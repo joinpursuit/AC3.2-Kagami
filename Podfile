@@ -7,5 +7,6 @@ target 'Kagami' do
 
   # Pods for Kagami
   pod ‘SnapKit’, ‘~> 3.0’
+  pod 'Firebase/Core'
 
 end
