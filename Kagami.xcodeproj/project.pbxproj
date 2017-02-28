@@ -1,0 +1,415 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		478B306E1E66181500FD580C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B306D1E66181500FD580C /* AppDelegate.swift */; };
+		478B30751E66181500FD580C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 478B30741E66181500FD580C /* Assets.xcassets */; };
+		478B30781E66181500FD580C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 478B30761E66181500FD580C /* LaunchScreen.storyboard */; };
+		478B30851E66192300FD580C /* APIRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30841E66192300FD580C /* APIRequestManager.swift */; };
+		478B30871E66257300FD580C /* KagamiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30861E66257300FD580C /* KagamiViewController.swift */; };
+		8272D0DA3A138F18F4C84361 /* Pods_Kagami.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F471247316DDB5A8497911B /* Pods_Kagami.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		28B5280557D9DBC696BF6E1A /* Pods-Kagami.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kagami.release.xcconfig"; path = "Pods/Target Support Files/Pods-Kagami/Pods-Kagami.release.xcconfig"; sourceTree = "<group>"; };
+		478B306A1E66181500FD580C /* Kagami.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kagami.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		478B306D1E66181500FD580C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		478B30741E66181500FD580C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		478B30771E66181500FD580C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		478B30791E66181500FD580C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		478B30841E66192300FD580C /* APIRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIRequestManager.swift; sourceTree = "<group>"; };
+		478B30861E66257300FD580C /* KagamiViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KagamiViewController.swift; sourceTree = "<group>"; };
+		9F471247316DDB5A8497911B /* Pods_Kagami.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Kagami.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E91726256CD58FA69FD00264 /* Pods-Kagami.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kagami.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Kagami/Pods-Kagami.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		478B30671E66181500FD580C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8272D0DA3A138F18F4C84361 /* Pods_Kagami.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		478B30611E66181500FD580C = {
+			isa = PBXGroup;
+			children = (
+				478B306C1E66181500FD580C /* Kagami */,
+				478B306B1E66181500FD580C /* Products */,
+				90FC43B4122C23A8D49FAEC7 /* Pods */,
+				D75BAA57F0389AADD92E1941 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		478B306B1E66181500FD580C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				478B306A1E66181500FD580C /* Kagami.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		478B306C1E66181500FD580C /* Kagami */ = {
+			isa = PBXGroup;
+			children = (
+				478B30801E66187800FD580C /* Managers */,
+				478B30811E66187F00FD580C /* View Controllers */,
+				478B30831E66188B00FD580C /* Views */,
+				478B30821E66188500FD580C /* Models */,
+				478B307F1E66185700FD580C /* Supporting Files */,
+			);
+			path = Kagami;
+			sourceTree = "<group>";
+		};
+		478B307F1E66185700FD580C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				478B306D1E66181500FD580C /* AppDelegate.swift */,
+				478B30741E66181500FD580C /* Assets.xcassets */,
+				478B30761E66181500FD580C /* LaunchScreen.storyboard */,
+				478B30791E66181500FD580C /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		478B30801E66187800FD580C /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				478B30841E66192300FD580C /* APIRequestManager.swift */,
+			);
+			name = Managers;
+			sourceTree = "<group>";
+		};
+		478B30811E66187F00FD580C /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				478B30861E66257300FD580C /* KagamiViewController.swift */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		478B30821E66188500FD580C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		478B30831E66188B00FD580C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		90FC43B4122C23A8D49FAEC7 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E91726256CD58FA69FD00264 /* Pods-Kagami.debug.xcconfig */,
+				28B5280557D9DBC696BF6E1A /* Pods-Kagami.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		D75BAA57F0389AADD92E1941 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9F471247316DDB5A8497911B /* Pods_Kagami.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		478B30691E66181500FD580C /* Kagami */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 478B307C1E66181500FD580C /* Build configuration list for PBXNativeTarget "Kagami" */;
+			buildPhases = (
+				966E5023F6C1F052204209A2 /* [CP] Check Pods Manifest.lock */,
+				478B30661E66181500FD580C /* Sources */,
+				478B30671E66181500FD580C /* Frameworks */,
+				478B30681E66181500FD580C /* Resources */,
+				9A09654C2448958AE223C6DE /* [CP] Embed Pods Frameworks */,
+				D05A8D30CD145D1F38263068 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Kagami;
+			productName = Kagami;
+			productReference = 478B306A1E66181500FD580C /* Kagami.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		478B30621E66181500FD580C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0800;
+				LastUpgradeCheck = 0800;
+				ORGANIZATIONNAME = "Eric Chang";
+				TargetAttributes = {
+					478B30691E66181500FD580C = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 478B30651E66181500FD580C /* Build configuration list for PBXProject "Kagami" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 478B30611E66181500FD580C;
+			productRefGroup = 478B306B1E66181500FD580C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				478B30691E66181500FD580C /* Kagami */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		478B30681E66181500FD580C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				478B30781E66181500FD580C /* LaunchScreen.storyboard in Resources */,
+				478B30751E66181500FD580C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		966E5023F6C1F052204209A2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		9A09654C2448958AE223C6DE /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Kagami/Pods-Kagami-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D05A8D30CD145D1F38263068 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Kagami/Pods-Kagami-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		478B30661E66181500FD580C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				478B30851E66192300FD580C /* APIRequestManager.swift in Sources */,
+				478B306E1E66181500FD580C /* AppDelegate.swift in Sources */,
+				478B30871E66257300FD580C /* KagamiViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		478B30761E66181500FD580C /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				478B30771E66181500FD580C /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		478B307A1E66181500FD580C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		478B307B1E66181500FD580C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		478B307D1E66181500FD580C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E91726256CD58FA69FD00264 /* Pods-Kagami.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = Kagami/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Ericchang.Kagami;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		478B307E1E66181500FD580C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28B5280557D9DBC696BF6E1A /* Pods-Kagami.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = Kagami/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Ericchang.Kagami;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		478B30651E66181500FD580C /* Build configuration list for PBXProject "Kagami" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				478B307A1E66181500FD580C /* Debug */,
+				478B307B1E66181500FD580C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		478B307C1E66181500FD580C /* Build configuration list for PBXNativeTarget "Kagami" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				478B307D1E66181500FD580C /* Debug */,
+				478B307E1E66181500FD580C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 478B30621E66181500FD580C /* Project object */;
+}
