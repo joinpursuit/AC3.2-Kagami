@@ -12,7 +12,7 @@ import SnapKit
 class KagamiViewController: UIViewController {
 
     // MARK: - Properties
-    
+
     // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
