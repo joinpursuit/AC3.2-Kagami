@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class ReminderAndGoalsViewController: UIViewController {
     
@@ -15,15 +16,27 @@ class ReminderAndGoalsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = .blue        
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        setupSegmentControl()
+        self.view.backgroundColor = .white
     }
     
-
+    func setupSegmentControl() {
+        self.view.addSubview(segmentControl)
+        segmentControl.snp.makeConstraints { (control) in
+            control.left.right.equalToSuperview()
+            control.top.equalTo(view.snp.top).inset(70)
+        }
+    }
+    
+    lazy var segmentControl: UISegmentedControl = {
+        let segmentControl = UISegmentedControl()
+        segmentControl.backgroundColor = .gray
+        segmentControl.tintColor = .white
+        segmentControl.insertSegment(withTitle: "Goal", at: 0, animated: false)
+        segmentControl.insertSegment(withTitle: "Reminder", at: 0, animated: false)
+        return segmentControl
+    }()
+    
     /*
     // MARK: - Navigation
 
