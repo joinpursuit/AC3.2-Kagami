@@ -7,9 +7,9 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>328675898219-6cmub912830j4gf52f9hjmu1fth60qj2.apps.googleusercontent.com</string>
+	<string>328675898219-9ftlhs78sgo2nrevun4tid6cbknt3t0g.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.328675898219-6cmub912830j4gf52f9hjmu1fth60qj2</string>
+	<string>com.googleusercontent.apps.328675898219-9ftlhs78sgo2nrevun4tid6cbknt3t0g</string>
 	<key>API_KEY</key>
 	<string>AIzaSyCfJtMqp16Zcpitfl8-duexPy18cqy_qx8</string>
 	<key>GCM_SENDER_ID</key>
@@ -17,7 +17,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>Ericchang.Kagami</string>
+	<string>nyc.c4q.ac32.Kagami</string>
 	<key>PROJECT_ID</key>
 	<string>kagami-b6130</string>
 	<key>STORAGE_BUCKET</key>
@@ -33,7 +33,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:328675898219:ios:96da7b0ba14e4389</string>
+	<string>1:328675898219:ios:4a966c7d411c58c3</string>
 	<key>DATABASE_URL</key>
 	<string>https://kagami-b6130.firebaseio.com</string>
 </dict>
