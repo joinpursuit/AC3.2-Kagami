@@ -24,6 +24,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.rootViewController = navVC
         self.window?.makeKeyAndVisible()
         
+        // nav bar
+        UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 20.0),
+                                                            NSForegroundColorAttributeName : UIColor.white]
+        
+        // status bar
+        UIApplication.shared.statusBarStyle = .lightContent
+
         return true
     }
 
