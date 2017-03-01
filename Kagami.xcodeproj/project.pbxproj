@@ -13,6 +13,7 @@
 		478B30851E66192300FD580C /* APIRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30841E66192300FD580C /* APIRequestManager.swift */; };
 		478B30871E66257300FD580C /* KagamiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30861E66257300FD580C /* KagamiViewController.swift */; };
 		478B30A71E6763F600FD580C /* SelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30A61E6763F600FD580C /* SelectionViewController.swift */; };
+		478B30A91E6767AD00FD580C /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30A81E6767AD00FD580C /* Utilities.swift */; };
 		8272D0DA3A138F18F4C84361 /* Pods_Kagami.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F471247316DDB5A8497911B /* Pods_Kagami.framework */; };
 		9C022C981E67381400AA2802 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9C022C971E67381400AA2802 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
@@ -27,6 +28,7 @@
 		478B30841E66192300FD580C /* APIRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIRequestManager.swift; sourceTree = "<group>"; };
 		478B30861E66257300FD580C /* KagamiViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KagamiViewController.swift; sourceTree = "<group>"; };
 		478B30A61E6763F600FD580C /* SelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionViewController.swift; sourceTree = "<group>"; };
+		478B30A81E6767AD00FD580C /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		9C022C971E67381400AA2802 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9F471247316DDB5A8497911B /* Pods_Kagami.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Kagami.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E91726256CD58FA69FD00264 /* Pods-Kagami.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kagami.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Kagami/Pods-Kagami.debug.xcconfig"; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 		478B307F1E66185700FD580C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				478B30A81E6767AD00FD580C /* Utilities.swift */,
 				478B306D1E66181500FD580C /* AppDelegate.swift */,
 				478B30741E66181500FD580C /* Assets.xcassets */,
 				478B30761E66181500FD580C /* LaunchScreen.storyboard */,
@@ -260,6 +263,7 @@
 				478B30851E66192300FD580C /* APIRequestManager.swift in Sources */,
 				478B30A71E6763F600FD580C /* SelectionViewController.swift in Sources */,
 				478B306E1E66181500FD580C /* AppDelegate.swift in Sources */,
+				478B30A91E6767AD00FD580C /* Utilities.swift in Sources */,
 				478B30871E66257300FD580C /* KagamiViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
