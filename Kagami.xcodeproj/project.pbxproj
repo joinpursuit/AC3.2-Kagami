@@ -17,6 +17,8 @@
 		9C022C981E67381400AA2802 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9C022C971E67381400AA2802 /* GoogleService-Info.plist */; };
 		9C022C9C1E67667700AA2802 /* SelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */; };
 		9C022CA01E6776F600AA2802 /* ReminderAndGoalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C022C9F1E6776F600AA2802 /* ReminderAndGoalsViewController.swift */; };
+		9C022CA31E677D9700AA2802 /* Code_Pro_Demo.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C022CA11E677D9700AA2802 /* Code_Pro_Demo.otf */; };
+		9C022CA41E677D9700AA2802 /* Code_Pro_Light_Demo.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C022CA21E677D9700AA2802 /* Code_Pro_Light_Demo.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		9C022C971E67381400AA2802 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionCollectionViewCell.swift; sourceTree = "<group>"; };
 		9C022C9F1E6776F600AA2802 /* ReminderAndGoalsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReminderAndGoalsViewController.swift; sourceTree = "<group>"; };
+		9C022CA11E677D9700AA2802 /* Code_Pro_Demo.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Code_Pro_Demo.otf; sourceTree = "<group>"; };
+		9C022CA21E677D9700AA2802 /* Code_Pro_Light_Demo.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Code_Pro_Light_Demo.otf; sourceTree = "<group>"; };
 		9F471247316DDB5A8497911B /* Pods_Kagami.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Kagami.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E91726256CD58FA69FD00264 /* Pods-Kagami.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kagami.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Kagami/Pods-Kagami.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,6 +91,8 @@
 				478B30761E66181500FD580C /* LaunchScreen.storyboard */,
 				478B30791E66181500FD580C /* Info.plist */,
 				9C022C971E67381400AA2802 /* GoogleService-Info.plist */,
+				9C022CA11E677D9700AA2802 /* Code_Pro_Demo.otf */,
+				9C022CA21E677D9700AA2802 /* Code_Pro_Light_Demo.otf */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -202,9 +208,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C022CA41E677D9700AA2802 /* Code_Pro_Light_Demo.otf in Resources */,
 				478B30781E66181500FD580C /* LaunchScreen.storyboard in Resources */,
 				478B30751E66181500FD580C /* Assets.xcassets in Resources */,
 				9C022C981E67381400AA2802 /* GoogleService-Info.plist in Resources */,
+				9C022CA31E677D9700AA2802 /* Code_Pro_Demo.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
