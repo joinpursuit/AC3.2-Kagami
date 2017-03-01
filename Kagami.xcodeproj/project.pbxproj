@@ -13,6 +13,7 @@
 		478B30851E66192300FD580C /* APIRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30841E66192300FD580C /* APIRequestManager.swift */; };
 		478B30871E66257300FD580C /* KagamiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30861E66257300FD580C /* KagamiViewController.swift */; };
 		8272D0DA3A138F18F4C84361 /* Pods_Kagami.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F471247316DDB5A8497911B /* Pods_Kagami.framework */; };
+		9C022C961E66362700AA2802 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9C022C951E66362700AA2802 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		478B30791E66181500FD580C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		478B30841E66192300FD580C /* APIRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIRequestManager.swift; sourceTree = "<group>"; };
 		478B30861E66257300FD580C /* KagamiViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KagamiViewController.swift; sourceTree = "<group>"; };
+		9C022C951E66362700AA2802 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9F471247316DDB5A8497911B /* Pods_Kagami.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Kagami.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E91726256CD58FA69FD00264 /* Pods-Kagami.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kagami.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Kagami/Pods-Kagami.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -77,6 +79,7 @@
 				478B30741E66181500FD580C /* Assets.xcassets */,
 				478B30761E66181500FD580C /* LaunchScreen.storyboard */,
 				478B30791E66181500FD580C /* Info.plist */,
+				9C022C951E66362700AA2802 /* GoogleService-Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -192,6 +195,7 @@
 			files = (
 				478B30781E66181500FD580C /* LaunchScreen.storyboard in Resources */,
 				478B30751E66181500FD580C /* Assets.xcassets in Resources */,
+				9C022C961E66362700AA2802 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
