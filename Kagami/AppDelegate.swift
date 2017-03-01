@@ -20,7 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FIRApp.configure()
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        self.window?.rootViewController = KagamiViewController()
+        let navVC = UINavigationController(rootViewController: KagamiViewController())
+        self.window?.rootViewController = navVC
         self.window?.makeKeyAndVisible()
         
         return true
