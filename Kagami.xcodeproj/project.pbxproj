@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3E91CEDA1E6780C10074AA31 /* DailyWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E91CED91E6780C10074AA31 /* DailyWeather.swift */; };
 		3E91CEDC1E6780CF0074AA31 /* ForecastWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E91CEDB1E6780CF0074AA31 /* ForecastWeather.swift */; };
+		3E91CEDE1E688CE20074AA31 /* WordOfTheDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E91CEDD1E688CE20074AA31 /* WordOfTheDay.swift */; };
 		478B306E1E66181500FD580C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B306D1E66181500FD580C /* AppDelegate.swift */; };
 		478B30751E66181500FD580C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 478B30741E66181500FD580C /* Assets.xcassets */; };
 		478B30781E66181500FD580C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 478B30761E66181500FD580C /* LaunchScreen.storyboard */; };
@@ -28,6 +29,7 @@
 		28B5280557D9DBC696BF6E1A /* Pods-Kagami.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kagami.release.xcconfig"; path = "Pods/Target Support Files/Pods-Kagami/Pods-Kagami.release.xcconfig"; sourceTree = "<group>"; };
 		3E91CED91E6780C10074AA31 /* DailyWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DailyWeather.swift; sourceTree = "<group>"; };
 		3E91CEDB1E6780CF0074AA31 /* ForecastWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForecastWeather.swift; sourceTree = "<group>"; };
+		3E91CEDD1E688CE20074AA31 /* WordOfTheDay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WordOfTheDay.swift; sourceTree = "<group>"; };
 		478B306A1E66181500FD580C /* Kagami.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kagami.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		478B306D1E66181500FD580C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		478B30741E66181500FD580C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 			children = (
 				3E91CED91E6780C10074AA31 /* DailyWeather.swift */,
 				3E91CEDB1E6780CF0074AA31 /* ForecastWeather.swift */,
+				3E91CEDD1E688CE20074AA31 /* WordOfTheDay.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -281,6 +284,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3E91CEDA1E6780C10074AA31 /* DailyWeather.swift in Sources */,
+				3E91CEDE1E688CE20074AA31 /* WordOfTheDay.swift in Sources */,
 				478B30851E66192300FD580C /* APIRequestManager.swift in Sources */,
 				9C022CA01E6776F600AA2802 /* ReminderAndGoalsViewController.swift in Sources */,
 				478B30A71E6763F600FD580C /* SelectionViewController.swift in Sources */,
