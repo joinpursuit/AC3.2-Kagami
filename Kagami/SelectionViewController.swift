@@ -13,7 +13,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.barTintColor = UIColor(red:0.76, green:0.83, blue:0.90, alpha:1.0)
+        self.navigationController?.navigationBar.barTintColor = ColorPalette.accentColor
         self.navigationController?.navigationBar.tintColor = .white
         collectionView.delegate = self
         collectionView.dataSource = self
