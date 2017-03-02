@@ -75,7 +75,6 @@
 		478B306C1E66181500FD580C /* Kagami */ = {
 			isa = PBXGroup;
 			children = (
-				9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */,
 				478B30801E66187800FD580C /* Managers */,
 				478B30811E66187F00FD580C /* View Controllers */,
 				478B30831E66188B00FD580C /* Views */,
@@ -128,6 +127,7 @@
 		478B30831E66188B00FD580C /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
