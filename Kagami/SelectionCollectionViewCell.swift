@@ -15,7 +15,7 @@ class SelectionCollectionViewCell: UICollectionViewCell {
     
     required override init(frame: CGRect) {
         super.init(frame: frame)
-        self.addSubview(image)
+        self.addSubview(iconImage)
         setupConstraints()
     }
     
@@ -24,12 +24,12 @@ class SelectionCollectionViewCell: UICollectionViewCell {
     }
     
     func setupConstraints() {
-        image.snp.makeConstraints { (image) in
+        iconImage.snp.makeConstraints { (image) in
             image.top.bottom.left.right.equalToSuperview()
         }
     }
     
-    lazy var image: UIImageView = {
+    lazy var iconImage: UIImageView = {
         let image = UIImage(named: "Appointment Reminders-50")
         let im = UIImageView(image: image)
         im.contentMode = .scaleToFill

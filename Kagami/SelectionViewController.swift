@@ -11,6 +11,8 @@ import SnapKit
 
 class SelectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
+    let testArray = ["Watch-50", "Partly Cloudy Day-50", "Appointment Reminders-50", "Quote-50", "News-50", "Push Notifications-50", "Dictionary-50"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.barTintColor = ColorPalette.accentColor
@@ -35,11 +37,13 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+        return testArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SelectionCollectionViewCell.identifier, for: indexPath) as! SelectionCollectionViewCell
+        let item = testArray[indexPath.item]
+        cell.iconImage.image = UIImage(named: item)
         return cell
     }
     
@@ -60,9 +64,9 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     lazy var collectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .vertical
-        flowLayout.minimumLineSpacing = 0
+        flowLayout.minimumLineSpacing = 20
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = .white        
         collectionView.isPagingEnabled = false
         collectionView.bounces = true
         collectionView.showsVerticalScrollIndicator = true
