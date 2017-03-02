@@ -57,7 +57,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let viewController = ReminderAndGoalsViewController()
+        let viewController = CustomizeSelectionsViewController()
         self.navigationController?.pushViewController(viewController, animated: true)
     }
     

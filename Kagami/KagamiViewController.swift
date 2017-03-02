@@ -14,7 +14,9 @@ class KagamiViewController: UIViewController {
     
     // MARK: - Properties
     var ref: FIRDatabaseReference!
-    
+    var animator: UIViewPropertyAnimator? = nil
+    var dynamicAnimator: UIDynamicAnimator? = nil
+    var isCurrentlyHeld: Bool = false
     
     
     // MARK: - View Lifecycle
@@ -25,7 +27,7 @@ class KagamiViewController: UIViewController {
         
         setupViewHierarchy()
         addTargets()
-        
+        setupWeather()
         // Developer testing only -> REMOVE before production
         // Developer testing only -> REMOVE before production
         ref = FIRDatabase.database().reference()
@@ -44,9 +46,12 @@ class KagamiViewController: UIViewController {
         
         // Developer testing only -> REMOVE before production
         // Developer testing only -> REMOVE before production
-        self.ref.child("position").updateChildValues(["topLeft" : "true"])
-        
-
+        let reference = self.ref.child("position")
+//        self.ref.child("position").updateChildValues(["topLeft" : "true"])
+        reference.setValue(["topLeft" : "weather",
+                            "topRight" : "time",
+                            "middle" : "news",
+                            "bottom" : "quote"])
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -54,6 +59,8 @@ class KagamiViewController: UIViewController {
         
         self.navigationController?.isNavigationBarHidden = false
         UIApplication.shared.statusBarStyle = .lightContent
+        
+        testView.removeFromSuperview()
     }
     
     override func didReceiveMemoryWarning() {
@@ -167,6 +174,82 @@ class KagamiViewController: UIViewController {
         navigationItem.backBarButtonItem = backItem
     }
     
+    
+    /**
+     * Animations here! :) 👇👇👇
+     */
+    // MARK: - Movement
+    internal func move(view: UIView, to point: CGPoint) {
+        let _ = dynamicAnimator?.behaviors.map {
+            if $0 is UISnapBehavior {
+                dynamicAnimator?.removeBehavior($0)
+            }
+        }
+        
+        let snapBehavior = UISnapBehavior(item: view, snapTo: point)
+        snapBehavior.damping = 1.0
+        dynamicAnimator?.addBehavior(snapBehavior)
+        
+    }
+    
+    internal func pickUp(view: UIView) {
+        self.animator = UIViewPropertyAnimator(duration: 0.5, curve: .easeOut) {
+            view.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+        }
+        
+        self.animator?.startAnimation()
+        isCurrentlyHeld = true
+    }
+    
+    internal func putDownView(view: UIView) {
+        self.animator = UIViewPropertyAnimator(duration: 0.5, curve: .easeIn) {
+            view.transform = CGAffineTransform.identity
+        }
+        
+        let _ = dynamicAnimator?.behaviors.map {
+            if $0 is UISnapBehavior {
+                dynamicAnimator?.removeBehavior($0)
+            }
+        }
+        
+        isCurrentlyHeld = false
+        self.animator?.startAnimation()
+    }
+    
+    // MARK: - Tracking Touches
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let wasInsideBlueFrame = darkBlueView.frame.contains(touch.location(in: view))
+        
+        if wasInsideBlueFrame {
+            pickUp(view: darkBlueView)
+        }
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        
+        let touchLocationInView = touch.location(in: view)
+        if isCurrentlyHeld {
+            move(view: darkBlueView, to: touchLocationInView)
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        putDownView(view: darkBlueView)
+    }
+    
+    // MARK: - ChangeThisView
+    internal lazy var darkBlueView: UIView = {
+        let view: UIView = UIView()
+        view.backgroundColor = .blue
+        return view
+    }()
+    /**
+     * Animations here! :) ☝️☝️☝️
+     */
+    
+    
     // MARK: - Lazy Instantiates
     // hamburger
     lazy var hamburger: UIView = {
@@ -238,6 +321,25 @@ class KagamiViewController: UIViewController {
         button.backgroundColor = .red
         return button
     }()
+    
+    lazy var testView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .red
+        return view
+    }()
+}
+
+extension KagamiViewController {
+    
+    func setupWeather() {
+        self.view.addSubview(testView)
+        
+        testView.snp.makeConstraints { (make) in
+            make.top.centerX.equalToSuperview()
+            make.size.equalTo(50.0)
+        }
+    }
+    
     
 }
 

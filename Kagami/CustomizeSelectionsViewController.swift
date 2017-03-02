@@ -9,20 +9,28 @@
 import UIKit
 import SnapKit
 
-class ReminderAndGoalsViewController: UIViewController {
+class CustomizeSelectionsViewController: UIViewController {
     
+    // MARK: - Properties
     static let identifier = "ReminderAndGoals"
     
+    // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.navigationController?.navigationBar.barTintColor = ColorPalette.accentColor
         self.view.backgroundColor = .white
+        
         setupViewHierarchy()
-        setupConstraints()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        configureConstraints()
     }
     
     // MARK: - Setup View Hierarchy & Constraints
-    
     func setupViewHierarchy() {
         self.view.addSubview(blueView)
         self.view.addSubview(goalsView)
@@ -31,25 +39,27 @@ class ReminderAndGoalsViewController: UIViewController {
         self.blueView.addSubview(segmentControl)
     }
     
-    // MARK: - Methods
-    
-    func setupConstraints() {
+    func configureConstraints() {
         blueView.snp.makeConstraints { (view) in
             view.top.left.right.equalToSuperview()
             view.height.equalTo(self.view).multipliedBy(0.25)
         }
+        
         goalsView.snp.makeConstraints { (view) in
             view.bottom.left.right.equalToSuperview()
             view.top.equalTo(segmentControl.snp.bottom)
         }
+        
         remindersView.snp.makeConstraints { (view) in
             view.bottom.left.right.equalToSuperview()
             view.top.equalTo(segmentControl.snp.bottom)
         }
+        
         segmentControl.snp.makeConstraints { (control) in
             control.left.right.equalToSuperview()
             control.bottom.equalTo(self.blueView.snp.bottom)//.inset(10)
         }
+        
         circleAddImage.snp.makeConstraints { (view) in
             view.centerX.equalToSuperview()
             view.bottom.equalTo(self.view.snp.bottom).inset(20)
@@ -81,7 +91,6 @@ class ReminderAndGoalsViewController: UIViewController {
     }
     
     // MARK: - Lazy Instances
-    
     lazy var segmentControl: UISegmentedControl = {
         let segmentControl = UISegmentedControl()
         segmentControl.setTitleTextAttributes([NSForegroundColorAttributeName: ColorPalette.grayColor, NSFontAttributeName:UIFont.systemFont(ofSize: 30)], for: UIControlState.normal)
@@ -118,15 +127,5 @@ class ReminderAndGoalsViewController: UIViewController {
         view.setImage(image, for: .normal)
         return view
     }()
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
     
 }

@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import FirebaseAuth
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,8 +18,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        
+        // firebase anon login
         FIRApp.configure()
+        FIRAuth.auth()?.signInAnonymously() { (user, error) in
+            _ = user!.isAnonymous
+            _ = user!.uid
+        }
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
         let navVC = UINavigationController(rootViewController: KagamiViewController())
