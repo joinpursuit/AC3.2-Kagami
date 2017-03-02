@@ -8,6 +8,9 @@
 
 import Foundation
 
+//API Endpoint
+//http://api.wordnik.com/v4/words.json/wordOfTheDay?api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5
+
 class WordOfTheDay {
     var word: String
     var definition: String
@@ -20,28 +23,24 @@ class WordOfTheDay {
         self.partOfSpeech = partOfSpeech
     }
     
-//    convenience init?(from dictionary: [String:Any])  {
-//        //Descriptions Of Weather
-//        let weather = dictionary["weather"] as? [[String:Any]]
-//        let mainCondition = weather?[0]["main"] as? String ?? "No Weather"
-//        let weatherDescription = weather?[0]["description"] as? String ?? "No Description"
-//        let icon = weather?[0]["icon"] as? String ?? "No Icon"
-//        
-//        //Main Temperature
-//        let mainTemperature = dictionary["main"] as! [String: Int]
-//        let temperature = mainTemperature["temp"]!
-//        let pressure = mainTemperature["pressure"]!
-//        let humidity = mainTemperature["humidity"]!
-//        
-//        self.init(temperature: temperature, icon: icon, mainCondition: mainCondition, weatherDescription: weatherDescription, pressure : pressure, humidity : humidity)
-//    }
-//    
-//    static func parseWordOfDay(from: Data?) -> WordOfTheDay? {
-//        
-//        let data = try? JSONSerialization.jsonObject(with: from!, options: [])
-//        guard let validJson = data as? [String: Any] else { return nil }
-//        
-//        return WordOfTheDay(from: validJson)
-//    }
+    convenience init?(from dictionary: [String:Any])  {
+        //The Word
+        
+        let word = dictionary["word"] as? String
+       
+        //Get Into Dictionary Array
+        let definitionArray = dictionary["definitions"] as! [[String: String]]
+        let definition = definitionArray[0]["text"]
+        let partOfSpeech = definitionArray[0]["partOfSpeech"]
+        
+        self.init(word: word!, definition: definition!, partOfSpeech: partOfSpeech!)
+    }
     
+    static func parseWordOfDay(from: Data?) -> WordOfTheDay? {
+        
+        let data = try? JSONSerialization.jsonObject(with: from!, options: [])
+        guard let validJson = data as? [String: Any] else { return nil }
+        
+        return WordOfTheDay(from: validJson)
+    }
 }
