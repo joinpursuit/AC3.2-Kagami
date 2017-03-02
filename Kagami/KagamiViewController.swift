@@ -8,10 +8,14 @@
 
 import UIKit
 import SnapKit
+import FirebaseDatabase
 
 class KagamiViewController: UIViewController {
     
     // MARK: - Properties
+    var ref: FIRDatabaseReference!
+    
+    
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -21,6 +25,10 @@ class KagamiViewController: UIViewController {
         
         setupViewHierarchy()
         addTargets()
+        
+        // Developer testing only -> REMOVE before production
+        // Developer testing only -> REMOVE before production
+        ref = FIRDatabase.database().reference()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -33,6 +41,12 @@ class KagamiViewController: UIViewController {
         self.navigationController?.navigationBar.tintColor = UIColor.black
         
         configureConstraints()
+        
+        // Developer testing only -> REMOVE before production
+        // Developer testing only -> REMOVE before production
+        self.ref.child("position").updateChildValues(["topLeft" : "true"])
+        
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -163,30 +177,30 @@ class KagamiViewController: UIViewController {
     
     lazy var burgerBar1: UIView = {
         let view = UIView()
-        view.backgroundColor = ColorPalette.accentColor
-        view.layer.cornerRadius = 5.0
+        view.backgroundColor = ColorPalette.blackColor
+        //        view.layer.cornerRadius = 5.0
         return view
     }()
     
     lazy var burgerBar2: UIView = {
         let view = UIView()
-        view.backgroundColor = ColorPalette.accentColor
-        view.layer.cornerRadius = 5.0
+        view.backgroundColor = ColorPalette.blackColor
+        //        view.layer.cornerRadius = 5.0
         return view
     }()
     
     lazy var burgerBar3: UIView = {
         let view = UIView()
-        view.backgroundColor = ColorPalette.accentColor
-        view.layer.cornerRadius = 5.0
+        view.backgroundColor = ColorPalette.blackColor
+        //        view.layer.cornerRadius = 5.0
         return view
     }()
     
     // kagami view
     lazy var kagamiView: UIView = {
         let view = UIView()
-        view.backgroundColor = ColorPalette.whiteColor
-        view.layer.borderColor = ColorPalette.accentColor.cgColor
+        view.backgroundColor = ColorPalette.accentColor
+        view.layer.borderColor = ColorPalette.blackColor.cgColor
         view.layer.borderWidth = 1.0
         view.alpha = 0.8
         return view

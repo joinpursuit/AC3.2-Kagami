@@ -21,7 +21,7 @@ extension UIButton {
     
     func styled() {
         self.layer.borderWidth = 1.0
-        self.layer.borderColor = ColorPalette.accentColor.cgColor
+        self.layer.borderColor = ColorPalette.blackColor.cgColor
         self.layer.shadowColor = ColorPalette.blackColor.cgColor
         self.layer.shadowOpacity = 1
         self.layer.shadowOffset = CGSize(width: -1, height: 2)
