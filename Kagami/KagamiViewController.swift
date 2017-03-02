@@ -10,9 +10,9 @@ import UIKit
 import SnapKit
 
 class KagamiViewController: UIViewController {
-
+    
     // MARK: - Properties
-
+    
     // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,8 +22,7 @@ class KagamiViewController: UIViewController {
         setupViewHierarchy()
         addTargets()
     }
-
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -58,7 +57,9 @@ class KagamiViewController: UIViewController {
         view.addSubview(kagamiView)
         view.addSubview(annieButton)
         
-        hamburger.addSubview(hamburgerBar1)
+        hamburger.addSubview(burgerBar1)
+        hamburger.addSubview(burgerBar2)
+        hamburger.addSubview(burgerBar3)
         
         kagamiView.addSubview(topLeftSelection)
         kagamiView.addSubview(topRightSelection)
@@ -68,6 +69,30 @@ class KagamiViewController: UIViewController {
     
     // constraints
     func configureConstraints() {
+        // hamburger
+        hamburger.snp.makeConstraints { (make) in
+            make.size.equalTo(30.0)
+            make.top.equalToSuperview().offset(30.0)
+            make.leading.equalToSuperview().offset(8.0)
+        }
+        
+        burgerBar1.snp.makeConstraints { (make) in
+            make.height.equalToSuperview().multipliedBy(0.2)
+            make.width.equalToSuperview().multipliedBy(1)
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().offset(5.0)
+        }
+        
+        burgerBar2.snp.makeConstraints { (make) in
+            make.height.width.centerX.equalTo(burgerBar1)
+            make.top.equalTo(burgerBar1.snp.bottom).offset(5.0)
+        }
+        
+        burgerBar3.snp.makeConstraints { (make) in
+            make.height.width.centerX.equalTo(burgerBar1)
+            make.top.equalTo(burgerBar2.snp.bottom).offset(5.0)
+        }
+        
         // mirror view
         kagamiView.snp.makeConstraints { (make) in
             make.width.height.equalToSuperview().multipliedBy(0.75)
@@ -107,11 +132,16 @@ class KagamiViewController: UIViewController {
     
     // add targets
     func addTargets() {
-        annieButton.addTarget(self, action: #selector(annieSegue), for: .touchUpInside)
+        //hamburger
+        hamburger.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(annieSegue)))
+        
+        // selections
         topLeftSelection.addTarget(self, action: #selector(annieSegue), for: .touchUpInside)
         topRightSelection.addTarget(self, action: #selector(annieSegue), for: .touchUpInside)
         middleSelection.addTarget(self, action: #selector(annieSegue), for: .touchUpInside)
         bottomSelection.addTarget(self, action: #selector(annieSegue), for: .touchUpInside)
+        
+        annieButton.addTarget(self, action: #selector(annieSegue), for: .touchUpInside)
     }
     
     func annieSegue() {
@@ -131,8 +161,24 @@ class KagamiViewController: UIViewController {
         return view
     }()
     
-    lazy var hamburgerBar1: UIView = {
-       let view = UIView()
+    lazy var burgerBar1: UIView = {
+        let view = UIView()
+        view.backgroundColor = ColorPalette.accentColor
+        view.layer.cornerRadius = 5.0
+        return view
+    }()
+    
+    lazy var burgerBar2: UIView = {
+        let view = UIView()
+        view.backgroundColor = ColorPalette.accentColor
+        view.layer.cornerRadius = 5.0
+        return view
+    }()
+    
+    lazy var burgerBar3: UIView = {
+        let view = UIView()
+        view.backgroundColor = ColorPalette.accentColor
+        view.layer.cornerRadius = 5.0
         return view
     }()
     
