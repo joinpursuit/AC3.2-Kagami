@@ -23,6 +23,7 @@ class KagamiViewController: UIViewController {
         addTargets()
     }
 
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -41,7 +42,6 @@ class KagamiViewController: UIViewController {
         self.navigationController?.isNavigationBarHidden = false
         UIApplication.shared.statusBarStyle = .lightContent
     }
->>>>>>> 2df8ddbaa3693dd82c0a5fb8a7386af93e401a1d
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
