@@ -23,6 +23,7 @@ class KagamiViewController: UIViewController {
         addTargets()
     }
 
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
