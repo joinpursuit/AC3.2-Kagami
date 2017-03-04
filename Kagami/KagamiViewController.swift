@@ -26,59 +26,15 @@ class KagamiViewController: UIViewController {
         super.viewDidLoad()
         
         self.title = "か が み"
+        self.dynamicAnimator = UIDynamicAnimator(referenceView: view)
         
         setupViewHierarchy()
         addTargets()
-        setupWeather()
+        
         // Developer testing only -> REMOVE before production
         // Developer testing only -> REMOVE before production
         ref = FIRDatabase.database().reference()
         dump(self.view.subviews.count)
-        
-    }
-    
-    func setGestureRecognizer() -> UIPanGestureRecognizer {
-        
-        panRecognizer = UIPanGestureRecognizer (target: self, action: #selector(self.wasDragged(_:)))
-        panRecognizer.minimumNumberOfTouches = 1
-        panRecognizer.maximumNumberOfTouches = 1
-        panRecognizer.cancelsTouchesInView = false
-        return panRecognizer
-    }
-
-    
-    func wasDragged(_ gesture: UIPanGestureRecognizer) {
-        let label = gesture.view!
-        let translation = gesture.translation(in: self.view)
-        let rect = self.kagamiView.frame
-        label.center = CGPoint(x: label.center.x + translation.x , y: label.center.y + translation.y)
-        gesture.setTranslation(CGPoint.zero, in: self.view)
-        
-        
-        if gesture.state == .ended {
-
-            let centerOfLabel = self.kagamiView.convert(label.center, from: label.superview)
-            print(centerOfLabel)
-            print(kagamiView.bounds)
-            if kagamiView.bounds.contains(centerOfLabel) {
-            self.kagamiView.addSubview(label)
-            label.snp.remakeConstraints({ (make) in
-                make.center.equalTo(centerOfLabel)
-                make.height.width.equalTo(50.0)
-            })
-            
-            dump("This the center of the label \(centerOfLabel)")
-            
-            } else {
-                self.iconContainerView.addSubview(label)
-                label.snp.remakeConstraints({ (make) in
-                    make.trailing.equalToSuperview().offset(-5.0)
-                    make.centerY.equalToSuperview()
-                    make.height.width.equalTo(50.0)
-                })
-
-            }
-        }
         
     }
     
@@ -92,6 +48,7 @@ class KagamiViewController: UIViewController {
         self.navigationController?.navigationBar.tintColor = UIColor.black
         
         configureConstraints()
+        
         // Developer testing only -> REMOVE before production
         // Developer testing only -> REMOVE before production
         let reference = self.ref.child("position")
@@ -102,6 +59,10 @@ class KagamiViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+//        let collisions = CollidingViewBehavior(items: [testRedView, testBlueView, testPurpleView])
+//        self.dynamicAnimator?.addBehavior(collisions)
         
         self.blueViewOriginalPoint = testBlueView.center
         
@@ -113,7 +74,6 @@ class KagamiViewController: UIViewController {
         self.navigationController?.isNavigationBarHidden = false
         UIApplication.shared.statusBarStyle = .lightContent
         
-        testView.removeFromSuperview()
     }
     
     override func didReceiveMemoryWarning() {
@@ -131,11 +91,12 @@ class KagamiViewController: UIViewController {
         
         view.addSubview(hamburger)
         view.addSubview(kagamiView)
-        view.addSubview(annieButton)
         view.addSubview(iconContainerView)
+        
         iconContainerView.addSubview(testBlueView)
         iconContainerView.addSubview(testRedView)
         iconContainerView.addSubview(testPurpleView)
+        
         testBlueView.addGestureRecognizer(setGestureRecognizer())
         testRedView.addGestureRecognizer(setGestureRecognizer())
         testPurpleView.addGestureRecognizer(setGestureRecognizer())
@@ -143,11 +104,6 @@ class KagamiViewController: UIViewController {
         hamburger.addSubview(burgerBar1)
         hamburger.addSubview(burgerBar2)
         hamburger.addSubview(burgerBar3)
-        
-        //kagamiView.addSubview(topLeftSelection)
-        //kagamiView.addSubview(topRightSelection)
-        //kagamiView.addSubview(middleSelection)
-        //kagamiView.addSubview(bottomSelection)
     }
     
     // constraints
@@ -176,6 +132,7 @@ class KagamiViewController: UIViewController {
             make.top.equalTo(burgerBar2.snp.bottom).offset(5.0)
         }
         
+        // testing drag views
         iconContainerView.snp.makeConstraints { (make) in
             make.trailing.equalToSuperview().offset(-8.0)
             make.top.equalToSuperview().offset(8.0)
@@ -205,53 +162,72 @@ class KagamiViewController: UIViewController {
         
         // mirror view
         kagamiView.snp.makeConstraints { (make) in
-            make.width.height.equalToSuperview().multipliedBy(0.50)
+            make.width.height.equalToSuperview().multipliedBy(0.75)
             make.centerY.equalToSuperview().inset(50.0)
-            make.centerX.equalToSuperview()
+            make.leading.equalToSuperview().offset(16.0)
         }
         
-        // selections
-//        topLeftSelection.snp.makeConstraints { (make) in
-//            make.top.leading.equalToSuperview().inset(16.0)
-//            make.width.equalToSuperview().multipliedBy(0.30)
-//            make.height.equalToSuperview().multipliedBy(0.15)
-//        }
-//        
-//        topRightSelection.snp.makeConstraints { (make) in
-//            make.top.trailing.equalToSuperview().inset(16.0)
-//            make.width.equalToSuperview().multipliedBy(0.30)
-//            make.height.equalToSuperview().multipliedBy(0.15)
-//        }
-        
-//        middleSelection.snp.makeConstraints { (make) in
-//            make.center.equalToSuperview()
-//            make.width.height.equalToSuperview().multipliedBy(0.5)
-//        }
-//        
-//        bottomSelection.snp.makeConstraints { (make) in
-//            make.leading.trailing.bottom.equalToSuperview().inset(16.0)
-//            make.height.equalToSuperview().multipliedBy(0.15)
-//        }
-        
-        annieButton.snp.makeConstraints { (make) in
-            make.top.trailing.equalToSuperview()
-            make.height.equalTo(50.0)
-            make.width.equalTo(100.0)
-        }
     }
     
     // add targets
     func addTargets() {
         //hamburger
         hamburger.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(annieSegue)))
+
+    }
+    
+    // add gestures
+    func setGestureRecognizer() -> UIPanGestureRecognizer {
         
-        // selections
-        topLeftSelection.addTarget(self, action: #selector(annieSegue), for: .touchUpInside)
-        topRightSelection.addTarget(self, action: #selector(annieSegue), for: .touchUpInside)
-        middleSelection.addTarget(self, action: #selector(annieSegue), for: .touchUpInside)
-        bottomSelection.addTarget(self, action: #selector(annieSegue), for: .touchUpInside)
+        panRecognizer = UIPanGestureRecognizer (target: self, action: #selector(self.wasDragged(_:)))
+        panRecognizer.minimumNumberOfTouches = 1
+        panRecognizer.maximumNumberOfTouches = 1
+        panRecognizer.cancelsTouchesInView = false
+        return panRecognizer
+    }
+    
+    
+    func wasDragged(_ gesture: UIPanGestureRecognizer) {
+        let label = gesture.view!
+        let translation = gesture.translation(in: self.view)
+//        let rect = self.kagamiView.frame
+        label.center = CGPoint(x: label.center.x + translation.x , y: label.center.y + translation.y)
+        gesture.setTranslation(CGPoint.zero, in: self.view)
         
-        annieButton.addTarget(self, action: #selector(annieSegue), for: .touchUpInside)
+        //TODO: - Math
+        // viewMin >= kagamiMin & viewMax <= kagamiMax
+        
+        if gesture.state == .began {
+            dump("Parent View \(self.view.subviews.count)")
+            dump("Kagami View \(self.kagamiView.subviews.count)")
+        }
+        
+        if gesture.state == .ended {
+            
+            let centerOfLabel = self.kagamiView.convert(label.center, from: label.superview)
+            print(centerOfLabel)
+            print(kagamiView.bounds)
+            
+            if kagamiView.bounds.contains(centerOfLabel) {
+                self.kagamiView.addSubview(label)
+                label.snp.remakeConstraints({ (make) in
+                    make.center.equalTo(centerOfLabel)
+                    make.height.width.equalTo(50.0)
+                })
+                
+                dump("This the center of the label \(centerOfLabel)")
+                
+            }
+            else {
+                self.iconContainerView.addSubview(label)
+                label.snp.remakeConstraints({ (make) in
+                    make.trailing.equalToSuperview().offset(-5.0)
+                    make.centerY.equalToSuperview()
+                    make.height.width.equalTo(50.0)
+                })
+            }
+        }
+        
     }
     
     func annieSegue() {
@@ -263,11 +239,11 @@ class KagamiViewController: UIViewController {
         navigationItem.backBarButtonItem = backItem
     }
     
-    
     /**
      * Animations here! :) 👇👇👇
      */
     // MARK: - Movement
+
 //    internal func move(view: UIView, to point: CGPoint) {
 //        let _ = dynamicAnimator?.behaviors.map {
 //            if $0 is UISnapBehavior {
@@ -400,57 +376,26 @@ class KagamiViewController: UIViewController {
         return view
     }()
     
-    // selections
-    lazy var topLeftSelection: UIButton = {
-        let button = UIButton()
-        button.styled()
-        return button
-    }()
-    
-    lazy var topRightSelection: UIButton = {
-        let button = UIButton()
-        button.styled()
-        return button
-    }()
-    
-    lazy var middleSelection: UIButton = {
-        let button = UIButton()
-        button.styled()
-        return button
-    }()
-    
-    lazy var bottomSelection: UIButton = {
-        let button = UIButton()
-        button.styled()
-        return button
-    }()
-    
-    // Developer testing button
-    lazy var annieButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Annie-chan", for: .normal)
-        button.backgroundColor = .red
-        return button
-    }()
-    
-    lazy var testView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .red
-        return view
-    }()
 }
 
-extension KagamiViewController {
+class CollidingViewBehavior: UIDynamicBehavior  {
     
-    func setupWeather() {
-        self.view.addSubview(testView)
+    override init() {}
+    
+    convenience init(items: [UIDynamicItem]) {
+        self.init()
         
-        testView.snp.makeConstraints { (make) in
-            make.top.centerX.equalToSuperview()
-            make.size.equalTo(50.0)
-        }
+        let collisionBehavior = UICollisionBehavior(items: items)
+        collisionBehavior.translatesReferenceBoundsIntoBoundary = true
+        self.addChildBehavior(collisionBehavior)
+        
+        let elasticBehavior = UIDynamicItemBehavior(items: items)
+        elasticBehavior.elasticity = 0.0
+        self.addChildBehavior(elasticBehavior)
+        
     }
     
-    
 }
+
+
 
