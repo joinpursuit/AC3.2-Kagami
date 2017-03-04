@@ -54,11 +54,9 @@ class KagamiViewController: UIViewController {
         label.center = CGPoint(x: label.center.x + translation.x , y: label.center.y + translation.y)
         gesture.setTranslation(CGPoint.zero, in: self.view)
         
-        if gesture.state == .began {
-            dump("Parent View \(self.view.subviews.count)")
-            dump("Kagami View \(self.kagamiView.subviews.count)")
-        }
+        
         if gesture.state == .ended {
+
             let centerOfLabel = self.kagamiView.convert(label.center, from: label.superview)
             print(centerOfLabel)
             print(kagamiView.bounds)
@@ -81,6 +79,7 @@ class KagamiViewController: UIViewController {
 
             }
         }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -328,7 +327,7 @@ class KagamiViewController: UIViewController {
 //    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        dump(touches.count)
 //    }
-        
+    
     // MARK: - Drag And Drop Testing
     
     internal lazy var iconContainerView: UIView = {
