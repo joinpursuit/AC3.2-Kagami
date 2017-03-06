@@ -392,6 +392,7 @@ class KagamiViewController: UIViewController {
     
 }
 
+// Ignore for now
 class CollidingViewBehavior: UIDynamicBehavior  {
     
     override init() {}
