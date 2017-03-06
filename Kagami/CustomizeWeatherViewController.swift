@@ -9,19 +9,27 @@
 import UIKit
 import SnapKit
 
-class ViewController: UIViewController {
+class CustomizeWeatherViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.title = "Weather"
         self.navigationController?.navigationBar.barTintColor = ColorPalette.accentColor
+        var isSelected: Bool
         
         setupHierarchy()
         setupConstraints()
         setupBlurEffect()
         setupOverlayView()
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.view.alpha = 0
+    }
+    
+    // MARK: - Set up Hierarchy & Constraints
     
     func setupHierarchy() {
         view.addSubview(backgroundImage)
@@ -53,13 +61,38 @@ class ViewController: UIViewController {
             view.top.equalTo(locationLabel.snp.bottom).offset(10)
             view.centerX.equalTo(cardView.snp.centerX)
         }
+        // buttons
+        cardView.addSubview(fahrenheitButton)
+        fahrenheitButton.snp.makeConstraints { (view) in
+            view.top.equalTo(cardView)
+            view.trailing.equalTo(cardView).inset(5)
+        }
+        cardView.addSubview(celsiusButton)
+        celsiusButton.snp.makeConstraints { (view) in
+            view.top.equalTo(cardView)
+            view.trailing.equalTo(fahrenheitButton.snp.leading).inset(5)
+        }
     }
-
+    
+    // MARK: - Methods
+    
     func setupBlurEffect() {
         let blur = UIBlurEffect(style: UIBlurEffectStyle.extraLight)
         let blurEffectView = UIVisualEffectView(effect: blur)
         blurEffectView.frame = self.view.bounds
         backgroundImage.addSubview(blurEffectView)
+    }
+    
+    func switchToFahrenheit() {
+        celsiusButton.isHighlighted = false
+        fahrenheitButton.isHighlighted = true
+        print("fahrenheit")
+    }
+    
+    func switchToCelcius() {
+        celsiusButton.isHighlighted = true
+        fahrenheitButton.isHighlighted = false
+        print("celcius")
     }
     
     // MARK: - Lazy Instances
@@ -89,5 +122,23 @@ class ViewController: UIViewController {
         let label = UILabel()
         label.text = "New York"
         return label
+    }()
+    
+    lazy var fahrenheitButton: UIButton = {
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 75, height: 75))
+        button.setTitle("℉", for: .normal)
+        button.addTarget(self, action: #selector(switchToFahrenheit), for: .touchUpInside)
+        button.setTitleColor(ColorPalette.blackColor, for: .normal)
+        button.setTitleColor(ColorPalette.grayColor, for: .highlighted)
+        return button
+    }()
+    
+    lazy var celsiusButton: UIButton = {
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 75, height: 75))
+        button.setTitle("℃", for: .normal)
+        button.addTarget(self, action: #selector(switchToCelcius), for: .touchUpInside)
+        button.setTitleColor(ColorPalette.blackColor, for: .normal)
+        button.setTitleColor(ColorPalette.grayColor, for: .highlighted)
+        return button
     }()
 }

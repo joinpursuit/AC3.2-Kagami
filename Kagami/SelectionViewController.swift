@@ -11,7 +11,7 @@ import SnapKit
 
 class SelectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    let testArray = ["Watch-50", "Partly Cloudy Day-50", "Appointment Reminders-50", "Quote-50", "News-50", "Push Notifications-50", "Dictionary-50"]
+    let testArray = ["Watch-50", "Partly Cloudy Day-50", "Appointment Reminders-50", "Quote-50", "News-50", "Push Notifications-50"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,8 +57,17 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let viewController = CustomizeSelectionsViewController()
-        self.navigationController?.pushViewController(viewController, animated: true)
+        var selectedItem = indexPath
+        print(selectedItem.row)
+        if selectedItem.row == 1 {
+            let viewController = CustomizeWeatherViewController()
+            self.navigationController?.pushViewController(viewController, animated: true)
+        } else if selectedItem.row == 2 {
+            let viewController = CustomizeSelectionsViewController()
+            self.navigationController?.pushViewController(viewController, animated: true)
+        } else {
+            print("Need to set up customization views")
+        }
     }
     
     lazy var collectionView: UICollectionView = {
