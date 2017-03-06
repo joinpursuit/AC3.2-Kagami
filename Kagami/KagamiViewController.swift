@@ -34,7 +34,8 @@ class KagamiViewController: UIViewController {
         
         // Developer testing only -> REMOVE before production
         // Developer testing only -> REMOVE before production
-        ref = FIRDatabase.database().reference()        
+        ref = FIRDatabase.database().reference()
+        tapRecognizer.isEnabled = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -180,6 +181,16 @@ class KagamiViewController: UIViewController {
         //hamburger
         hamburger.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(annieSegue)))
 
+    }
+    
+    func editButtonClicked(sender: UIButton) {
+        if panRecognizer.isEnabled {
+            panRecognizer.isEnabled = false
+            tapRecognizer.isEnabled = true
+        } else {
+            panRecognizer.isEnabled = true
+            tapRecognizer.isEnabled = false
+        }
     }
     
     // add gestures
@@ -407,7 +418,8 @@ class KagamiViewController: UIViewController {
     // Edit Button
     lazy var editingButton: UIButton = {
         let button = UIButton()
-        button.imageView?.image = #imageLiteral(resourceName: "editbutton-android_v1")
+        button.setImage(#imageLiteral(resourceName: "editbutton-android_v1"), for: .normal)
+        button.addTarget(self, action: #selector(editButtonClicked(sender:)), for: UIControlEvents.touchUpInside)
         return button
     }()
     
