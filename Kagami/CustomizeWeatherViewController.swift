@@ -9,14 +9,17 @@
 import UIKit
 import SnapKit
 
-class CustomizeWeatherViewController: UIViewController {
+class CustomizeWeatherViewController: UIViewController, UISearchBarDelegate {
+    
+    var isSelected: Bool = true
+    var isSearchActive: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.title = "Weather"
         self.navigationController?.navigationBar.barTintColor = ColorPalette.accentColor
-        var isSelected: Bool
+        searchBar.delegate = self
         
         setupHierarchy()
         setupConstraints()
@@ -33,11 +36,16 @@ class CustomizeWeatherViewController: UIViewController {
     
     func setupHierarchy() {
         view.addSubview(backgroundImage)
+        view.addSubview(searchBar)
     }
     
     func setupConstraints() {
         backgroundImage.snp.makeConstraints { (view) in
             view.top.bottom.left.right.equalToSuperview()
+        }
+        searchBar.snp.makeConstraints { (view) in
+            view.left.right.equalToSuperview()
+            view.top.equalTo(self.view.snp.top).inset(65)
         }
     }
     
@@ -84,15 +92,47 @@ class CustomizeWeatherViewController: UIViewController {
     }
     
     func switchToFahrenheit() {
-        celsiusButton.isHighlighted = false
-        fahrenheitButton.isHighlighted = true
-        print("fahrenheit")
+        if isSelected {
+            print("fahrenheit")
+            fahrenheitButton.setTitleColor(.gray, for: .normal)
+            isSelected = !isSelected
+        }else {
+            isSelected = !isSelected
+        }
     }
     
     func switchToCelcius() {
-        celsiusButton.isHighlighted = true
-        fahrenheitButton.isHighlighted = false
-        print("celcius")
+        if isSelected {
+            print("celcius")
+            celsiusButton.setTitleColor(.gray, for: .normal)
+            isSelected = !isSelected
+        }else {
+            isSelected = !isSelected
+        }
+    }
+    
+    // MARK: - Search Bar Delegate
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        print("did begin")
+        isSearchActive = true
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        print("did end")
+        isSearchActive = false
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // called when text is changing
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        // api call here to search weather by location
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        code
     }
     
     // MARK: - Lazy Instances
@@ -129,7 +169,6 @@ class CustomizeWeatherViewController: UIViewController {
         button.setTitle("℉", for: .normal)
         button.addTarget(self, action: #selector(switchToFahrenheit), for: .touchUpInside)
         button.setTitleColor(ColorPalette.blackColor, for: .normal)
-        button.setTitleColor(ColorPalette.grayColor, for: .highlighted)
         return button
     }()
     
@@ -138,7 +177,13 @@ class CustomizeWeatherViewController: UIViewController {
         button.setTitle("℃", for: .normal)
         button.addTarget(self, action: #selector(switchToCelcius), for: .touchUpInside)
         button.setTitleColor(ColorPalette.blackColor, for: .normal)
-        button.setTitleColor(ColorPalette.grayColor, for: .highlighted)
         return button
+    }()
+    
+    lazy var searchBar: UISearchBar = {
+        let bar = UISearchBar()
+        bar.placeholder = "Enter a city here"
+        bar.barTintColor = ColorPalette.accentColor
+        return bar
     }()
 }
