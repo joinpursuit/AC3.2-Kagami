@@ -24,6 +24,7 @@
 		9C022CA01E6776F600AA2802 /* CustomizeSelectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C022C9F1E6776F600AA2802 /* CustomizeSelectionsViewController.swift */; };
 		9C022CA31E677D9700AA2802 /* Code_Pro_Demo.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C022CA11E677D9700AA2802 /* Code_Pro_Demo.otf */; };
 		9C022CA41E677D9700AA2802 /* Code_Pro_Light_Demo.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C022CA21E677D9700AA2802 /* Code_Pro_Light_Demo.otf */; };
+		9CBE48FA1E6D05F700F5BA84 /* CustomizeWeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBE48F91E6D05F700F5BA84 /* CustomizeWeatherViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 		9C022C9F1E6776F600AA2802 /* CustomizeSelectionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomizeSelectionsViewController.swift; sourceTree = "<group>"; };
 		9C022CA11E677D9700AA2802 /* Code_Pro_Demo.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Code_Pro_Demo.otf; sourceTree = "<group>"; };
 		9C022CA21E677D9700AA2802 /* Code_Pro_Light_Demo.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Code_Pro_Light_Demo.otf; sourceTree = "<group>"; };
+		9CBE48F91E6D05F700F5BA84 /* CustomizeWeatherViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomizeWeatherViewController.swift; sourceTree = "<group>"; };
 		9F471247316DDB5A8497911B /* Pods_Kagami.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Kagami.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E91726256CD58FA69FD00264 /* Pods-Kagami.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kagami.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Kagami/Pods-Kagami.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -147,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				9C022C9F1E6776F600AA2802 /* CustomizeSelectionsViewController.swift */,
+				9CBE48F91E6D05F700F5BA84 /* CustomizeWeatherViewController.swift */,
 				478B30AB1E68D54700FD580C /* DailyWeatherCustomization.swift */,
 			);
 			name = "Customize Selections";
@@ -304,6 +307,7 @@
 				478B30AC1E68D54700FD580C /* DailyWeatherCustomization.swift in Sources */,
 				478B306E1E66181500FD580C /* AppDelegate.swift in Sources */,
 				478B30A91E6767AD00FD580C /* Utilities.swift in Sources */,
+				9CBE48FA1E6D05F700F5BA84 /* CustomizeWeatherViewController.swift in Sources */,
 				9C022C9C1E67667700AA2802 /* SelectionCollectionViewCell.swift in Sources */,
 				478B30871E66257300FD580C /* KagamiViewController.swift in Sources */,
 			);
