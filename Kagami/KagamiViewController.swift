@@ -20,6 +20,7 @@ class KagamiViewController: UIViewController {
     var blueViewOriginalPoint: CGPoint?
     var theCGPoint: CGPoint?
     var panRecognizer = UIPanGestureRecognizer()
+    var tapRecognizer = UITapGestureRecognizer()
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -33,9 +34,7 @@ class KagamiViewController: UIViewController {
         
         // Developer testing only -> REMOVE before production
         // Developer testing only -> REMOVE before production
-        ref = FIRDatabase.database().reference()
-        dump(self.view.subviews.count)
-        
+        ref = FIRDatabase.database().reference()        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -94,9 +93,13 @@ class KagamiViewController: UIViewController {
         iconContainerView.addSubview(testRedView)
         iconContainerView.addSubview(testPurpleView)
         
-        testBlueView.addGestureRecognizer(setGestureRecognizer())
-        testRedView.addGestureRecognizer(setGestureRecognizer())
-        testPurpleView.addGestureRecognizer(setGestureRecognizer())
+        testBlueView.addGestureRecognizer(setPanGestureRecognizer())
+        testRedView.addGestureRecognizer(setPanGestureRecognizer())
+        testPurpleView.addGestureRecognizer(setPanGestureRecognizer())
+        testBlueView.addGestureRecognizer(setTapRecognizer())
+        testRedView.addGestureRecognizer(setTapRecognizer())
+        testPurpleView.addGestureRecognizer(setTapRecognizer())
+
         
         hamburger.addSubview(burgerBar1)
         hamburger.addSubview(burgerBar2)
@@ -180,13 +183,31 @@ class KagamiViewController: UIViewController {
     }
     
     // add gestures
-    func setGestureRecognizer() -> UIPanGestureRecognizer {
+    func setPanGestureRecognizer() -> UIPanGestureRecognizer {
         
         panRecognizer = UIPanGestureRecognizer (target: self, action: #selector(self.wasDragged(_:)))
         panRecognizer.minimumNumberOfTouches = 1
         panRecognizer.maximumNumberOfTouches = 1
         panRecognizer.cancelsTouchesInView = false
         return panRecognizer
+    }
+    
+    func setTapRecognizer() -> UITapGestureRecognizer {
+        tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.wasTapped(_:)))
+        tapRecognizer.numberOfTapsRequired = 1
+        tapRecognizer.cancelsTouchesInView = false
+        tapRecognizer.numberOfTouchesRequired = 1
+        return tapRecognizer
+    }
+
+    func wasTapped(_ gesture: UITapGestureRecognizer) {
+            let label = gesture.view!
+        
+            if gesture.state == .ended {
+                self.present(SettingsViewController(), animated: true, completion: nil)
+        
+        }
+
     }
     
     
@@ -238,7 +259,7 @@ class KagamiViewController: UIViewController {
     }
     
     func annieSegue() {
-        navigationController?.pushViewController(SelectionViewController(), animated: true)
+        navigationController?.pushViewController(SettingsViewController(), animated: true)
         
         let backItem = UIBarButtonItem()
         backItem.tintColor = ColorPalette.whiteColor
