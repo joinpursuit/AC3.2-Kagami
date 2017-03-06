@@ -76,11 +76,7 @@ class KagamiViewController: UIViewController {
         
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
+        
     // MARK: - Setup View Hierarchy & Constraints
     // view hierarchy
     func setupViewHierarchy() {
@@ -92,6 +88,7 @@ class KagamiViewController: UIViewController {
         view.addSubview(hamburger)
         view.addSubview(kagamiView)
         view.addSubview(iconContainerView)
+        view.addSubview(editingButton)
         
         iconContainerView.addSubview(testBlueView)
         iconContainerView.addSubview(testRedView)
@@ -133,11 +130,17 @@ class KagamiViewController: UIViewController {
         }
         
         // testing drag views
+        editingButton.snp.makeConstraints { (make) in
+            make.bottom.equalTo(iconContainerView.snp.top).offset(-8.0)
+            make.centerX.equalTo(iconContainerView.snp.centerX)
+            make.height.width.equalTo(60.0)
+        }
+        
         iconContainerView.snp.makeConstraints { (make) in
             make.trailing.equalToSuperview().offset(-8.0)
-            make.top.equalToSuperview().offset(8.0)
-            make.bottom.equalToSuperview().offset(-8.0)
+            make.height.equalTo(kagamiView.snp.height)
             make.width.equalTo(60.0)
+            make.bottom.equalTo(kagamiView.snp.bottom)
         }
         
         testBlueView.snp.makeConstraints { (make) in
@@ -200,6 +203,10 @@ class KagamiViewController: UIViewController {
         if gesture.state == .began {
             dump("Parent View \(self.view.subviews.count)")
             dump("Kagami View \(self.kagamiView.subviews.count)")
+        }
+        
+        if gesture.state == .changed {
+            dump("Label Center \(label.center) Translation: \(translation)")
         }
         
         if gesture.state == .ended {
@@ -374,6 +381,13 @@ class KagamiViewController: UIViewController {
         view.layer.borderWidth = 1.0
         view.alpha = 0.8
         return view
+    }()
+    
+    // Edit Button
+    lazy var editingButton: UIButton = {
+        let button = UIButton()
+        button.imageView?.image = #imageLiteral(resourceName: "editbutton-android_v1")
+        return button
     }()
     
 }
