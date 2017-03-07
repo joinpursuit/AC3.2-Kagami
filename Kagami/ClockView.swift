@@ -10,7 +10,6 @@ import UIKit
 
 class ClockView: UIView {
   var clock: Clock?
-  
   let formatter = DateFormatter()
   let currentDateTime = Date()
   let date = NSDate()
@@ -71,6 +70,7 @@ class ClockView: UIView {
       let amOrPm = formatter.string(from: currentDateTime).components(separatedBy: " ")
       timeLabel.text = ("\(hour):\(minutes) ") + amOrPm[1]
       clock?.timeFormat = "24 HR"
+      clock?.timeZone = TimeZone.current.abbreviation()!
     default:
       print("Blah")
     }
