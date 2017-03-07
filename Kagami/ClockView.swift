@@ -97,9 +97,9 @@ class ClockView: UIView {
     svc.view.removeFromSuperview()
     svc.dismiss(animated: true, completion: nil)
   
-    let militaryTimeRef = databaseReference.child("time")
-    let valueClock = Clock(militaryTime: (clock?.militaryTime)!)
-    militaryTimeRef.setValue(valueClock.asDictionary) {(error, reference) in
+    let militaryTimeRef = databaseReference.child("time/militaryTime")
+    
+    militaryTimeRef.setValue(clock?.militaryTime) {(error, reference) in
         if let error = error {
           print(error)
         }
