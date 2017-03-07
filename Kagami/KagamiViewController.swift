@@ -253,6 +253,7 @@ class KagamiViewController: UIViewController {
                     make.center.equalTo(centerOfLabel)
                     make.height.width.equalTo(50.0)
                 })
+             kagamiView.layoutSubviews()
                 }
             else {
                 self.iconContainerView.addSubview(label)
@@ -262,14 +263,21 @@ class KagamiViewController: UIViewController {
                     make.height.width.equalTo(50.0)
                 })
                 }
+        
             for subViews in kagamiView.subviews {
                 switch subViews {
                 case testBlueView:
+                   let weatherNode = ref.child("weather")
+                   weatherNode.updateChildValues(["x" : testBlueView.frame.midX, "y" :testBlueView.frame.midY, "onMirror" : true])
                     print("This Is The Blue View")
+                    print(testBlueView.frame)
                 case testRedView:
                     print("This Is The Red View")
+                    print(testRedView.frame)
                 case testPurpleView:
                     print("This Is The Purple View")
+                    print(testPurpleView.frame)
+
                 default:
                     break
                 }
