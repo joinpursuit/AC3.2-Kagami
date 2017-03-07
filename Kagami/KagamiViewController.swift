@@ -253,21 +253,7 @@ class KagamiViewController: UIViewController {
                     make.center.equalTo(centerOfLabel)
                     make.height.width.equalTo(50.0)
                 })
-                
-                //Checks Subviews Of kagamiView. Add Firebase Code here
-                for subViews in kagamiView.subviews {
-                    switch subViews {
-                    case testBlueView:
-                        print("This Is The Blue View")
-                    case testRedView:
-                        print("This Is The Red View")
-                    case testPurpleView:
-                        print("This Is The Purple View")
-                    default:
-                        break
-                    }
                 }
-            }
             else {
                 self.iconContainerView.addSubview(label)
                 label.snp.remakeConstraints({ (make) in
@@ -275,24 +261,21 @@ class KagamiViewController: UIViewController {
                     make.centerY.equalToSuperview()
                     make.height.width.equalTo(50.0)
                 })
-                
-                //Checks SubViews Of Kagami View Firebase Code Here
-                for subViews in kagamiView.subviews {
-                    switch subViews {
-                    case testBlueView:
-                        print("This Is The Blue View")
-                    case testRedView:
-                        print("This Is The Red View")
-                    case testPurpleView:
-                        print("This Is The Purple View")
-                    default:
-                        break
-                    }
                 }
+            for subViews in kagamiView.subviews {
+                switch subViews {
+                case testBlueView:
+                    print("This Is The Blue View")
+                case testRedView:
+                    print("This Is The Red View")
+                case testPurpleView:
+                    print("This Is The Purple View")
+                default:
+                    break
+                }
+                
             }
-            
-        }
-        
+            }
     }
     
     func annieSegue() {
