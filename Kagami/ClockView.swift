@@ -17,6 +17,7 @@ class ClockView: UIView {
   let date = NSDate()
   let calendar = NSCalendar.current
   var databaseReference: FIRDatabaseReference!
+  var user: FIRUser?
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -89,20 +90,9 @@ class ClockView: UIView {
     let svc = SettingsViewController()
     svc.view.removeFromSuperview()
     svc.dismiss(animated: true, completion: nil)
-//    
-//    let clockRef = databaseReference.childByAutoId()
-//    let clock = Clock(key: clockRef.key, comment: self.uploadDescriptionTextView.text, userID: (user?.uid)!)
-//    let dict = clock.asDictionary
-//    
-//    clockRef.setValue(dict) { (error, reference) in
-//      if let error = error {
-//        print(error)
-//      }
-//      else {
-//        print(reference)
-//      }
-//    }
-
+  
+    let militaryTimeRef = databaseReference.child("time/militaryTime")
+    militaryTimeRef.setValue(clock?.militaryTime)
   }
   
   //MARK: - Lazy Inits
