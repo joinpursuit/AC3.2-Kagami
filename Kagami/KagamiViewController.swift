@@ -216,7 +216,7 @@ class KagamiViewController: UIViewController {
         
             if gesture.state == .ended {
                 self.present(SettingsViewController(), animated: true, completion: nil)
-        
+                
         }
 
     }
@@ -225,7 +225,7 @@ class KagamiViewController: UIViewController {
     func wasDragged(_ gesture: UIPanGestureRecognizer) {
         let label = gesture.view!
         let translation = gesture.translation(in: self.view)
-//        let rect = self.kagamiView.frame
+        //let rect = self.kagamiView.frame
         label.center = CGPoint(x: label.center.x + translation.x , y: label.center.y + translation.y)
         gesture.setTranslation(CGPoint.zero, in: self.view)
         
@@ -254,8 +254,19 @@ class KagamiViewController: UIViewController {
                     make.height.width.equalTo(50.0)
                 })
                 
-                dump("This the center of the label \(centerOfLabel)")
-                
+                //Checks Subviews Of kagamiView. Add Firebase Code here
+                for subViews in kagamiView.subviews {
+                    switch subViews {
+                    case testBlueView:
+                        print("This Is The Blue View")
+                    case testRedView:
+                        print("This Is The Red View")
+                    case testPurpleView:
+                        print("This Is The Purple View")
+                    default:
+                        break
+                    }
+                }
             }
             else {
                 self.iconContainerView.addSubview(label)
@@ -264,7 +275,22 @@ class KagamiViewController: UIViewController {
                     make.centerY.equalToSuperview()
                     make.height.width.equalTo(50.0)
                 })
+                
+                //Checks SubViews Of Kagami View Firebase Code Here
+                for subViews in kagamiView.subviews {
+                    switch subViews {
+                    case testBlueView:
+                        print("This Is The Blue View")
+                    case testRedView:
+                        print("This Is The Red View")
+                    case testPurpleView:
+                        print("This Is The Purple View")
+                    default:
+                        break
+                    }
+                }
             }
+            
         }
         
     }
@@ -351,10 +377,11 @@ class KagamiViewController: UIViewController {
         return view
     }()
     
-    internal lazy var testBlueView: UIView = {
-        let view: UIView = UIView()
-        view.backgroundColor = .blue
+    internal lazy var testBlueView: UIImageView = {
+        let view: UIImageView = UIImageView()
+        view.image = #imageLiteral(resourceName: "sunny")
         view.isUserInteractionEnabled = true
+        
         return view
     }()
     
