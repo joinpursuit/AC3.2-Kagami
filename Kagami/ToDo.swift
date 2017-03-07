@@ -11,21 +11,14 @@ import Foundation
 class ToDo {
     
     var title: String
-    var isComplete: Bool
+    var completed: Bool
     
-    public init(title: String) {
+    init(title: String, completed: Bool) {
         self.title = title
-        self.isComplete = false
+        self.completed = completed
     }
-}
-
-extension ToDo {
     
-    public class func getMockData() -> [ToDo] {
-        return [
-            ToDo(title: "Mirror Film"),
-            ToDo(title: "Measure Monitor"),
-            ToDo(title: "Get VGA Cord")
-        ]
+    var asDictionary: [String:Any] {
+        return ["title" : title, "completed" : completed]
     }
 }
