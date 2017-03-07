@@ -19,14 +19,16 @@ class SettingsViewController: UIViewController {
         super.viewDidLoad()
         
         // Based on selected setting, use appropriate view
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        view.addSubview(toDoSettingsView)
+        setupConstraints()
     }
     
-
+    func setupConstraints() {
+        toDoSettingsView.snp.makeConstraints { (view) in
+            view.top.bottom.left.right.equalToSuperview()
+        }
+    }
+    
     /**
      *
      * All View Logic will be in this View Controller FOR SETTINGS
@@ -49,6 +51,12 @@ class SettingsViewController: UIViewController {
     // Lazy Instantiates
     lazy var weatherSettingsView: WeatherView = {
         let view = WeatherView()
+        return view
+    }()
+    
+    lazy var toDoSettingsView: ToDoView = {
+        let view = ToDoView()
+        view.backgroundColor = .white 
         return view
     }()
 
