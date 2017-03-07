@@ -22,12 +22,13 @@ class ClockView: UIView {
   
   override init(frame: CGRect) {
     super.init(frame: frame)
-    
+    databaseReference = FIRDatabase.database().reference()
     // add subviews
     self.addSubview(clockAndTimeView)
     self.addSubview(clockImageView)
     self.addSubview(timeLabel)
     self.addSubview(timeFormatSegmentedControl)
+    self.addSubview(doneButton)
     
     // configure constraints
     clockAndTimeView.snp.makeConstraints { (view) in
@@ -53,6 +54,11 @@ class ClockView: UIView {
       view.height.equalTo(50)
       view.width.equalTo(100)
     }
+    
+    doneButton.snp.makeConstraints { (view) in
+      view.centerX.equalToSuperview()
+      view.bottom.equalToSuperview()
+    }
   }
   
   required init(coder aDecoder: NSCoder) {
@@ -68,7 +74,6 @@ class ClockView: UIView {
     case 0:
       timeLabel.text = formatter.string(from: currentDateTime)
       clock?.militaryTime = false
-      clock?.timeZone = TimeZone.current.abbreviation()!
     case 1:
       let hour = calendar.component(.hour, from: date as Date)
       let minutes = calendar.component(.minute, from: date as Date)
@@ -76,7 +81,6 @@ class ClockView: UIView {
       let amOrPm = formatter.string(from: currentDateTime).components(separatedBy: " ")
       timeLabel.text = ("\(hour):\(minutes) ") + amOrPm[1]
       clock?.militaryTime = true
-      clock?.timeZone = TimeZone.current.abbreviation()!
     default:
       print("Blah")
     }
@@ -92,8 +96,16 @@ class ClockView: UIView {
     svc.view.removeFromSuperview()
     svc.dismiss(animated: true, completion: nil)
   
-    let militaryTimeRef = databaseReference.child("time/militaryTime")
-    militaryTimeRef.setValue(clock?.militaryTime)
+    let militaryTimeRef = databaseReference.child("time")
+    let clock = Clock(militaryTime: true)
+    militaryTimeRef.setValue(clock.asDictionary) {(error, reference) in
+        if let error = error {
+          print(error)
+        }
+        else {
+          print(reference)
+        }
+    }
   }
   
   //MARK: - Lazy Inits
