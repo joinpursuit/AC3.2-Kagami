@@ -23,6 +23,7 @@ class ClockView: UIView {
   override init(frame: CGRect) {
     super.init(frame: frame)
     databaseReference = FIRDatabase.database().reference()
+    clock = Clock(militaryTime: false)
     // add subviews
     self.addSubview(clockAndTimeView)
     self.addSubview(clockImageView)
@@ -97,8 +98,8 @@ class ClockView: UIView {
     svc.dismiss(animated: true, completion: nil)
   
     let militaryTimeRef = databaseReference.child("time")
-    let clock = Clock(militaryTime: true)
-    militaryTimeRef.setValue(clock.asDictionary) {(error, reference) in
+    let valueClock = Clock(militaryTime: (clock?.militaryTime)!)
+    militaryTimeRef.setValue(valueClock.asDictionary) {(error, reference) in
         if let error = error {
           print(error)
         }
