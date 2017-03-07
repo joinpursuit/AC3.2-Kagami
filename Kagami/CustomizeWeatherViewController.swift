@@ -129,10 +129,21 @@ class CustomizeWeatherViewController: UIViewController, UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // api call here to search weather by location
+        print("search")
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        code
+        //
+        print("cancel")
+    }
+    
+    func addGestureToRemoveKeyboard() {
+        let gesture = UIGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(gesture) 
+    }
+    
+    func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     // MARK: - Lazy Instances
