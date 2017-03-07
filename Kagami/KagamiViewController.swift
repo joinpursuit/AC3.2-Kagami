@@ -10,6 +10,39 @@ import UIKit
 import SnapKit
 import FirebaseDatabase
 
+struct Widget {
+
+    var category : Category
+    
+    init(category: Category) {
+        self.category = category
+    }
+    
+    enum Category : Int {
+        case weather, todos, time
+        
+        var icon : UIImage {
+            switch self {
+            case .weather: return UIImage(named: "Flash_Logo_01")!
+            case .todos: return UIImage(named: "Appointment Reminders-50")!
+            case .time: return UIImage(named: "Watch-50")!
+            }
+        }
+        
+        var description : String {
+            switch self {
+            case .weather: return "weather"
+            case .todos: return "todos"
+            case .time: return "time"
+            }
+        }
+    }
+    
+    let imageView = UIImageView()
+}
+
+
+
 class KagamiViewController: UIViewController {
     
     // MARK: - Properties
@@ -21,6 +54,7 @@ class KagamiViewController: UIViewController {
     var theCGPoint: CGPoint?
     var panRecognizer = UIPanGestureRecognizer()
     var tapRecognizer = UITapGestureRecognizer()
+    var widgetArray = [Widget(category: .weather), Widget(category: .time)]
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -90,16 +124,16 @@ class KagamiViewController: UIViewController {
         view.addSubview(iconContainerView)
         view.addSubview(editingButton)
         
-        iconContainerView.addSubview(testBlueView)
-        iconContainerView.addSubview(testRedView)
-        iconContainerView.addSubview(testPurpleView)
+//        iconContainerView.addSubview(testBlueView)
+//        iconContainerView.addSubview(testRedView)
+//        iconContainerView.addSubview(testPurpleView)
         
-        testBlueView.addGestureRecognizer(setPanGestureRecognizer())
-        testRedView.addGestureRecognizer(setPanGestureRecognizer())
-        testPurpleView.addGestureRecognizer(setPanGestureRecognizer())
-        testBlueView.addGestureRecognizer(setTapRecognizer())
-        testRedView.addGestureRecognizer(setTapRecognizer())
-        testPurpleView.addGestureRecognizer(setTapRecognizer())
+//        testBlueView.addGestureRecognizer(setPanGestureRecognizer())
+//        testRedView.addGestureRecognizer(setPanGestureRecognizer())
+//        testPurpleView.addGestureRecognizer(setPanGestureRecognizer())
+//        testBlueView.addGestureRecognizer(setTapRecognizer())
+//        testRedView.addGestureRecognizer(setTapRecognizer())
+//        testPurpleView.addGestureRecognizer(setTapRecognizer())
 
         
         hamburger.addSubview(burgerBar1)
@@ -147,25 +181,59 @@ class KagamiViewController: UIViewController {
             make.bottom.equalTo(kagamiView.snp.bottom)
         }
         
-        testBlueView.snp.makeConstraints { (make) in
-            make.trailing.equalToSuperview().offset(-5.0)
-            make.centerY.equalToSuperview()
-            make.width.height.equalTo(50.0)
+//        testBlueView.snp.makeConstraints { (make) in
+//            make.trailing.equalToSuperview().offset(-5.0)
+//            make.centerY.equalToSuperview()
+//            make.width.height.equalTo(50.0)
+//            
+//        }
+//        
+//        testRedView.snp.makeConstraints { (make) in
+//            make.trailing.equalToSuperview().offset(-5.0)
+//            make.centerY.equalToSuperview().offset(70)
+//            make.width.height.equalTo(50.0)
+//        }
+//        
+//        testPurpleView.snp.makeConstraints { (make) in
+//            make.trailing.equalToSuperview().offset(-5.0)
+//            make.centerY.equalToSuperview().offset(-70)
+//            make.width.height.equalTo(50.0)
+//        }
+
+        for widget in widgetArray {
+            
+            let imageView = widget.imageView
+            imageView.image = widget.category.icon
+            imageView.layer.borderColor = ColorPalette.blackColor.cgColor
+            imageView.layer.borderWidth = 1.0
+            imageView.alpha = 0.8
+            
+            
+            imageView.addGestureRecognizer(setPanGestureRecognizer())
+            imageView.addGestureRecognizer(setTapRecognizer())
+            imageView.isUserInteractionEnabled = true
+            
+            iconContainerView.addSubview(imageView)
+            
+           // if widget.category.rawValue == 0 {
+            imageView.snp.makeConstraints { (make) in
+                make.trailing.equalToSuperview().offset(-5.0)
+                //make.centerX.equalToSuperview()
+                make.top.equalToSuperview().offset((widget.category.rawValue * 50) + 10)
+                make.width.height.equalTo(50.0)
+                }
+           // }
+//            else {
+//            imageView.snp.makeConstraints { (make) in
+//                make.trailing.equalToSuperview().offset(-5.0)
+//                make.centerY.equalToSuperview()
+//                make.width.height.equalTo(50.0)
+//                make.top.equalTo(widgetArray[widget.category.rawValue - 1].imageView.snp.bottom).offset(-8.0)
+//            }
+
+        //    }
             
         }
-        
-        testRedView.snp.makeConstraints { (make) in
-            make.trailing.equalToSuperview().offset(-5.0)
-            make.centerY.equalToSuperview().offset(70)
-            make.width.height.equalTo(50.0)
-        }
-        
-        testPurpleView.snp.makeConstraints { (make) in
-            make.trailing.equalToSuperview().offset(-5.0)
-            make.centerY.equalToSuperview().offset(-70)
-            make.width.height.equalTo(50.0)
-        }
-        
         
         // mirror view
         kagamiView.snp.makeConstraints { (make) in
@@ -215,8 +283,9 @@ class KagamiViewController: UIViewController {
             let label = gesture.view!
         
             if gesture.state == .ended {
-                self.present(SettingsViewController(), animated: true, completion: nil)
-                
+                let svc = SettingsViewController()
+                svc.view = svc.weatherSettingsView
+                self.present(svc, animated: true, completion: nil)
         }
 
     }
@@ -364,7 +433,7 @@ class KagamiViewController: UIViewController {
     
     internal lazy var iconContainerView: UIView = {
         let view: UIView = UIView()
-        view.backgroundColor = .black
+        view.backgroundColor = .clear
         return view
     }()
     
