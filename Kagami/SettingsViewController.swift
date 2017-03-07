@@ -49,6 +49,7 @@ class SettingsViewController: UIViewController {
     // Lazy Instantiates
     lazy var weatherSettingsView: WeatherView = {
         let view = WeatherView()
+        
         return view
     }()
 
