@@ -55,7 +55,7 @@ class ClockView: UIView {
     super.init(coder: aDecoder)!
   }
   
-  // MARK: UISegmentedControl
+  // MARK: - UISegmentedControl
   func timeFormatChanged(sender: UISegmentedControl) {
     formatter.timeStyle = .short
     formatter.dateStyle = .none
@@ -63,23 +63,23 @@ class ClockView: UIView {
     switch sender.selectedSegmentIndex {
     case 0:
       timeLabel.text = formatter.string(from: currentDateTime)
-      clock?.time = formatter.string(from: currentDateTime)
+      clock?.timeFormat = "12 HR"
     case 1:
       let hour = calendar.component(.hour, from: date as Date)
       let minutes = calendar.component(.minute, from: date as Date)
       
       let amOrPm = formatter.string(from: currentDateTime).components(separatedBy: " ")
       timeLabel.text = ("\(hour):\(minutes) ") + amOrPm[1]
-      clock?.time = ("\(hour):\(minutes)")
+      clock?.timeFormat = "24 HR"
     default:
       print("Blah")
     }
   }
   
   
-  //MARK: Lazy Inits
+  //MARK: - Lazy Inits
   //Labels
-  internal lazy var timeLabel: UILabel = {
+  lazy var timeLabel: UILabel = {
     let label: UILabel = UILabel()
     label.font = UIFont(name: "DS-Digital", size: 60)
     label.textColor = .white
@@ -87,14 +87,14 @@ class ClockView: UIView {
   }()
   
   //Views
-  internal lazy var clockAndTimeView: UIView = {
+  lazy var clockAndTimeView: UIView = {
     let view: UIView = UIView()
     view.translatesAutoresizingMaskIntoConstraints = false
     return view
   }()
   
   //ImageViews
-  internal lazy var clockImageView: UIImageView = {
+  lazy var clockImageView: UIImageView = {
     let imageView: UIImageView = UIImageView()
     imageView.image = #imageLiteral(resourceName: "Clock")
     imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -103,7 +103,7 @@ class ClockView: UIView {
   }()
   
   //UISegmentedControl
-  internal lazy var timeFormatSegmentedControl: UISegmentedControl = {
+  lazy var timeFormatSegmentedControl: UISegmentedControl = {
     let segmentedControl: UISegmentedControl = UISegmentedControl(items: ["12 HR" , "24 HR"])
     segmentedControl.layer.cornerRadius = 5.0  // Don't let background bleed
     segmentedControl.backgroundColor = .black

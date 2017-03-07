@@ -9,14 +9,14 @@
 import Foundation
 
 struct Clock {
-  var time: String
+  var timeFormat: String
   
-  init(time: String) {
-    self.time = time
+  init(timeFormat: String) {
+    self.timeFormat = timeFormat
   }
   
   var asDictionary: [String: String] {
-    return ["time": time]
+    return ["timeFormat": timeFormat]
   }
 
 }
