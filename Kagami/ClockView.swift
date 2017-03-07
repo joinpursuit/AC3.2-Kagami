@@ -76,6 +76,18 @@ class ClockView: UIView {
     }
   }
   
+  //MARK: - Actions
+  //KagamiViewController presents SettingsViewController
+  //ClockView gets removed from SettingsViewController
+  //Firebase gets user preference information
+  
+  func dismissScreen() {
+    let kvc = KagamiViewController()
+    let svc = SettingsViewController()
+    svc.view.removeFromSuperview()
+    svc.dismiss(animated: true, completion: nil)
+    
+  }
   
   //MARK: - Lazy Inits
   //Labels
@@ -110,6 +122,21 @@ class ClockView: UIView {
     segmentedControl.tintColor = .red
     segmentedControl.addTarget(self, action: #selector(timeFormatChanged(sender:)), for: .valueChanged)
     return segmentedControl
+  }()
+  
+  //UIButtons
+  lazy var doneButton: UIButton = {
+    let button = UIButton(type: .system)
+    button.translatesAutoresizingMaskIntoConstraints = false
+    button.setTitle("Done", for: .normal)
+    button.titleLabel?.font = UIFont(name: "Montserrat-Light", size: 20)
+    button.setTitleColor(UIColor.white, for: .normal)
+    button.layer.borderWidth = 1.5
+    button.layer.cornerRadius = 20
+    button.layer.borderColor = UIColor.black.cgColor
+    button.backgroundColor = UIColor.clear
+    button.addTarget(self, action: #selector(dismissScreen), for: .touchUpInside)
+    return button
   }()
 
 }
