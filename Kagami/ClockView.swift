@@ -115,7 +115,7 @@ class ClockView: UIView {
   //ImageViews
   lazy var clockImageView: UIImageView = {
     let imageView: UIImageView = UIImageView()
-    imageView.image = #imageLiteral(resourceName: "Clock")
+//    imageView.image = #imageLiteral(resourceName: "Clock")
     imageView.translatesAutoresizingMaskIntoConstraints = false
     imageView.contentMode = .scaleAspectFit
     return imageView
@@ -128,6 +128,7 @@ class ClockView: UIView {
     segmentedControl.backgroundColor = .black
     segmentedControl.tintColor = .red
     segmentedControl.addTarget(self, action: #selector(timeFormatChanged(sender:)), for: .valueChanged)
+    segmentedControl.selectedSegmentIndex = 0
     return segmentedControl
   }()
   
