@@ -9,16 +9,16 @@
 import Foundation
 
 struct Clock {
-  var timeFormat: String
+  var militaryTime: Bool
   var timeZone: String
   
-  init(timeFormat: String, timeZone: String) {
-    self.timeFormat = timeFormat
+  init(militaryTime: Bool, timeZone: String) {
+    self.militaryTime = militaryTime
     self.timeZone = timeZone
   }
   
-  var asDictionary: [String: String] {
-    return ["timeFormat": timeFormat,
+  var asDictionary: [String: Any] {
+    return ["militaryTime": militaryTime,
             "timeZone": timeZone]
   }
 

@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseDatabase
 
 class ClockView: UIView {
   var clock: Clock?
@@ -14,6 +16,7 @@ class ClockView: UIView {
   let currentDateTime = Date()
   let date = NSDate()
   let calendar = NSCalendar.current
+  var databaseReference: FIRDatabaseReference!
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -62,14 +65,15 @@ class ClockView: UIView {
     switch sender.selectedSegmentIndex {
     case 0:
       timeLabel.text = formatter.string(from: currentDateTime)
-      clock?.timeFormat = "12 HR"
+      clock?.militaryTime = false
+      clock?.timeZone = TimeZone.current.abbreviation()!
     case 1:
       let hour = calendar.component(.hour, from: date as Date)
       let minutes = calendar.component(.minute, from: date as Date)
       
       let amOrPm = formatter.string(from: currentDateTime).components(separatedBy: " ")
       timeLabel.text = ("\(hour):\(minutes) ") + amOrPm[1]
-      clock?.timeFormat = "24 HR"
+      clock?.militaryTime = true
       clock?.timeZone = TimeZone.current.abbreviation()!
     default:
       print("Blah")
@@ -82,11 +86,23 @@ class ClockView: UIView {
   //Firebase gets user preference information
   
   func dismissScreen() {
-    let kvc = KagamiViewController()
     let svc = SettingsViewController()
     svc.view.removeFromSuperview()
     svc.dismiss(animated: true, completion: nil)
-    
+//    
+//    let clockRef = databaseReference.childByAutoId()
+//    let clock = Clock(key: clockRef.key, comment: self.uploadDescriptionTextView.text, userID: (user?.uid)!)
+//    let dict = clock.asDictionary
+//    
+//    clockRef.setValue(dict) { (error, reference) in
+//      if let error = error {
+//        print(error)
+//      }
+//      else {
+//        print(reference)
+//      }
+//    }
+
   }
   
   //MARK: - Lazy Inits
