@@ -20,6 +20,7 @@ class KagamiViewController: UIViewController {
     var blueViewOriginalPoint: CGPoint?
     var theCGPoint: CGPoint?
     var panRecognizer = UIPanGestureRecognizer()
+    var tapRecognizer = UITapGestureRecognizer()
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -34,8 +35,7 @@ class KagamiViewController: UIViewController {
         // Developer testing only -> REMOVE before production
         // Developer testing only -> REMOVE before production
         ref = FIRDatabase.database().reference()
-        dump(self.view.subviews.count)
-        
+        tapRecognizer.isEnabled = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,11 +76,7 @@ class KagamiViewController: UIViewController {
         
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
+        
     // MARK: - Setup View Hierarchy & Constraints
     // view hierarchy
     func setupViewHierarchy() {
@@ -92,14 +88,19 @@ class KagamiViewController: UIViewController {
         view.addSubview(hamburger)
         view.addSubview(kagamiView)
         view.addSubview(iconContainerView)
+        view.addSubview(editingButton)
         
         iconContainerView.addSubview(testBlueView)
         iconContainerView.addSubview(testRedView)
         iconContainerView.addSubview(testPurpleView)
         
-        testBlueView.addGestureRecognizer(setGestureRecognizer())
-        testRedView.addGestureRecognizer(setGestureRecognizer())
-        testPurpleView.addGestureRecognizer(setGestureRecognizer())
+        testBlueView.addGestureRecognizer(setPanGestureRecognizer())
+        testRedView.addGestureRecognizer(setPanGestureRecognizer())
+        testPurpleView.addGestureRecognizer(setPanGestureRecognizer())
+        testBlueView.addGestureRecognizer(setTapRecognizer())
+        testRedView.addGestureRecognizer(setTapRecognizer())
+        testPurpleView.addGestureRecognizer(setTapRecognizer())
+
         
         hamburger.addSubview(burgerBar1)
         hamburger.addSubview(burgerBar2)
@@ -133,11 +134,17 @@ class KagamiViewController: UIViewController {
         }
         
         // testing drag views
+        editingButton.snp.makeConstraints { (make) in
+            make.bottom.equalTo(iconContainerView.snp.top).offset(-8.0)
+            make.centerX.equalTo(iconContainerView.snp.centerX)
+            make.height.width.equalTo(60.0)
+        }
+        
         iconContainerView.snp.makeConstraints { (make) in
             make.trailing.equalToSuperview().offset(-8.0)
-            make.top.equalToSuperview().offset(8.0)
-            make.bottom.equalToSuperview().offset(-8.0)
+            make.height.equalTo(kagamiView.snp.height)
             make.width.equalTo(60.0)
+            make.bottom.equalTo(kagamiView.snp.bottom)
         }
         
         testBlueView.snp.makeConstraints { (make) in
@@ -176,14 +183,42 @@ class KagamiViewController: UIViewController {
 
     }
     
+    func editButtonClicked(sender: UIButton) {
+        if panRecognizer.isEnabled {
+            panRecognizer.isEnabled = false
+            tapRecognizer.isEnabled = true
+        } else {
+            panRecognizer.isEnabled = true
+            tapRecognizer.isEnabled = false
+        }
+    }
+    
     // add gestures
-    func setGestureRecognizer() -> UIPanGestureRecognizer {
+    func setPanGestureRecognizer() -> UIPanGestureRecognizer {
         
         panRecognizer = UIPanGestureRecognizer (target: self, action: #selector(self.wasDragged(_:)))
         panRecognizer.minimumNumberOfTouches = 1
         panRecognizer.maximumNumberOfTouches = 1
         panRecognizer.cancelsTouchesInView = false
         return panRecognizer
+    }
+    
+    func setTapRecognizer() -> UITapGestureRecognizer {
+        tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.wasTapped(_:)))
+        tapRecognizer.numberOfTapsRequired = 1
+        tapRecognizer.cancelsTouchesInView = false
+        tapRecognizer.numberOfTouchesRequired = 1
+        return tapRecognizer
+    }
+
+    func wasTapped(_ gesture: UITapGestureRecognizer) {
+            let label = gesture.view!
+        
+            if gesture.state == .ended {
+                self.present(SettingsViewController(), animated: true, completion: nil)
+        
+        }
+
     }
     
     
@@ -200,6 +235,10 @@ class KagamiViewController: UIViewController {
         if gesture.state == .began {
             dump("Parent View \(self.view.subviews.count)")
             dump("Kagami View \(self.kagamiView.subviews.count)")
+        }
+        
+        if gesture.state == .changed {
+            dump("Label Center \(label.center) Translation: \(translation)")
         }
         
         if gesture.state == .ended {
@@ -231,7 +270,7 @@ class KagamiViewController: UIViewController {
     }
     
     func annieSegue() {
-        navigationController?.pushViewController(SelectionViewController(), animated: true)
+        navigationController?.pushViewController(SettingsViewController(), animated: true)
         
         let backItem = UIBarButtonItem()
         backItem.tintColor = ColorPalette.whiteColor
@@ -376,8 +415,17 @@ class KagamiViewController: UIViewController {
         return view
     }()
     
+    // Edit Button
+    lazy var editingButton: UIButton = {
+        let button = UIButton()
+        button.setImage(#imageLiteral(resourceName: "editbutton-android_v1"), for: .normal)
+        button.addTarget(self, action: #selector(editButtonClicked(sender:)), for: UIControlEvents.touchUpInside)
+        return button
+    }()
+    
 }
 
+// Ignore for now
 class CollidingViewBehavior: UIDynamicBehavior  {
     
     override init() {}
