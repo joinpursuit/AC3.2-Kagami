@@ -20,6 +20,7 @@ class KagamiViewController: UIViewController {
     var blueViewOriginalPoint: CGPoint?
     var theCGPoint: CGPoint?
     var panRecognizer = UIPanGestureRecognizer()
+    var tapRecognizer = UITapGestureRecognizer()
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -34,8 +35,7 @@ class KagamiViewController: UIViewController {
         // Developer testing only -> REMOVE before production
         // Developer testing only -> REMOVE before production
         ref = FIRDatabase.database().reference()
-        dump(self.view.subviews.count)
-        
+        tapRecognizer.isEnabled = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -94,9 +94,13 @@ class KagamiViewController: UIViewController {
         iconContainerView.addSubview(testRedView)
         iconContainerView.addSubview(testPurpleView)
         
-        testBlueView.addGestureRecognizer(setGestureRecognizer())
-        testRedView.addGestureRecognizer(setGestureRecognizer())
-        testPurpleView.addGestureRecognizer(setGestureRecognizer())
+        testBlueView.addGestureRecognizer(setPanGestureRecognizer())
+        testRedView.addGestureRecognizer(setPanGestureRecognizer())
+        testPurpleView.addGestureRecognizer(setPanGestureRecognizer())
+        testBlueView.addGestureRecognizer(setTapRecognizer())
+        testRedView.addGestureRecognizer(setTapRecognizer())
+        testPurpleView.addGestureRecognizer(setTapRecognizer())
+
         
         hamburger.addSubview(burgerBar1)
         hamburger.addSubview(burgerBar2)
@@ -179,8 +183,18 @@ class KagamiViewController: UIViewController {
 
     }
     
+    func editButtonClicked(sender: UIButton) {
+        if panRecognizer.isEnabled {
+            panRecognizer.isEnabled = false
+            tapRecognizer.isEnabled = true
+        } else {
+            panRecognizer.isEnabled = true
+            tapRecognizer.isEnabled = false
+        }
+    }
+    
     // add gestures
-    func setGestureRecognizer() -> UIPanGestureRecognizer {
+    func setPanGestureRecognizer() -> UIPanGestureRecognizer {
         
         panRecognizer = UIPanGestureRecognizer (target: self, action: #selector(self.wasDragged(_:)))
         panRecognizer.minimumNumberOfTouches = 1
@@ -189,11 +203,29 @@ class KagamiViewController: UIViewController {
         return panRecognizer
     }
     
+    func setTapRecognizer() -> UITapGestureRecognizer {
+        tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.wasTapped(_:)))
+        tapRecognizer.numberOfTapsRequired = 1
+        tapRecognizer.cancelsTouchesInView = false
+        tapRecognizer.numberOfTouchesRequired = 1
+        return tapRecognizer
+    }
+
+    func wasTapped(_ gesture: UITapGestureRecognizer) {
+            let label = gesture.view!
+        
+            if gesture.state == .ended {
+                self.present(SettingsViewController(), animated: true, completion: nil)
+                
+        }
+
+    }
+    
     
     func wasDragged(_ gesture: UIPanGestureRecognizer) {
         let label = gesture.view!
         let translation = gesture.translation(in: self.view)
-//        let rect = self.kagamiView.frame
+        //let rect = self.kagamiView.frame
         label.center = CGPoint(x: label.center.x + translation.x , y: label.center.y + translation.y)
         gesture.setTranslation(CGPoint.zero, in: self.view)
         
@@ -222,8 +254,19 @@ class KagamiViewController: UIViewController {
                     make.height.width.equalTo(50.0)
                 })
                 
-                dump("This the center of the label \(centerOfLabel)")
-                
+                //Checks Subviews Of kagamiView. Add Firebase Code here
+                for subViews in kagamiView.subviews {
+                    switch subViews {
+                    case testBlueView:
+                        print("This Is The Blue View")
+                    case testRedView:
+                        print("This Is The Red View")
+                    case testPurpleView:
+                        print("This Is The Purple View")
+                    default:
+                        break
+                    }
+                }
             }
             else {
                 self.iconContainerView.addSubview(label)
@@ -232,13 +275,28 @@ class KagamiViewController: UIViewController {
                     make.centerY.equalToSuperview()
                     make.height.width.equalTo(50.0)
                 })
+                
+                //Checks SubViews Of Kagami View Firebase Code Here
+                for subViews in kagamiView.subviews {
+                    switch subViews {
+                    case testBlueView:
+                        print("This Is The Blue View")
+                    case testRedView:
+                        print("This Is The Red View")
+                    case testPurpleView:
+                        print("This Is The Purple View")
+                    default:
+                        break
+                    }
+                }
             }
+            
         }
         
     }
     
     func annieSegue() {
-        navigationController?.pushViewController(SelectionViewController(), animated: true)
+        navigationController?.pushViewController(SettingsViewController(), animated: true)
         
         let backItem = UIBarButtonItem()
         backItem.tintColor = ColorPalette.whiteColor
@@ -319,10 +377,11 @@ class KagamiViewController: UIViewController {
         return view
     }()
     
-    internal lazy var testBlueView: UIView = {
-        let view: UIView = UIView()
-        view.backgroundColor = .blue
+    internal lazy var testBlueView: UIImageView = {
+        let view: UIImageView = UIImageView()
+        view.image = #imageLiteral(resourceName: "sunny")
         view.isUserInteractionEnabled = true
+        
         return view
     }()
     
@@ -386,7 +445,8 @@ class KagamiViewController: UIViewController {
     // Edit Button
     lazy var editingButton: UIButton = {
         let button = UIButton()
-        button.imageView?.image = #imageLiteral(resourceName: "editbutton-android_v1")
+        button.setImage(#imageLiteral(resourceName: "editbutton-android_v1"), for: .normal)
+        button.addTarget(self, action: #selector(editButtonClicked(sender:)), for: UIControlEvents.touchUpInside)
         return button
     }()
     
