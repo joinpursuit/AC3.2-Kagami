@@ -16,6 +16,7 @@ class ToDoView: UIView, UITextFieldDelegate {
     var database: FIRDatabaseReference!
     var activeTextField: UITextField?
     let animator = UIViewPropertyAnimator(duration: 0.5, curve: .linear, animations: nil)
+    let userDefault = UserDefaults.standard
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -26,6 +27,7 @@ class ToDoView: UIView, UITextFieldDelegate {
         textFieldThree.delegate = self
         setupView()
         setupConstraints()
+        loadUserDefaults()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -152,6 +154,15 @@ class ToDoView: UIView, UITextFieldDelegate {
         animator.startAnimation()
     }
     
+    func loadUserDefaults() {
+        textFieldOne.text = userDefault.object(forKey: "item one") as? String
+        textFieldTwo.text = userDefault.object(forKey: "item two") as? String
+        textFieldThree.text = userDefault.object(forKey: "item three") as? String
+        print(textFieldOne.text!)
+        print(textFieldTwo.text!)
+        print(textFieldThree.text!)
+    }
+    
     // MARK: - TextField Delegate
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -164,6 +175,7 @@ class ToDoView: UIView, UITextFieldDelegate {
         print("did end editing")
     }
     
+    // MARK: - FIXME: add user default to checklist box
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         print("should return")
         guard activeTextField == textField, activeTextField?.text != "" else { return false }
@@ -171,23 +183,27 @@ class ToDoView: UIView, UITextFieldDelegate {
         if activeTextField!.tag == 1 {
             let item = ToDo(title: activeTextField!.text!, completed: false)
             let itemDict = item.asDictionary
-            
             let itemOneDatabaseRef = self.database.child("1")
             itemOneDatabaseRef.setValue(itemDict)
+            
+            userDefault.setValue(activeTextField!.text, forKey: "item one")
         }
         else if activeTextField!.tag == 2 {
+            print("have text field #2")
             let item = ToDo(title: activeTextField!.text!, completed: false)
             let itemDict = item.asDictionary
-            
             let itemOneDatabaseRef = self.database.child("2")
             itemOneDatabaseRef.setValue(itemDict)
+            
+            userDefault.setValue(activeTextField!.text, forKey: "item two")
         }
         else if activeTextField!.tag == 3 {
             let item = ToDo(title: activeTextField!.text!, completed: false)
             let itemDict = item.asDictionary
-            
             let itemOneDatabaseRef = self.database.child("3")
             itemOneDatabaseRef.setValue(itemDict)
+            
+            userDefault.setValue(activeTextField!.text, forKey: "item three")
         }
         return false
     }
