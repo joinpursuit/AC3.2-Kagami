@@ -24,7 +24,6 @@ class Router {
         
         kagamiVC.didTapWidget = showWeather
         
-        
         window.rootViewController = navController
         window.makeKeyAndVisible()
         
@@ -39,7 +38,7 @@ class Router {
     func showWeather() {
         weatherVC = UIViewController()
         navController?.pushViewController(weatherVC!, animated: true)
-        weatherVC.didTapCancel = hideWeather
+//        weatherVC.didTapCancel = hideWeather
     }
     
     func hideWeather() {

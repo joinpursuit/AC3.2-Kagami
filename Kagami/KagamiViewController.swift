@@ -54,6 +54,7 @@ class KagamiViewController: UIViewController {
     var panRecognizer = UIPanGestureRecognizer()
     var tapRecognizer = UITapGestureRecognizer()
     var widgetArray = [Widget(category: .weather), Widget(category: .time), Widget(category: .todos)]
+    var didTapWidget: () -> () = { }
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
