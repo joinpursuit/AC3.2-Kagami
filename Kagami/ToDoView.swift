@@ -45,7 +45,6 @@ class ToDoView: UIView, UITextFieldDelegate {
         self.addSubview(checkBoxOne)
         self.addSubview(checkBoxTwo)
         self.addSubview(checkBoxThree)
-        checkMarkView.addSubview(checkMark)
     }
     
     func setupConstraints() {
@@ -95,11 +94,6 @@ class ToDoView: UIView, UITextFieldDelegate {
             view.bottom.equalTo(textFieldThree.snp.bottom).inset(8)
             view.width.height.equalTo(40)
         }
-        
-        // checkmark
-        checkMark.snp.makeConstraints { (view) in
-            view.top.bottom.leading.trailing.equalTo(checkMarkView)
-        }
     }
     
     // MARK: - Methods
@@ -109,50 +103,61 @@ class ToDoView: UIView, UITextFieldDelegate {
     }
     
     func checkOffItemOne() {
-        if !checkBoxOne.subviews.contains(checkMarkView) {
+        if !checkBoxOne.subviews.contains(checkMarkOne) {
             
-            checkBoxOne.addSubview(checkMarkView)
-            animateCheckMark()
-            
+            checkBoxOne.addSubview(checkMarkOne)
+            checkMarkOne.snp.makeConstraints { (view) in
+                view.centerX.centerY.equalTo(checkBoxOne)
+            }
+            //            animateCheckMark()
         } else {
-            checkMarkView.snp.removeConstraints()
+            checkMarkOne.snp.removeConstraints()
+            for view in checkBoxOne.subviews {
+                view.removeFromSuperview()
+            }
         }
     }
-    // MARK: - FIXME
+    
     func checkOffItemTwo() {
-        if !checkBoxTwo.subviews.contains(checkMark) {
-            checkBoxTwo.addSubview(checkMark)
-            checkMark.snp.makeConstraints { (view) in
-                view.top.trailing.bottom.equalTo(textFieldTwo)
+        if !checkBoxTwo.subviews.contains(checkMarkTwo) {
+            checkBoxTwo.addSubview(checkMarkTwo)
+            checkMarkTwo.snp.makeConstraints { (view) in
+                view.centerX.centerY.equalTo(checkBoxTwo)
             }
         } else {
-            checkMarkView.snp.removeConstraints()
+            checkMarkTwo.snp.removeConstraints()
+            for view in checkBoxTwo.subviews {
+                view.removeFromSuperview()
+            }
         }
     }
     
     func checkOffItemThree() {
-        if !checkBoxThree.subviews.contains(checkMark) {
-            checkBoxThree.addSubview(checkMark)
-            checkMark.snp.makeConstraints { (view) in
-                view.top.trailing.bottom.equalTo(textFieldThree)
+        if !checkBoxThree.subviews.contains(checkMarkThree) {
+            checkBoxThree.addSubview(checkMarkThree)
+            checkMarkThree.snp.makeConstraints { (view) in
+                view.centerX.centerY.equalTo(checkBoxThree)
             }
         } else {
-            checkMarkView.snp.removeConstraints()
+            checkMarkThree.snp.removeConstraints()
+            for view in checkBoxThree.subviews {
+                view.removeFromSuperview()
+            }
         }
     }
     
-    func animateCheckMark() {
-        checkMarkView.snp.makeConstraints { (view) in
-            view.centerX.centerY.equalTo(checkBoxOne)
-        }
-        animator.addAnimations{
-            self.checkMarkView.transform = CGAffineTransform(scaleX: 1, y: 1)
-        }
-        animator.addAnimations {
-            self.layoutIfNeeded()
-        }
-        animator.startAnimation()
-    }
+//    func animateCheckMark() {
+//        checkMark.snp.makeConstraints { (view) in
+//            view.centerX.centerY.equalTo(checkBoxOne)
+//        }
+//        animator.addAnimations{
+//            self.checkMark.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+//        }
+//        animator.addAnimations {
+//            self.layoutIfNeeded()
+//        }
+//        animator.startAnimation()
+//    }
     
     func loadUserDefaults() {
         textFieldOne.text = userDefault.object(forKey: "item one") as? String
@@ -180,30 +185,29 @@ class ToDoView: UIView, UITextFieldDelegate {
         print("should return")
         guard activeTextField == textField, activeTextField?.text != "" else { return false }
         
-        if activeTextField!.tag == 1 {
+        switch activeTextField!.tag {
+        case 1:
             let item = ToDo(title: activeTextField!.text!, completed: false)
             let itemDict = item.asDictionary
             let itemOneDatabaseRef = self.database.child("1")
             itemOneDatabaseRef.setValue(itemDict)
             
             userDefault.setValue(activeTextField!.text, forKey: "item one")
-        }
-        else if activeTextField!.tag == 2 {
-            print("have text field #2")
+        case 2:
             let item = ToDo(title: activeTextField!.text!, completed: false)
             let itemDict = item.asDictionary
             let itemOneDatabaseRef = self.database.child("2")
             itemOneDatabaseRef.setValue(itemDict)
             
             userDefault.setValue(activeTextField!.text, forKey: "item two")
-        }
-        else if activeTextField!.tag == 3 {
+        case 3:
             let item = ToDo(title: activeTextField!.text!, completed: false)
             let itemDict = item.asDictionary
             let itemOneDatabaseRef = self.database.child("3")
             itemOneDatabaseRef.setValue(itemDict)
             
             userDefault.setValue(activeTextField!.text, forKey: "item three")
+        default: break
         }
         return false
     }
@@ -293,14 +297,21 @@ class ToDoView: UIView, UITextFieldDelegate {
         return button
     }()
     
-    lazy var checkMark: UIImageView = {
+    lazy var checkMarkOne: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "Checkmark")
         return view
     }()
     
-    lazy var checkMarkView: UIView = {
-        let view = UIView()
+    lazy var checkMarkTwo: UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "Checkmark")
+        return view
+    }()
+    
+    lazy var checkMarkThree: UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "Checkmark")
         return view
     }()
 }
