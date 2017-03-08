@@ -244,7 +244,6 @@ class ToDoView: UIView, UITextFieldDelegate {
         print("did end editing")
     }
     
-    // MARK: - FIXME: add user default to checklist box
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         print("should return")
         guard activeTextField == textField, activeTextField?.text != "" else { return false }
@@ -311,6 +310,16 @@ class ToDoView: UIView, UITextFieldDelegate {
         field.contentVerticalAlignment = .center
         field.layer.cornerRadius = 9
         field.tag = 1
+        
+//        if let font = UIFont(name: "Code_Pro_Demo", size: 18.0) {
+//            let attributes = [
+////                NSForegroundColorAttributeName: ColorPalette.blackColor,
+//                NSFontAttributeName : font]
+//            let attributedString = NSMutableAttributedString(string: field.text!, attributes: attributes)
+//            let textLength = attributedString.string.characters.count
+//            field.attributedText = attributedString
+//        }
+        
         return field
     }()
     
