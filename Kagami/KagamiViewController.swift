@@ -82,14 +82,6 @@ class KagamiViewController: UIViewController {
         self.navigationController?.navigationBar.tintColor = UIColor.black
         
         configureConstraints()
-
-        // Developer testing only -> REMOVE before production
-        // Developer testing only -> REMOVE before production
-        let reference = self.ref.child("position")
-        reference.setValue(["topLeft" : "weather",
-                            "topRight" : "time",
-                            "middle" : "news",
-                            "bottom" : "quote"])
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -122,19 +114,6 @@ class KagamiViewController: UIViewController {
         view.addSubview(hamburger)
         view.addSubview(kagamiView)
         view.addSubview(iconContainerView)
-        view.addSubview(editingButton)
-        
-//        iconContainerView.addSubview(testBlueView)
-//        iconContainerView.addSubview(testRedView)
-//        iconContainerView.addSubview(testPurpleView)
-        
-//        testBlueView.addGestureRecognizer(setPanGestureRecognizer())
-//        testRedView.addGestureRecognizer(setPanGestureRecognizer())
-//        testPurpleView.addGestureRecognizer(setPanGestureRecognizer())
-//        testBlueView.addGestureRecognizer(setTapRecognizer())
-//        testRedView.addGestureRecognizer(setTapRecognizer())
-//        testPurpleView.addGestureRecognizer(setTapRecognizer())
-
         
         hamburger.addSubview(burgerBar1)
         hamburger.addSubview(burgerBar2)
@@ -167,38 +146,11 @@ class KagamiViewController: UIViewController {
             make.top.equalTo(burgerBar2.snp.bottom).offset(5.0)
         }
         
-        // testing drag views
-        editingButton.snp.makeConstraints { (make) in
-            make.bottom.equalTo(iconContainerView.snp.top).offset(-8.0)
-            make.centerX.equalTo(iconContainerView.snp.centerX)
-            make.height.width.equalTo(60.0)
-        }
-        
         iconContainerView.snp.makeConstraints { (make) in
-            make.trailing.equalToSuperview().offset(-8.0)
-            make.height.equalTo(kagamiView.snp.height)
-            make.width.equalTo(60.0)
-            make.bottom.equalTo(kagamiView.snp.bottom)
+            make.leading.equalToSuperview().offset(8.0)
+            make.trailing.bottom.equalToSuperview().offset(-8.0)
+            make.height.equalTo(60.0)
         }
-        
-//        testBlueView.snp.makeConstraints { (make) in
-//            make.trailing.equalToSuperview().offset(-5.0)
-//            make.centerY.equalToSuperview()
-//            make.width.height.equalTo(50.0)
-//            
-//        }
-//        
-//        testRedView.snp.makeConstraints { (make) in
-//            make.trailing.equalToSuperview().offset(-5.0)
-//            make.centerY.equalToSuperview().offset(70)
-//            make.width.height.equalTo(50.0)
-//        }
-//        
-//        testPurpleView.snp.makeConstraints { (make) in
-//            make.trailing.equalToSuperview().offset(-5.0)
-//            make.centerY.equalToSuperview().offset(-70)
-//            make.width.height.equalTo(50.0)
-//        }
 
         for widget in widgetArray {
             
@@ -231,8 +183,8 @@ class KagamiViewController: UIViewController {
                         
                         self.iconContainerView.addSubview(imageView)
                         imageView.snp.makeConstraints({ (make) in
-                            make.top.equalToSuperview().offset((imageView.tag * 50) + (8 * imageView.tag) + 8)
-                            make.trailing.equalToSuperview().offset(-5.0)
+                            make.leading.equalToSuperview().offset((imageView.tag * 50) + (8 * imageView.tag) + 8)
+                            make.bottom.equalToSuperview().offset(-5.0)
                             make.height.width.equalTo(50.0)
                         })
 
@@ -241,9 +193,9 @@ class KagamiViewController: UIViewController {
             }
             else {
                 imageView.snp.makeConstraints { (make) in
-                    make.trailing.equalToSuperview().offset(-5.0)
+                    make.bottom.equalToSuperview().offset(-5.0)
                     make.width.height.equalTo(50.0)
-                    make.top.equalToSuperview().offset((imageView.tag * 50) + (8 * imageView.tag) + 8)
+                    make.leading.equalToSuperview().offset((imageView.tag * 50) + (8 * imageView.tag) + 8)
                 }
             }
 
@@ -251,9 +203,9 @@ class KagamiViewController: UIViewController {
         
         // mirror view
         kagamiView.snp.makeConstraints { (make) in
-            make.width.height.equalToSuperview().multipliedBy(0.75)
-            make.centerY.equalToSuperview().inset(50.0)
-            make.leading.equalToSuperview().offset(16.0)
+            make.width.height.equalToSuperview().multipliedBy(0.80)
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().offset(44.0)
         }
         
     }
@@ -263,18 +215,6 @@ class KagamiViewController: UIViewController {
         //hamburger
         hamburger.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(annieSegue)))
 
-    }
-    
-    func editButtonClicked(sender: UIButton) {
-//        if panRecognizer.isEnabled {
-//            panRecognizer.isEnabled = false
-//            tapRecognizer.isEnabled = true
-//        } else {
-//            panRecognizer.isEnabled = true
-//            tapRecognizer.isEnabled = false
-//        }
-        print("Panrecognizer \(panRecognizer.isEnabled)")
-        print("Taprecognizer \(tapRecognizer.isEnabled)")
     }
     
     // add gestures
@@ -344,9 +284,9 @@ class KagamiViewController: UIViewController {
             else {
                 self.iconContainerView.addSubview(label)
                 label.snp.makeConstraints { (make) in
-                    make.trailing.equalToSuperview().offset(-5.0)
+                    make.bottom.equalToSuperview().offset(-5.0)
                     make.width.height.equalTo(50.0)
-                    make.top.equalToSuperview().offset((label.tag * 50) + (8 * label.tag) + 8)
+                    make.leading.equalToSuperview().offset((label.tag * 50) + (8 * label.tag) + 8)
                 }
                 userDefault.set(["onMirror" : false, "x" : label.frame.midX, "y" : label.frame.midY], forKey: label.accessibilityIdentifier!)
                 }
@@ -518,14 +458,6 @@ class KagamiViewController: UIViewController {
         view.layer.borderWidth = 1.0
         view.alpha = 0.8
         return view
-    }()
-    
-    // Edit Button
-    lazy var editingButton: UIButton = {
-        let button = UIButton()
-        button.setImage(#imageLiteral(resourceName: "editbutton-android_v1"), for: .normal)
-        button.addTarget(self, action: #selector(editButtonClicked(sender:)), for: UIControlEvents.touchUpInside)
-        return button
     }()
     
 

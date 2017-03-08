@@ -22,6 +22,9 @@
 		478B30B41E6DF95300FD580C /* WeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30B31E6DF95300FD580C /* WeatherView.swift */; };
 		478B30B71E6DFDBE00FD580C /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30B61E6DFDBE00FD580C /* Weather.swift */; };
 		478B30BF1E7062C800FD580C /* RouterServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30BE1E7062C800FD580C /* RouterServices.swift */; };
+		478B30C11E70ABA200FD580C /* WeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30C01E70ABA200FD580C /* WeatherViewController.swift */; };
+		478B30C31E70ABBB00FD580C /* TimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30C21E70ABBB00FD580C /* TimeViewController.swift */; };
+		478B30C51E70ABC400FD580C /* ToDoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30C41E70ABC400FD580C /* ToDoViewController.swift */; };
 		8272D0DA3A138F18F4C84361 /* Pods_Kagami.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F471247316DDB5A8497911B /* Pods_Kagami.framework */; };
 		9C022C981E67381400AA2802 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9C022C971E67381400AA2802 /* GoogleService-Info.plist */; };
 		9C022C9C1E67667700AA2802 /* SelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */; };
@@ -52,6 +55,9 @@
 		478B30B31E6DF95300FD580C /* WeatherView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherView.swift; sourceTree = "<group>"; };
 		478B30B61E6DFDBE00FD580C /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		478B30BE1E7062C800FD580C /* RouterServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterServices.swift; sourceTree = "<group>"; };
+		478B30C01E70ABA200FD580C /* WeatherViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherViewController.swift; sourceTree = "<group>"; };
+		478B30C21E70ABBB00FD580C /* TimeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeViewController.swift; sourceTree = "<group>"; };
+		478B30C41E70ABC400FD580C /* ToDoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoViewController.swift; sourceTree = "<group>"; };
 		9C022C971E67381400AA2802 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionCollectionViewCell.swift; sourceTree = "<group>"; };
 		9C022C9F1E6776F600AA2802 /* CustomizeSelectionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomizeSelectionsViewController.swift; sourceTree = "<group>"; };
@@ -163,6 +169,9 @@
 			isa = PBXGroup;
 			children = (
 				478B30B01E6DF87400FD580C /* SettingsViewController.swift */,
+				478B30C01E70ABA200FD580C /* WeatherViewController.swift */,
+				478B30C21E70ABBB00FD580C /* TimeViewController.swift */,
+				478B30C41E70ABC400FD580C /* ToDoViewController.swift */,
 			);
 			name = "Customize Selections";
 			sourceTree = "<group>";
@@ -341,6 +350,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3E91CEDA1E6780C10074AA31 /* DailyWeather.swift in Sources */,
+				478B30C31E70ABBB00FD580C /* TimeViewController.swift in Sources */,
 				3E91CEDE1E688CE20074AA31 /* WordOfTheDay.swift in Sources */,
 				478B30851E66192300FD580C /* APIRequestManager.swift in Sources */,
 				9C022CA01E6776F600AA2802 /* CustomizeSelectionsViewController.swift in Sources */,
@@ -352,8 +362,10 @@
 				478B30AC1E68D54700FD580C /* DailyWeatherCustomization.swift in Sources */,
 				478B30BF1E7062C800FD580C /* RouterServices.swift in Sources */,
 				478B306E1E66181500FD580C /* AppDelegate.swift in Sources */,
+				478B30C51E70ABC400FD580C /* ToDoViewController.swift in Sources */,
 				9C49BA801E6F02CC001C4780 /* ToDoView.swift in Sources */,
 				478B30A91E6767AD00FD580C /* Utilities.swift in Sources */,
+				478B30C11E70ABA200FD580C /* WeatherViewController.swift in Sources */,
 				9CBE48FA1E6D05F700F5BA84 /* CustomizeWeatherViewController.swift in Sources */,
 				478B30B11E6DF87400FD580C /* SettingsViewController.swift in Sources */,
 				9C022C9C1E67667700AA2802 /* SelectionCollectionViewCell.swift in Sources */,
