@@ -228,11 +228,11 @@ class KagamiViewController: UIViewController {
                     })
                 } else {
                     if widgetDict?["onMirror"] as! Bool == false {
-                        let x = widgetDict?["x"] as! CGFloat
-                        let y = widgetDict?["y"] as! CGFloat
+                        
                         self.iconContainerView.addSubview(imageView)
                         imageView.snp.makeConstraints({ (make) in
-                            make.center.equalTo(CGPoint(x: x, y: y))
+                            make.top.equalToSuperview().offset((imageView.tag * 50) + (8 * imageView.tag) + 8)
+                            make.trailing.equalToSuperview().offset(-5.0)
                             make.height.width.equalTo(50.0)
                         })
 
