@@ -22,6 +22,8 @@ class ToDoView: UIView, UITextFieldDelegate {
         
         self.database = FIRDatabase.database().reference().child("toDos").child("lastest")
         textFieldOne.delegate = self
+        textFieldTwo.delegate = self
+        textFieldThree.delegate = self
         setupView()
         setupConstraints()
     }
@@ -114,7 +116,7 @@ class ToDoView: UIView, UITextFieldDelegate {
             checkMarkView.snp.removeConstraints()
         }
     }
-    
+    // MARK: - FIXME
     func checkOffItemTwo() {
         if !checkBoxTwo.subviews.contains(checkMark) {
             checkBoxTwo.addSubview(checkMark)
@@ -164,15 +166,29 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         print("should return")
-        activeTextField = textField
-        guard activeTextField?.text != "" else { return false }
-                
-        let item = ToDo(title: activeTextField!.text!, completed: false)
-        let itemDict = item.asDictionary
+        guard activeTextField == textField, activeTextField?.text != "" else { return false }
         
-        let itemOneDatabaseRef = self.database.child("1")
-        itemOneDatabaseRef.setValue(itemDict)
-        
+        if activeTextField!.tag == 1 {
+            let item = ToDo(title: activeTextField!.text!, completed: false)
+            let itemDict = item.asDictionary
+            
+            let itemOneDatabaseRef = self.database.child("1")
+            itemOneDatabaseRef.setValue(itemDict)
+        }
+        else if activeTextField!.tag == 2 {
+            let item = ToDo(title: activeTextField!.text!, completed: false)
+            let itemDict = item.asDictionary
+            
+            let itemOneDatabaseRef = self.database.child("2")
+            itemOneDatabaseRef.setValue(itemDict)
+        }
+        else if activeTextField!.tag == 3 {
+            let item = ToDo(title: activeTextField!.text!, completed: false)
+            let itemDict = item.asDictionary
+            
+            let itemOneDatabaseRef = self.database.child("3")
+            itemOneDatabaseRef.setValue(itemDict)
+        }
         return false
     }
     
@@ -210,6 +226,7 @@ class ToDoView: UIView, UITextFieldDelegate {
         field.borderStyle = UITextBorderStyle.none
         field.contentVerticalAlignment = .center
         field.layer.cornerRadius = 9
+        field.tag = 1
         return field
     }()
     
@@ -222,6 +239,7 @@ class ToDoView: UIView, UITextFieldDelegate {
         field.borderStyle = UITextBorderStyle.none
         field.contentVerticalAlignment = .center
         field.layer.cornerRadius = 9
+        field.tag = 2
         return field
     }()
     
@@ -234,6 +252,7 @@ class ToDoView: UIView, UITextFieldDelegate {
         field.borderStyle = UITextBorderStyle.none
         field.contentVerticalAlignment = .center
         field.layer.cornerRadius = 9
+        field.tag = 3
         return field
     }()
     
