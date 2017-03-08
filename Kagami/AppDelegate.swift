@@ -8,20 +8,26 @@
 
 import UIKit
 import Firebase
+import FirebaseAuth
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    var router: Router?
     var window: UIWindow?
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        
+        // firebase anon login
         FIRApp.configure()
+        FIRAuth.auth()?.signInAnonymously() { (user, error) in
+            _ = user!.isAnonymous
+            _ = user!.uid
+        }
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        self.window?.rootViewController = KagamiViewController()
-        self.window?.makeKeyAndVisible()
+        router = Router(window: self.window!)
         
         return true
     }
