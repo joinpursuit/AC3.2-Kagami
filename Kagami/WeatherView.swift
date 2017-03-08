@@ -13,8 +13,6 @@ class WeatherView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-     
-        
         
         // add subviews
         self.addSubview(testButton)
