@@ -21,6 +21,7 @@
 		478B30B11E6DF87400FD580C /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30B01E6DF87400FD580C /* SettingsViewController.swift */; };
 		478B30B41E6DF95300FD580C /* WeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30B31E6DF95300FD580C /* WeatherView.swift */; };
 		478B30B71E6DFDBE00FD580C /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30B61E6DFDBE00FD580C /* Weather.swift */; };
+		478B30BF1E7062C800FD580C /* RouterServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30BE1E7062C800FD580C /* RouterServices.swift */; };
 		8272D0DA3A138F18F4C84361 /* Pods_Kagami.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F471247316DDB5A8497911B /* Pods_Kagami.framework */; };
 		9C022C981E67381400AA2802 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9C022C971E67381400AA2802 /* GoogleService-Info.plist */; };
 		9C022C9C1E67667700AA2802 /* SelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */; };
@@ -50,6 +51,7 @@
 		478B30B01E6DF87400FD580C /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		478B30B31E6DF95300FD580C /* WeatherView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherView.swift; sourceTree = "<group>"; };
 		478B30B61E6DFDBE00FD580C /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
+		478B30BE1E7062C800FD580C /* RouterServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterServices.swift; sourceTree = "<group>"; };
 		9C022C971E67381400AA2802 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionCollectionViewCell.swift; sourceTree = "<group>"; };
 		9C022C9F1E6776F600AA2802 /* CustomizeSelectionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomizeSelectionsViewController.swift; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 		478B306C1E66181500FD580C /* Kagami */ = {
 			isa = PBXGroup;
 			children = (
+				478B30BD1E7062B900FD580C /* Services */,
 				478B30801E66187800FD580C /* Managers */,
 				478B30811E66187F00FD580C /* View Controllers */,
 				478B30831E66188B00FD580C /* Views */,
@@ -184,6 +187,14 @@
 				478B30A61E6763F600FD580C /* SelectionViewController.swift */,
 			);
 			name = "Depcreciated - Will Be Deleted";
+			sourceTree = "<group>";
+		};
+		478B30BD1E7062B900FD580C /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				478B30BE1E7062C800FD580C /* RouterServices.swift */,
+			);
+			name = Services;
 			sourceTree = "<group>";
 		};
 		90FC43B4122C23A8D49FAEC7 /* Pods */ = {
@@ -339,6 +350,7 @@
 				3E91CEDC1E6780CF0074AA31 /* ForecastWeather.swift in Sources */,
 				9C49BA861E6F1FA9001C4780 /* ToDo.swift in Sources */,
 				478B30AC1E68D54700FD580C /* DailyWeatherCustomization.swift in Sources */,
+				478B30BF1E7062C800FD580C /* RouterServices.swift in Sources */,
 				478B306E1E66181500FD580C /* AppDelegate.swift in Sources */,
 				9C49BA801E6F02CC001C4780 /* ToDoView.swift in Sources */,
 				478B30A91E6767AD00FD580C /* Utilities.swift in Sources */,

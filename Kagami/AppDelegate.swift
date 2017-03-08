@@ -14,6 +14,7 @@ import FirebaseAuth
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    var router: Router?
     var window: UIWindow?
 
 
