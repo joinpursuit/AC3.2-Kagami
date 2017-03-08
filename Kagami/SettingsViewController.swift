@@ -48,10 +48,14 @@ class SettingsViewController: UIViewController {
     }
     */
     
+    func dismissSVC(sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     // Lazy Instantiates
     lazy var weatherSettingsView: WeatherView = {
         let view = WeatherView()
-        
+        view.testButton.addTarget(self, action: #selector(dismissSVC), for: .touchUpInside)
         return view
     }()
     

@@ -37,7 +37,6 @@ struct Widget {
             }
         }
     }
-    
     let imageView = UIImageView()
 }
 
@@ -69,7 +68,6 @@ class KagamiViewController: UIViewController {
         // Developer testing only -> REMOVE before production
         // Developer testing only -> REMOVE before production
         ref = FIRDatabase.database().reference()
-        tapRecognizer.isEnabled = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -82,7 +80,7 @@ class KagamiViewController: UIViewController {
         self.navigationController?.navigationBar.tintColor = UIColor.black
         
         configureConstraints()
-        
+
         // Developer testing only -> REMOVE before production
         // Developer testing only -> REMOVE before production
         let reference = self.ref.child("position")
@@ -215,8 +213,6 @@ class KagamiViewController: UIViewController {
             imageView.isUserInteractionEnabled = true
             iconContainerView.addSubview(imageView)
             
-            //iconContainerView.layoutSubviews()
-            
             imageView.snp.makeConstraints { (make) in
                 make.trailing.equalToSuperview().offset(-5.0)
                 make.width.height.equalTo(50.0)
@@ -241,13 +237,15 @@ class KagamiViewController: UIViewController {
     }
     
     func editButtonClicked(sender: UIButton) {
-        if panRecognizer.isEnabled {
-            panRecognizer.isEnabled = false
-            tapRecognizer.isEnabled = true
-        } else {
-            panRecognizer.isEnabled = true
-            tapRecognizer.isEnabled = false
-        }
+//        if panRecognizer.isEnabled {
+//            panRecognizer.isEnabled = false
+//            tapRecognizer.isEnabled = true
+//        } else {
+//            panRecognizer.isEnabled = true
+//            tapRecognizer.isEnabled = false
+//        }
+        print("Panrecognizer \(panRecognizer.isEnabled)")
+        print("Taprecognizer \(tapRecognizer.isEnabled)")
     }
     
     // add gestures
@@ -265,6 +263,7 @@ class KagamiViewController: UIViewController {
         tapRecognizer.numberOfTapsRequired = 1
         tapRecognizer.cancelsTouchesInView = false
         tapRecognizer.numberOfTouchesRequired = 1
+        tapRecognizer.require(toFail: panRecognizer)
         return tapRecognizer
     }
 
@@ -301,9 +300,9 @@ class KagamiViewController: UIViewController {
         if gesture.state == .ended {
             
             let centerOfLabel = self.kagamiView.convert(label.center, from: label.superview)
-            print(centerOfLabel)
-            print(kagamiView.bounds)
-            
+//            print(centerOfLabel)
+//            print(kagamiView.bounds)
+//            
             if kagamiView.bounds.contains(centerOfLabel) {
                 self.kagamiView.addSubview(label)
                 label.snp.remakeConstraints({ (make) in
@@ -324,8 +323,8 @@ class KagamiViewController: UIViewController {
             for subView in kagamiView.subviews {
                 switch subView.accessibilityIdentifier! {
                 case "weather":
-//                   let weatherNode = ref.child("weather")
-//                   weatherNode.updateChildValues(["x" : testBlueView.frame.midX, "y" :testBlueView.frame.midY, "onMirror" : true])
+                   let weatherNode = ref.child("weather")
+                   //weatherNode.updateChildValues(["x" : (subView.frame.minX / kagamiView.frame.maxX) , "y" : (subView.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
                     print("This Is \(subView.accessibilityIdentifier!)")
                     print(subView.frame)
                 case "time":
