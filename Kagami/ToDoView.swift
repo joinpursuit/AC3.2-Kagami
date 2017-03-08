@@ -13,6 +13,8 @@ import FirebaseDatabase
 
 class ToDoView: UIView, UITextFieldDelegate {
     
+    // MARK: - Properties
+    
     var database: FIRDatabaseReference!
     var activeTextField: UITextField?
     let animator = UIViewPropertyAnimator(duration: 0.5, curve: .linear, animations: nil)
@@ -103,69 +105,131 @@ class ToDoView: UIView, UITextFieldDelegate {
     }
     
     func checkOffItemOne() {
+        let itemOneDatabaseRef = self.database.child("1")
         if !checkBoxOne.subviews.contains(checkMarkOne) {
             
-            checkBoxOne.addSubview(checkMarkOne)
-            checkMarkOne.snp.makeConstraints { (view) in
-                view.centerX.centerY.equalTo(checkBoxOne)
-            }
+            addCheckMarkOne()
+            
+            let item = ToDo(title: textFieldOne.text!, completed: true)
+            let itemDict = item.asDictionary
+            itemOneDatabaseRef.setValue(itemDict)
+            userDefault.setValue(true, forKey: "item one completed")
             //            animateCheckMark()
         } else {
             checkMarkOne.snp.removeConstraints()
             for view in checkBoxOne.subviews {
                 view.removeFromSuperview()
             }
+            // remove from firebase
+            let item = ToDo(title: textFieldOne.text!, completed: false)
+            let itemDict = item.asDictionary
+            itemOneDatabaseRef.setValue(itemDict)
+            userDefault.setValue(false, forKey: "item one completed")
         }
     }
     
     func checkOffItemTwo() {
+        let itemTwoDatabaseRef = self.database.child("2")
         if !checkBoxTwo.subviews.contains(checkMarkTwo) {
-            checkBoxTwo.addSubview(checkMarkTwo)
-            checkMarkTwo.snp.makeConstraints { (view) in
-                view.centerX.centerY.equalTo(checkBoxTwo)
-            }
+            
+            addCheckMarkTwo()
+            
+            let item = ToDo(title: textFieldTwo.text!, completed: true)
+            let itemDict = item.asDictionary
+            itemTwoDatabaseRef.setValue(itemDict)
+            userDefault.setValue(true, forKey: "item two completed")
         } else {
             checkMarkTwo.snp.removeConstraints()
             for view in checkBoxTwo.subviews {
                 view.removeFromSuperview()
             }
+            let item = ToDo(title: textFieldTwo.text!, completed: false)
+            let itemDict = item.asDictionary
+            itemTwoDatabaseRef.setValue(itemDict)
+            userDefault.setValue(false, forKey: "item two completed")
         }
     }
     
     func checkOffItemThree() {
+        let itemThreeDatabaseRef = self.database.child("3")
         if !checkBoxThree.subviews.contains(checkMarkThree) {
-            checkBoxThree.addSubview(checkMarkThree)
-            checkMarkThree.snp.makeConstraints { (view) in
-                view.centerX.centerY.equalTo(checkBoxThree)
-            }
+            
+            addCheckMarkThree()
+            
+            let item = ToDo(title: textFieldThree.text!, completed: true)
+            let itemDict = item.asDictionary
+            itemThreeDatabaseRef.setValue(itemDict)
+            userDefault.setValue(true, forKey: "item three completed")
         } else {
             checkMarkThree.snp.removeConstraints()
             for view in checkBoxThree.subviews {
                 view.removeFromSuperview()
             }
+            let item = ToDo(title: textFieldThree.text!, completed: false)
+            let itemDict = item.asDictionary
+            itemThreeDatabaseRef.setValue(itemDict)
+            userDefault.setValue(false, forKey: "item three completed")
         }
     }
     
-//    func animateCheckMark() {
-//        checkMark.snp.makeConstraints { (view) in
-//            view.centerX.centerY.equalTo(checkBoxOne)
-//        }
-//        animator.addAnimations{
-//            self.checkMark.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
-//        }
-//        animator.addAnimations {
-//            self.layoutIfNeeded()
-//        }
-//        animator.startAnimation()
-//    }
+    //    func animateCheckMark() {
+    //        checkMark.snp.makeConstraints { (view) in
+    //            view.centerX.centerY.equalTo(checkBoxOne)
+    //        }
+    //        animator.addAnimations{
+    //            self.checkMark.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+    //        }
+    //        animator.addAnimations {
+    //            self.layoutIfNeeded()
+    //        }
+    //        animator.startAnimation()
+    //    }
     
     func loadUserDefaults() {
         textFieldOne.text = userDefault.object(forKey: "item one") as? String
-        textFieldTwo.text = userDefault.object(forKey: "item two") as? String
-        textFieldThree.text = userDefault.object(forKey: "item three") as? String
         print(textFieldOne.text!)
+        print(userDefault.object(forKey: "item one completed") as! Bool)
+        let completedFirstItem = userDefault.object(forKey: "item one completed") as! Bool
+        if completedFirstItem {
+            addCheckMarkOne()
+        }
+        
+        textFieldTwo.text = userDefault.object(forKey: "item two") as? String
         print(textFieldTwo.text!)
+        print(userDefault.object(forKey: "item two completed") as! Bool)
+        let completedSecondItem = userDefault.object(forKey: "item two completed") as! Bool
+        if completedSecondItem {
+            addCheckMarkTwo()
+        }
+        
+        textFieldThree.text = userDefault.object(forKey: "item three") as? String
         print(textFieldThree.text!)
+        print(userDefault.object(forKey: "item three completed") as! Bool)
+        let completedThirdItem = userDefault.object(forKey: "item three completed") as! Bool
+        if completedThirdItem {
+            addCheckMarkThree()
+        }
+    }
+    
+    func addCheckMarkOne() {
+        checkBoxOne.addSubview(checkMarkOne)
+        checkMarkOne.snp.makeConstraints { (view) in
+            view.centerX.centerY.equalTo(checkBoxOne)
+        }
+    }
+    
+    func addCheckMarkTwo() {
+        checkBoxTwo.addSubview(checkMarkTwo)
+        checkMarkTwo.snp.makeConstraints { (view) in
+            view.centerX.centerY.equalTo(checkBoxTwo)
+        }
+    }
+    
+    func addCheckMarkThree() {
+        checkBoxThree.addSubview(checkMarkThree)
+        checkMarkThree.snp.makeConstraints { (view) in
+            view.centerX.centerY.equalTo(checkBoxThree)
+        }
     }
     
     // MARK: - TextField Delegate
