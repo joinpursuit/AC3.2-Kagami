@@ -33,7 +33,7 @@ struct Widget {
             switch self {
             case .weather: return "weather"
             case .time: return "time"
-            case .todos: return "todos"
+            case .todos: return "toDos"
             }
         }
     }
@@ -46,6 +46,7 @@ class KagamiViewController: UIViewController {
     
     // MARK: - Properties
     var ref: FIRDatabaseReference!
+    let userDefault = UserDefaults.standard
     var animator: UIViewPropertyAnimator? = nil
     var dynamicAnimator: UIDynamicAnimator? = nil
     var isCurrentlyHeld: Bool = false
@@ -214,11 +215,38 @@ class KagamiViewController: UIViewController {
             imageView.isUserInteractionEnabled = true
             iconContainerView.addSubview(imageView)
             
-            imageView.snp.makeConstraints { (make) in
-                make.trailing.equalToSuperview().offset(-5.0)
-                make.width.height.equalTo(50.0)
-                make.top.equalToSuperview().offset((imageView.tag * 50) + (8 * imageView.tag) + 8)
+            let widgetDict = userDefault.dictionary(forKey: imageView.accessibilityIdentifier!)
+
+            if widgetDict != nil {
+                if widgetDict?["onMirror"] as! Bool == true {
+                    let x = widgetDict?["x"] as! CGFloat
+                    let y = widgetDict?["y"] as! CGFloat
+                    self.kagamiView.addSubview(imageView)
+                    imageView.snp.makeConstraints({ (make) in
+                        make.center.equalTo(CGPoint(x: x, y: y))
+                        make.height.width.equalTo(50.0)
+                    })
+                } else {
+                    if widgetDict?["onMirror"] as! Bool == false {
+                        let x = widgetDict?["x"] as! CGFloat
+                        let y = widgetDict?["y"] as! CGFloat
+                        self.iconContainerView.addSubview(imageView)
+                        imageView.snp.makeConstraints({ (make) in
+                            make.center.equalTo(CGPoint(x: x, y: y))
+                            make.height.width.equalTo(50.0)
+                        })
+
+                    }
+                }
             }
+            else {
+                imageView.snp.makeConstraints { (make) in
+                    make.trailing.equalToSuperview().offset(-5.0)
+                    make.width.height.equalTo(50.0)
+                    make.top.equalToSuperview().offset((imageView.tag * 50) + (8 * imageView.tag) + 8)
+                }
+            }
+
         }
         
         // mirror view
@@ -311,6 +339,7 @@ class KagamiViewController: UIViewController {
                     make.height.width.equalTo(50.0)
                 })
              kagamiView.layoutSubviews()
+                userDefault.set(["onMirror" : true, "x" : label.frame.midX, "y" : label.frame.midY], forKey: label.accessibilityIdentifier!)
                 }
             else {
                 self.iconContainerView.addSubview(label)
@@ -319,6 +348,7 @@ class KagamiViewController: UIViewController {
                     make.width.height.equalTo(50.0)
                     make.top.equalToSuperview().offset((label.tag * 50) + (8 * label.tag) + 8)
                 }
+                userDefault.set(["onMirror" : false, "x" : label.frame.midX, "y" : label.frame.midY], forKey: label.accessibilityIdentifier!)
                 }
         
             for subView in kagamiView.subviews {
@@ -498,7 +528,7 @@ class KagamiViewController: UIViewController {
         return button
     }()
     
-}
+
 
 // Ignore for now
 class CollidingViewBehavior: UIDynamicBehavior  {
@@ -517,8 +547,7 @@ class CollidingViewBehavior: UIDynamicBehavior  {
         self.addChildBehavior(elasticBehavior)
         
     }
-    
 }
-
+}
 
 
