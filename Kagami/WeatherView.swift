@@ -32,8 +32,7 @@ class WeatherView: UIView {
     
     func flashButtonClicked(sender: UIButton) {
         print("Hello World")
-        let svc = SettingsViewController()
-        svc.dismiss(animated: true, completion: nil)
+        self.removeFromSuperview()
     }
     
     lazy var testButton: UIButton = {
