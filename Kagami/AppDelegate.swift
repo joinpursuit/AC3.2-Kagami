@@ -14,6 +14,7 @@ import FirebaseAuth
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    var router: Router?
     var window: UIWindow?
 
 
@@ -26,17 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        let navVC = UINavigationController(rootViewController: KagamiViewController())
-        self.window?.rootViewController = navVC
-        self.window?.makeKeyAndVisible()
+        router = Router(window: self.window!)
         
-        // nav bar
-        UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 20.0),
-                                                            NSForegroundColorAttributeName : UIColor.white]
-        
-        // status bar
-        UIApplication.shared.statusBarStyle = .lightContent
-
         return true
     }
 
