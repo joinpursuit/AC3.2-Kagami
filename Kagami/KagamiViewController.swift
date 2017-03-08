@@ -228,7 +228,6 @@ class KagamiViewController: UIViewController {
                     })
                 } else {
                     if widgetDict?["onMirror"] as! Bool == false {
-                        
                         self.iconContainerView.addSubview(imageView)
                         imageView.snp.makeConstraints({ (make) in
                             make.top.equalToSuperview().offset((imageView.tag * 50) + (8 * imageView.tag) + 8)
@@ -361,7 +360,7 @@ class KagamiViewController: UIViewController {
                 case "time":
                     print("This Is \(subView.accessibilityIdentifier!)")
                     print(subView.frame)
-                case "todos":
+                case "toDos":
                     print("This Is \(subView.accessibilityIdentifier!)")
                     print(subView.frame)
 
