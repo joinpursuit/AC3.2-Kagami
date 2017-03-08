@@ -19,21 +19,21 @@ struct Widget {
     }
     
     enum Category : Int {
-        case weather, todos, time
+        case weather, time, todos
         
         var icon : UIImage {
             switch self {
             case .weather: return UIImage(named: "Flash_Logo_01")!
-            case .todos: return UIImage(named: "Appointment Reminders-50")!
             case .time: return UIImage(named: "Watch-50")!
+            case .todos: return UIImage(named: "Appointment Reminders-50")!
             }
         }
         
         var description : String {
             switch self {
             case .weather: return "weather"
-            case .todos: return "todos"
             case .time: return "time"
+            case .todos: return "todos"
             }
         }
     }
@@ -54,7 +54,7 @@ class KagamiViewController: UIViewController {
     var theCGPoint: CGPoint?
     var panRecognizer = UIPanGestureRecognizer()
     var tapRecognizer = UITapGestureRecognizer()
-    var widgetArray = [Widget(category: .weather), Widget(category: .time)]
+    var widgetArray = [Widget(category: .weather), Widget(category: .time), Widget(category: .todos)]
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -207,32 +207,21 @@ class KagamiViewController: UIViewController {
             imageView.layer.borderColor = ColorPalette.blackColor.cgColor
             imageView.layer.borderWidth = 1.0
             imageView.alpha = 0.8
-            
+            imageView.tag = widget.category.rawValue
+            imageView.accessibilityIdentifier = widget.category.description
             
             imageView.addGestureRecognizer(setPanGestureRecognizer())
             imageView.addGestureRecognizer(setTapRecognizer())
             imageView.isUserInteractionEnabled = true
-            
             iconContainerView.addSubview(imageView)
             
-           // if widget.category.rawValue == 0 {
+            //iconContainerView.layoutSubviews()
+            
             imageView.snp.makeConstraints { (make) in
                 make.trailing.equalToSuperview().offset(-5.0)
-                //make.centerX.equalToSuperview()
-                make.top.equalToSuperview().offset((widget.category.rawValue * 50) + 10)
                 make.width.height.equalTo(50.0)
-                }
-           // }
-//            else {
-//            imageView.snp.makeConstraints { (make) in
-//                make.trailing.equalToSuperview().offset(-5.0)
-//                make.centerY.equalToSuperview()
-//                make.width.height.equalTo(50.0)
-//                make.top.equalTo(widgetArray[widget.category.rawValue - 1].imageView.snp.bottom).offset(-8.0)
-//            }
-
-        //    }
-            
+                make.top.equalToSuperview().offset((imageView.tag * 50) + (8 * imageView.tag) + 8)
+            }
         }
         
         // mirror view
@@ -297,7 +286,6 @@ class KagamiViewController: UIViewController {
         //let rect = self.kagamiView.frame
         label.center = CGPoint(x: label.center.x + translation.x , y: label.center.y + translation.y)
         gesture.setTranslation(CGPoint.zero, in: self.view)
-        
         //TODO: - Math
         // viewMin >= kagamiMin & viewMax <= kagamiMax
         
@@ -326,26 +314,26 @@ class KagamiViewController: UIViewController {
                 }
             else {
                 self.iconContainerView.addSubview(label)
-                label.snp.remakeConstraints({ (make) in
+                label.snp.makeConstraints { (make) in
                     make.trailing.equalToSuperview().offset(-5.0)
-                    make.centerY.equalToSuperview()
-                    make.height.width.equalTo(50.0)
-                })
+                    make.width.height.equalTo(50.0)
+                    make.top.equalToSuperview().offset((label.tag * 50) + (8 * label.tag) + 8)
+                }
                 }
         
-            for subViews in kagamiView.subviews {
-                switch subViews {
-                case testBlueView:
-                   let weatherNode = ref.child("weather")
-                   weatherNode.updateChildValues(["x" : testBlueView.frame.midX, "y" :testBlueView.frame.midY, "onMirror" : true])
-                    print("This Is The Blue View")
-                    print(testBlueView.frame)
-                case testRedView:
-                    print("This Is The Red View")
-                    print(testRedView.frame)
-                case testPurpleView:
-                    print("This Is The Purple View")
-                    print(testPurpleView.frame)
+            for subView in kagamiView.subviews {
+                switch subView.accessibilityIdentifier! {
+                case "weather":
+//                   let weatherNode = ref.child("weather")
+//                   weatherNode.updateChildValues(["x" : testBlueView.frame.midX, "y" :testBlueView.frame.midY, "onMirror" : true])
+                    print("This Is \(subView.accessibilityIdentifier!)")
+                    print(subView.frame)
+                case "time":
+                    print("This Is \(subView.accessibilityIdentifier!)")
+                    print(subView.frame)
+                case "todos":
+                    print("This Is \(subView.accessibilityIdentifier!)")
+                    print(subView.frame)
 
                 default:
                     break
@@ -433,7 +421,7 @@ class KagamiViewController: UIViewController {
     
     internal lazy var iconContainerView: UIView = {
         let view: UIView = UIView()
-        view.backgroundColor = .clear
+        view.backgroundColor = .gray
         return view
     }()
     
