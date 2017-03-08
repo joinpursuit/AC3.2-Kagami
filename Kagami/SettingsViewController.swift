@@ -19,12 +19,16 @@ class SettingsViewController: UIViewController {
         super.viewDidLoad()
         
         // Based on selected setting, use appropriate view
-        view.addSubview(toDoSettingsView)
+//        view.addSubview(toDoSettingsView)
+        view.addSubview(weatherSettingsView)
         setupConstraints()
     }
     
     func setupConstraints() {
-        toDoSettingsView.snp.makeConstraints { (view) in
+//        toDoSettingsView.snp.makeConstraints { (view) in
+//            view.top.bottom.left.right.equalToSuperview()
+//        }
+        weatherSettingsView.snp.makeConstraints { (view) in
             view.top.bottom.left.right.equalToSuperview()
         }
     }
@@ -55,7 +59,7 @@ class SettingsViewController: UIViewController {
     // Lazy Instantiates
     lazy var weatherSettingsView: WeatherView = {
         let view = WeatherView()
-        view.testButton.addTarget(self, action: #selector(dismissSVC), for: .touchUpInside)
+//        view.testButton.addTarget(self, action: #selector(dismissSVC), for: .touchUpInside)
         return view
     }()
     
