@@ -33,12 +33,14 @@ PODS:
   - GoogleToolboxForMac/NSString+URLArguments (2.1.1)
   - GTMSessionFetcher/Core (1.1.8)
   - SnapKit (3.2.0)
+  - TwicketSegmentedControl (0.1.2)
 
 DEPENDENCIES:
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Database
   - SnapKit (~> 3.0)
+  - TwicketSegmentedControl
 
 SPEC CHECKSUMS:
   Firebase: 85a581fb04e44f63ae9f4fbc8d6dabf4a4c18653
@@ -50,7 +52,8 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
   GTMSessionFetcher: 6f8d8b28b7e345549ac471071608170b31cb4977
   SnapKit: 1ca44df72cfa543218d177cb8aab029d10d86ea7
+  TwicketSegmentedControl: 6d7a4cf243657e0ac3f00d06d873a25334c04042
 
-PODFILE CHECKSUM: 815e5ce800e4cf774cfcc0a162dffef866bd08f9
+PODFILE CHECKSUM: 4d8d4c5db8a3f315bf51639f80610ff4ab38999a
 
 COCOAPODS: 1.1.1
