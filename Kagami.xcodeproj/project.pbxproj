@@ -287,10 +287,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9C49BA931E70A9D7001C4780 /* Code_Pro_Light_Demo.otf in Resources */,
+				9C49BA921E70A9D7001C4780 /* Code_Pro_Demo.otf in Resources */,
 				478B30781E66181500FD580C /* LaunchScreen.storyboard in Resources */,
 				478B30751E66181500FD580C /* Assets.xcassets in Resources */,
 				9C022C981E67381400AA2802 /* GoogleService-Info.plist in Resources */,
-				9C49BA921E70A9D7001C4780 /* Code_Pro_Demo.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
