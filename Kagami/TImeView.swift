@@ -61,7 +61,7 @@ class TimeView: UIView {
     //Labels
     timeLabel.snp.makeConstraints { (label) in
       label.centerX.equalTo(clockAndTimeView.snp.centerX)
-      label.centerY.equalTo(clockAndTimeView.snp.centerY)
+      label.bottom.equalTo(segmentView.snp.top)
     }
     
     //ImageViews
@@ -189,12 +189,25 @@ class TimeView: UIView {
 
 extension TimeView: TwicketSegmentedControlDelegate {
   func didSelect(_ segmentIndex: Int) {
-    print("Selected index at: \(segmentIndex)!")
-    if segmentIndex == 0 {
-      print("switch to fahrenheight")
-    } else {
-      print("Switch to celsius")
-    }
+      formatter.timeStyle = .short
+      formatter.dateStyle = .none
+      
+      switch segmentIndex {
+      case 0:
+        timeLabel.text = formatter.string(from: currentDateTime)
+        time?.militaryTime = false
+      case 1:
+        let hour = calendar.component(.hour, from: date as Date)
+        let minutes = calendar.component(.minute, from: date as Date)
+        
+        let amOrPm = formatter.string(from: currentDateTime).components(separatedBy: " ")
+        timeLabel.text = ("\(hour):\(minutes) ") + amOrPm[1]
+        time?.militaryTime = true
+      default:
+        print("Blah")
+      }
+    
+    
   }
 }
 

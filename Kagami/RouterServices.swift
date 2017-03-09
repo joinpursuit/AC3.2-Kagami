@@ -12,32 +12,20 @@ import UIKit
 class Router {
     
     let window : UIWindow
-    let navController : UINavigationController?
     var weatherVC : UIViewController?
     
     
     init(window: UIWindow) {
         self.window = window
-        let kagamiVC = KagamiViewController()
         
-        navController = UINavigationController(rootViewController: kagamiVC)
-        
-        kagamiVC.didTapWidget = showWeather
-        
-        window.rootViewController = navController
+        window.rootViewController = KagamiViewController()
         window.makeKeyAndVisible()
         
-        // nav bar
-        UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 20.0),
-                                                            NSForegroundColorAttributeName : UIColor.white]
-        
-        // status bar
-        UIApplication.shared.statusBarStyle = .lightContent
     }
     
     func showWeather() {
         weatherVC = UIViewController()
-        navController?.pushViewController(weatherVC!, animated: true)
+//        navController?.pushViewController(weatherVC!, animated: true)
 //        weatherVC.didTapCancel = hideWeather
     }
     
