@@ -61,7 +61,7 @@ class TimeView: UIView {
     //Labels
     timeLabel.snp.makeConstraints { (label) in
       label.centerX.equalTo(clockAndTimeView.snp.centerX)
-      label.centerY.equalTo(clockAndTimeView.snp.centerY)
+      label.bottom.equalTo(segmentView.snp.top)
     }
     
     //ImageViews
