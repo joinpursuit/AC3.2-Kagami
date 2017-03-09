@@ -13,7 +13,6 @@ import FirebaseDatabase
 import FirebaseAuth
 
 class TimeViewController: UIViewController {
-  
   var time: Time?
   let formatter = DateFormatter()
   let currentDateTime = Date()
@@ -142,7 +141,7 @@ class TimeViewController: UIViewController {
   //UISegmentedControl
   lazy var timeFormatSegmentedControl: UISegmentedControl = {
     let segmentedControl: UISegmentedControl = UISegmentedControl(items: ["12 HR" , "24 HR"])
-    segmentedControl.layer.cornerRadius = 5.0  // Don't let background bleed
+    segmentedControl.layer.cornerRadius = 5.0 
     segmentedControl.backgroundColor = .black
     segmentedControl.tintColor = .red
     segmentedControl.addTarget(self, action: #selector(timeFormatChanged(sender:)), for: .valueChanged)
