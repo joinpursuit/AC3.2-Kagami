@@ -8,51 +8,36 @@
 
 import UIKit
 import SnapKit
+import Firebase
+import FirebaseDatabase
+import FirebaseAuth
 
 class TimeViewController: UIViewController {
   
+  var time: Time?
   let formatter = DateFormatter()
   let currentDateTime = Date()
   let date = NSDate()
   let calendar = NSCalendar.current
-  
-  var time = String()
+  var databaseReference: FIRDatabaseReference!
+  var user: FIRUser?
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .white
+    databaseReference = FIRDatabase.database().reference()
+    time = Time(militaryTime: false)
     
     setupViewHierarchy()
     configureConstraints()
   }
-  
-  // MARK: UISegmentedControl
-  func timeFormatChanged(sender: UISegmentedControl) {
-    formatter.timeStyle = .short
-    formatter.dateStyle = .none
-    
-    switch sender.selectedSegmentIndex {
-    case 0:
-      timeLabel.text = formatter.string(from: currentDateTime)
-      time = formatter.string(from: currentDateTime)
-    case 1:
-      let hour = calendar.component(.hour, from: date as Date)
-      let minutes = calendar.component(.minute, from: date as Date)
-      
-      let amOrPm = formatter.string(from: currentDateTime).components(separatedBy: " ")
-      timeLabel.text = ("\(hour):\(minutes) ") + amOrPm[1]
-      time = ("\(hour):\(minutes)")
-    default:
-      print("Blah")
-    }
-  }
-  
+
   // MARK: Setup
   func setupViewHierarchy () {
-    view.addSubview(clockAndTimeView)
-    view.addSubview(clockImageView)
-    view.addSubview(timeLabel)
-    view.addSubview(timeFormatSegmentedControl)
+    self.view.addSubview(clockAndTimeView)
+    self.view.addSubview(clockImageView)
+    self.view.addSubview(timeLabel)
+    self.view.addSubview(timeFormatSegmentedControl)
+    self.view.addSubview(doneButton)
   }
   
   func configureConstraints() {
@@ -79,11 +64,59 @@ class TimeViewController: UIViewController {
       view.height.equalTo(50)
       view.width.equalTo(100)
     }
+    
+    doneButton.snp.makeConstraints { (view) in
+      view.centerX.equalToSuperview()
+      view.bottom.equalToSuperview()
+    }
   }
   
-  //MARK: Lazy Inits
+  // MARK: - UISegmentedControl
+  func timeFormatChanged(sender: UISegmentedControl) {
+    formatter.timeStyle = .short
+    formatter.dateStyle = .none
+    
+    switch sender.selectedSegmentIndex {
+    case 0:
+      timeLabel.text = formatter.string(from: currentDateTime)
+      time?.militaryTime = false
+    case 1:
+      let hour = calendar.component(.hour, from: date as Date)
+      let minutes = calendar.component(.minute, from: date as Date)
+      
+      let amOrPm = formatter.string(from: currentDateTime).components(separatedBy: " ")
+      timeLabel.text = ("\(hour):\(minutes) ") + amOrPm[1]
+      time?.militaryTime = true
+    default:
+      print("Blah")
+    }
+  }
+  
+  //MARK: - Actions
+  //KagamiViewController presents SettingsViewController
+  //ClockView gets removed from SettingsViewController
+  //Firebase gets user preference information
+  
+  func dismissScreen() {
+    let svc = SettingsViewController()
+    svc.view.removeFromSuperview()
+    svc.dismiss(animated: true, completion: nil)
+    
+    let militaryTimeRef = databaseReference.child("time/militaryTime")
+    
+    militaryTimeRef.setValue(time?.militaryTime) {(error, reference) in
+      if let error = error {
+        print(error)
+      }
+      else {
+        print(reference)
+      }
+    }
+  }
+  
+  //MARK: - Lazy Inits
   //Labels
-  internal lazy var timeLabel: UILabel = {
+  lazy var timeLabel: UILabel = {
     let label: UILabel = UILabel()
     label.font = UIFont(name: "DS-Digital", size: 60)
     label.textColor = .white
@@ -91,28 +124,44 @@ class TimeViewController: UIViewController {
   }()
   
   //Views
-  internal lazy var clockAndTimeView: UIView = {
+  lazy var clockAndTimeView: UIView = {
     let view: UIView = UIView()
     view.translatesAutoresizingMaskIntoConstraints = false
     return view
   }()
   
   //ImageViews
-  internal lazy var clockImageView: UIImageView = {
+  lazy var clockImageView: UIImageView = {
     let imageView: UIImageView = UIImageView()
-    imageView.image = #imageLiteral(resourceName: "Clock")
+    //    imageView.image = #imageLiteral(resourceName: "Clock")
     imageView.translatesAutoresizingMaskIntoConstraints = false
     imageView.contentMode = .scaleAspectFit
     return imageView
   }()
   
   //UISegmentedControl
-  internal lazy var timeFormatSegmentedControl: UISegmentedControl = {
+  lazy var timeFormatSegmentedControl: UISegmentedControl = {
     let segmentedControl: UISegmentedControl = UISegmentedControl(items: ["12 HR" , "24 HR"])
     segmentedControl.layer.cornerRadius = 5.0  // Don't let background bleed
     segmentedControl.backgroundColor = .black
     segmentedControl.tintColor = .red
     segmentedControl.addTarget(self, action: #selector(timeFormatChanged(sender:)), for: .valueChanged)
+    segmentedControl.selectedSegmentIndex = 0
     return segmentedControl
+  }()
+  
+  //UIButtons
+  lazy var doneButton: UIButton = {
+    let button = UIButton(type: .system)
+    button.translatesAutoresizingMaskIntoConstraints = false
+    button.setTitle("Done", for: .normal)
+    button.titleLabel?.font = UIFont(name: "Montserrat-Light", size: 20)
+    button.setTitleColor(UIColor.white, for: .normal)
+    button.layer.borderWidth = 1.5
+    button.layer.cornerRadius = 20
+    button.layer.borderColor = UIColor.black.cgColor
+    button.backgroundColor = UIColor.clear
+    button.addTarget(self, action: #selector(dismissScreen), for: .touchUpInside)
+    return button
   }()
 }
