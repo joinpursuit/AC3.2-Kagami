@@ -97,6 +97,7 @@ class KagamiViewController: UIViewController {
         view.backgroundColor = .white
         
         view.addSubview(kagamiView)
+        kagamiView.addSubview(mirrorImageView)
         view.addSubview(iconContainerView)
         view.addSubview(toDoView)
         
@@ -110,6 +111,10 @@ class KagamiViewController: UIViewController {
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(iconContainerView.snp.top)
         }
+        
+        mirrorImageView.snp.makeConstraints({ (view) in
+            view.top.bottom.left.right.equalTo(kagamiView)
+        })
         
         // widget dock
         iconContainerView.snp.makeConstraints { (make) in
@@ -290,13 +295,21 @@ class KagamiViewController: UIViewController {
     }
     
     // MARK: - Lazy Instantiates
+
     lazy var kagamiView: UIView = {
         let view = UIView()
-        view.backgroundColor = ColorPalette.accentColor
-        view.layer.borderColor = ColorPalette.blackColor.cgColor
-        view.layer.borderWidth = 1.0
-        view.alpha = 0.8
+//        view.backgroundColor = ColorPalette.accentColor
+//        view.layer.borderColor = ColorPalette.blackColor.cgColor
+//        view.layer.borderWidth = 1.0
+//        view.alpha = 0.8
         return view
+    }()
+    
+    lazy var mirrorImageView: UIImageView = {
+        let image = UIImage(named: "mirrobackground")
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }()
     
     lazy var iconContainerView: UIView = {
