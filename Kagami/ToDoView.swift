@@ -39,7 +39,7 @@ class ToDoView: UIView, UITextFieldDelegate {
     // MARK: - Set up Hierarchy & constraints
     
     func setupView() {
-        self.addSubview(button)
+        self.addSubview(doneButton)
         self.addSubview(backgroundView)
         self.addSubview(textFieldOne)
         self.addSubview(textFieldTwo)
@@ -51,7 +51,7 @@ class ToDoView: UIView, UITextFieldDelegate {
     }
     
     func setupConstraints() {
-        button.snp.makeConstraints { (view) in
+        doneButton.snp.makeConstraints { (view) in
             view.left.right.bottom.equalToSuperview()
         }
         backgroundView.snp.makeConstraints { (view) in
@@ -281,7 +281,7 @@ class ToDoView: UIView, UITextFieldDelegate {
     }
     
     // MARK: - Lazy Instances
-    lazy var button: UIButton = {
+    lazy var doneButton: UIButton = {
         let button = UIButton()
         button.setTitle("Add To Mirror", for: .normal)
         button.setTitleColor(ColorPalette.blackColor, for: .normal)

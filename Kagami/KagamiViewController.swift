@@ -96,12 +96,12 @@ class KagamiViewController: UIViewController {
         
         view.backgroundColor = .white
         
+        view.addSubview(mirrorImageView)
         view.addSubview(kagamiView)
-        kagamiView.addSubview(mirrorImageView)
         view.addSubview(iconContainerView)
         view.addSubview(toDoView)
         
-        //        hamburger.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(annieSegue)))
+        toDoView.doneButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
     }
     
     private func configureConstraints() {
@@ -111,8 +111,9 @@ class KagamiViewController: UIViewController {
             make.bottom.equalTo(iconContainerView.snp.top)
         }
         
-        mirrorImageView.snp.makeConstraints({ (view) in
-            view.top.bottom.left.right.equalTo(kagamiView)
+        mirrorImageView.snp.makeConstraints({ (make) in
+            make.top.left.right.equalToSuperview()
+            make.bottom.equalTo(iconContainerView.snp.top)
         })
         
         // widget dock
@@ -294,21 +295,24 @@ class KagamiViewController: UIViewController {
         }
     }
     
+    func saveToDo() {
+        propertyAnimator?.addAnimations {
+            <#code#>
+        }
+    }
+    
     // MARK: - Lazy Instantiates
 
     lazy var kagamiView: UIView = {
         let view = UIView()
-//        view.backgroundColor = ColorPalette.accentColor
-//        view.layer.borderColor = ColorPalette.blackColor.cgColor
-//        view.layer.borderWidth = 1.0
-//        view.alpha = 0.8
+        view.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
         return view
     }()
     
     lazy var mirrorImageView: UIImageView = {
         let image = UIImage(named: "mirrobackground")
         let imageView = UIImageView(image: image)
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
