@@ -100,6 +100,8 @@ class KagamiViewController: UIViewController {
         view.addSubview(mirrorImageView)
         view.addSubview(kagamiView)
         view.addSubview(iconContainerView)
+        view.addSubview(weatherView)
+        view.addSubview(timeView)
         view.addSubview(toDoView)
         
         toDoView.doneButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
@@ -173,6 +175,16 @@ class KagamiViewController: UIViewController {
             
         }
         
+        weatherView.snp.makeConstraints { (make) in
+            make.leading.top.equalToSuperview()
+            make.size.equalTo(1.0)
+        }
+        
+        timeView.snp.makeConstraints { (make) in
+            make.leading.top.equalToSuperview()
+            make.size.equalTo(1.0)
+        }
+        
         toDoView.snp.makeConstraints { (make) in
             make.leading.top.equalToSuperview()
             make.size.equalTo(1.0)
@@ -221,6 +233,7 @@ class KagamiViewController: UIViewController {
                         make.center.equalToSuperview()
                     })
                     
+                    self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
                     self.weatherView.layer.opacity = 1.0
                     
                     self.view.layoutIfNeeded()
@@ -233,6 +246,7 @@ class KagamiViewController: UIViewController {
                         make.center.equalToSuperview()
                     })
                     
+                    self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
                     self.timeView.layer.opacity = 1.0
                     
                     self.view.layoutIfNeeded()
@@ -252,7 +266,6 @@ class KagamiViewController: UIViewController {
 
             default:
                 
-                
                 propertyAnimator?.addAnimations ({
                     self.toDoView.snp.remakeConstraints({ (make) in
                         make.height.width.equalToSuperview().multipliedBy(0.8)
@@ -266,6 +279,7 @@ class KagamiViewController: UIViewController {
 
                 propertyAnimator?.startAnimation()
             }
+            propertyAnimator?.startAnimation()
         }
     }
     
@@ -360,14 +374,6 @@ class KagamiViewController: UIViewController {
         return view
     }()
     
-    lazy var toDoView: ToDoView = {
-        let view = ToDoView()
-        view.layer.opacity = 0.0
-        view.layer.cornerRadius = 10.0
-        view.clipsToBounds = true
-        return view
-    }()
-    
     lazy var weatherView: WeatherView = {
         let view = WeatherView()
         view.layer.opacity = 0.0
@@ -378,6 +384,14 @@ class KagamiViewController: UIViewController {
     lazy var timeView: TimeView = {
         let view = TimeView()
         view.layer.opacity = 0.0
+        view.clipsToBounds = true
+        return view
+    }()
+    
+    lazy var toDoView: ToDoView = {
+        let view = ToDoView()
+        view.layer.opacity = 0.0
+        view.layer.cornerRadius = 10.0
         view.clipsToBounds = true
         return view
     }()
