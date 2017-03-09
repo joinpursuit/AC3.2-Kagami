@@ -36,15 +36,15 @@ class TimeViewController: UIViewController {
     self.view.addSubview(clockAndTimeView)
     self.view.addSubview(clockImageView)
     self.view.addSubview(timeLabel)
-    self.view.addSubview(timeFormatSegmentedControl)
     self.view.addSubview(doneButton)
+    segmentView.addSubview(timeFormatSegmentedControl)
   }
   
   func configureConstraints() {
     //Views
     segmentView.snp.makeConstraints { (view) in
       view.left.right.equalToSuperview()
-      view.top.equalTo(self.snp.top).inset(150)
+      view.top.equalTo(self.view.snp.top).inset(150)
       view.height.equalTo(40)
       view.width.equalTo(370)
     }
@@ -68,7 +68,7 @@ class TimeViewController: UIViewController {
     }
     
     //SegmentedControl
-    timeFormatSegmentedControl.snp.makeConstraints { (view) in
+    timeFormatSegmentedControl.snp.makeConstraints { (control) in
       control.top.bottom.equalTo(segmentView)
       control.left.equalTo(segmentView).inset(120)
       control.right.equalTo(segmentView).inset(120)
@@ -154,11 +154,11 @@ class TimeViewController: UIViewController {
   }()
   
   //TwicketSegmentedControl
-  lazy var timeFormatSegmentControl: TwicketSegmentedControl = {
-    let segmentedControl = TwicketSegmentedControl(frame: frame)
+  lazy var timeFormatSegmentedControl: TwicketSegmentedControl = {
+    let segmentedControl = TwicketSegmentedControl()
     let titles = ["12 HR", "24 HR"]
     segmentedControl.setSegmentItems(titles)
-    segmentedControl.delegate = self
+    segmentedControl.delegate = self.view as! TwicketSegmentedControlDelegate?
     segmentedControl.highlightTextColor = ColorPalette.whiteColor
     segmentedControl.sliderBackgroundColor = ColorPalette.accentColor
     segmentedControl.isSliderShadowHidden = false
