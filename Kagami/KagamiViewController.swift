@@ -107,8 +107,7 @@ class KagamiViewController: UIViewController {
     private func configureConstraints() {
         // mirror view
         kagamiView.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().offset(22.0)
-            make.leading.trailing.equalToSuperview()
+            make.leading.top.trailing.equalToSuperview()
             make.bottom.equalTo(iconContainerView.snp.top)
         }
         
@@ -322,6 +321,7 @@ class KagamiViewController: UIViewController {
     lazy var toDoView: ToDoView = {
         let view = ToDoView()
         view.layer.opacity = 0.0
+        view.layer.cornerRadius = 10.0
         view.clipsToBounds = true
         return view
     }()
