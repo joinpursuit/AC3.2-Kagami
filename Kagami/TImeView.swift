@@ -13,7 +13,7 @@ import FirebaseDatabase
 import FirebaseAuth
 import TwicketSegmentedControl
 
-class TimeViewController: UIViewController {
+class TimeView: UIView {
   var time: Time?
   let formatter = DateFormatter()
   let currentDateTime = Date()
@@ -22,21 +22,26 @@ class TimeViewController: UIViewController {
   var databaseReference: FIRDatabaseReference!
   var user: FIRUser?
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
+  override init(frame: CGRect) {
+    super.init(frame: frame)
     databaseReference = FIRDatabase.database().reference()
     time = Time(militaryTime: false)
     
     setupViewHierarchy()
     configureConstraints()
   }
-
+  
+  required init(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)!
+  }
+  
   // MARK: Setup
   func setupViewHierarchy () {
-    self.view.addSubview(clockAndTimeView)
-    self.view.addSubview(clockImageView)
-    self.view.addSubview(timeLabel)
-    self.view.addSubview(doneButton)
+    self.addSubview(clockAndTimeView)
+    self.addSubview(segmentView)
+    self.addSubview(clockImageView)
+    self.addSubview(timeLabel)
+    self.addSubview(doneButton)
     segmentView.addSubview(timeFormatSegmentedControl)
   }
   
@@ -44,13 +49,13 @@ class TimeViewController: UIViewController {
     //Views
     segmentView.snp.makeConstraints { (view) in
       view.left.right.equalToSuperview()
-      view.top.equalTo(self.view.snp.top).inset(150)
+      view.top.equalTo(self.snp.top).inset(150)
       view.height.equalTo(40)
       view.width.equalTo(370)
     }
     clockAndTimeView.snp.makeConstraints { (view) in
       view.top.trailing.leading.equalToSuperview()
-      view.height.equalTo(self.view.snp.height).multipliedBy(0.5)
+      view.height.equalTo(self.snp.height).multipliedBy(0.5)
     }
     
     //Labels
@@ -155,10 +160,11 @@ class TimeViewController: UIViewController {
   
   //TwicketSegmentedControl
   lazy var timeFormatSegmentedControl: TwicketSegmentedControl = {
-    let segmentedControl = TwicketSegmentedControl()
     let titles = ["12 HR", "24 HR"]
+    let frame = CGRect(x: 0, y: self.frame.height / 2, width: self.frame.width, height: 40)
+    let segmentedControl = TwicketSegmentedControl(frame: frame)
     segmentedControl.setSegmentItems(titles)
-    segmentedControl.delegate = self.view as! TwicketSegmentedControlDelegate?
+    segmentedControl.delegate = self
     segmentedControl.highlightTextColor = ColorPalette.whiteColor
     segmentedControl.sliderBackgroundColor = ColorPalette.accentColor
     segmentedControl.isSliderShadowHidden = false
@@ -180,3 +186,15 @@ class TimeViewController: UIViewController {
     return button
   }()
 }
+
+extension TimeView: TwicketSegmentedControlDelegate {
+  func didSelect(_ segmentIndex: Int) {
+    print("Selected index at: \(segmentIndex)!")
+    if segmentIndex == 0 {
+      print("switch to fahrenheight")
+    } else {
+      print("Switch to celsius")
+    }
+  }
+}
+
