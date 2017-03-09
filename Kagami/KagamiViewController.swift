@@ -11,7 +11,7 @@ import SnapKit
 import FirebaseDatabase
 
 struct Widget {
-
+    
     var category : Category
     
     init(category: Category) {
@@ -47,28 +47,24 @@ class KagamiViewController: UIViewController {
     // MARK: - Properties
     var ref: FIRDatabaseReference!
     let userDefault = UserDefaults.standard
-    var animator: UIViewPropertyAnimator? = nil
-    var dynamicAnimator: UIDynamicAnimator? = nil
-    var isCurrentlyHeld: Bool = false
-    var blueViewOriginalPoint: CGPoint?
-    var theCGPoint: CGPoint?
+    var propertyAnimator: UIViewPropertyAnimator?
+    
     var panRecognizer = UIPanGestureRecognizer()
     var tapRecognizer = UITapGestureRecognizer()
+    
     var widgetArray = [Widget(category: .weather), Widget(category: .time), Widget(category: .todos)]
+    var previousPoint: CGPoint?
     var didTapWidget: () -> () = { }
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "か が み"
-        self.dynamicAnimator = UIDynamicAnimator(referenceView: view)
+        self.title = "鏡"
+        propertyAnimator = UIViewPropertyAnimator(duration: 2.0, dampingRatio: 0.75, animations: nil)
         
         setupViewHierarchy()
-        addTargets()
         
-        // Developer testing only -> REMOVE before production
-        // Developer testing only -> REMOVE before production
         ref = FIRDatabase.database().reference()
     }
     
@@ -86,78 +82,49 @@ class KagamiViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-//        let collisions = CollidingViewBehavior(items: [testRedView, testBlueView, testPurpleView])
-//        self.dynamicAnimator?.addBehavior(collisions)
-        
-        self.blueViewOriginalPoint = testBlueView.center
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        self.navigationController?.isNavigationBarHidden = false
-        UIApplication.shared.statusBarStyle = .lightContent
-        
+        propertyAnimator = nil
     }
     
-        
+    
     // MARK: - Setup View Hierarchy & Constraints
-    // view hierarchy
-    func setupViewHierarchy() {
-        self.edgesForExtendedLayout = []
-        
+    private func setupViewHierarchy() {
         
         view.backgroundColor = .white
         
-        view.addSubview(hamburger)
         view.addSubview(kagamiView)
         view.addSubview(iconContainerView)
+        view.addSubview(toDoView)
         
-        hamburger.addSubview(burgerBar1)
-        hamburger.addSubview(burgerBar2)
-        hamburger.addSubview(burgerBar3)
+        //        hamburger.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(annieSegue)))
     }
     
-    // constraints
-    func configureConstraints() {
-        // hamburger
-        hamburger.snp.makeConstraints { (make) in
-            make.size.equalTo(30.0)
-            make.top.equalToSuperview().offset(30.0)
-            make.leading.equalToSuperview().offset(8.0)
+    private func configureConstraints() {
+        // mirror view
+        kagamiView.snp.makeConstraints { (make) in
+            make.top.equalToSuperview().offset(22.0)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(iconContainerView.snp.top)
         }
         
-        burgerBar1.snp.makeConstraints { (make) in
-            make.height.equalToSuperview().multipliedBy(0.2)
-            make.width.equalToSuperview().multipliedBy(1)
-            make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(5.0)
-        }
-        
-        burgerBar2.snp.makeConstraints { (make) in
-            make.height.width.centerX.equalTo(burgerBar1)
-            make.top.equalTo(burgerBar1.snp.bottom).offset(5.0)
-        }
-        
-        burgerBar3.snp.makeConstraints { (make) in
-            make.height.width.centerX.equalTo(burgerBar1)
-            make.top.equalTo(burgerBar2.snp.bottom).offset(5.0)
-        }
-        
+        // widget dock
         iconContainerView.snp.makeConstraints { (make) in
-            make.leading.equalToSuperview().offset(8.0)
-            make.trailing.bottom.equalToSuperview().offset(-8.0)
+            make.leading.equalToSuperview()
+            make.trailing.bottom.equalToSuperview()
             make.height.equalTo(60.0)
         }
-
+        
+        // instantiate Widgets
         for widget in widgetArray {
             
             let imageView = widget.imageView
             imageView.image = widget.category.icon
-            imageView.layer.borderColor = ColorPalette.blackColor.cgColor
-            imageView.layer.borderWidth = 1.0
+            //            imageView.layer.borderColor = ColorPalette.blackColor.cgColor
+            //            imageView.layer.borderWidth = 1.0
             imageView.alpha = 0.8
             imageView.tag = widget.category.rawValue
             imageView.accessibilityIdentifier = widget.category.description
@@ -168,7 +135,7 @@ class KagamiViewController: UIViewController {
             iconContainerView.addSubview(imageView)
             
             let widgetDict = userDefault.dictionary(forKey: imageView.accessibilityIdentifier!)
-
+            
             if widgetDict != nil {
                 if widgetDict?["onMirror"] as! Bool == true {
                     let x = widgetDict?["x"] as! CGFloat
@@ -187,7 +154,7 @@ class KagamiViewController: UIViewController {
                             make.bottom.equalToSuperview().offset(-5.0)
                             make.height.width.equalTo(50.0)
                         })
-
+                        
                     }
                 }
             }
@@ -198,23 +165,13 @@ class KagamiViewController: UIViewController {
                     make.leading.equalToSuperview().offset((imageView.tag * 50) + (8 * imageView.tag) + 8)
                 }
             }
-
+            
         }
         
-        // mirror view
-        kagamiView.snp.makeConstraints { (make) in
-            make.width.height.equalToSuperview().multipliedBy(0.80)
-            make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(44.0)
+        toDoView.snp.makeConstraints { (make) in
+            make.leading.top.equalToSuperview()
+            make.size.equalTo(1.0)
         }
-        
-    }
-    
-    // add targets
-    func addTargets() {
-        //hamburger
-        hamburger.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(annieSegue)))
-
     }
     
     // add gestures
@@ -235,27 +192,49 @@ class KagamiViewController: UIViewController {
         tapRecognizer.require(toFail: panRecognizer)
         return tapRecognizer
     }
-
+    
     func wasTapped(_ gesture: UITapGestureRecognizer) {
-            let label = gesture.view!
+        let view = gesture.view!
         
-            if gesture.state == .ended {
-                let svc = SettingsViewController()
-                svc.view = svc.weatherSettingsView
-                self.present(svc, animated: true, completion: nil)
-        }
+        if gesture.state == .ended {
+            
+            previousPoint = CGPoint(x: view.frame.midX, y: view.frame.midY)
+            
+            switch view.accessibilityIdentifier! {
+            default:
+                propertyAnimator?.addAnimations {
+                    view.snp.remakeConstraints({ (make) in
+                        make.leading.top.equalToSuperview().offset(8.0)
+                        make.size.equalTo(50.0)
+                    })
+                    self.view.layoutIfNeeded()
+                }
+                
+                propertyAnimator?.addAnimations ({
+                    self.toDoView.snp.remakeConstraints({ (make) in
+                        make.height.width.equalToSuperview().multipliedBy(0.8)
+                        make.center.equalToSuperview()
+                    })
+                    
+                    self.toDoView.layer.opacity = 1.0
+                    
+                    self.view.layoutIfNeeded()
+                    }, delayFactor: 0.5)
 
+                propertyAnimator?.startAnimation()
+            }
+        }
     }
     
     
     func wasDragged(_ gesture: UIPanGestureRecognizer) {
         let label = gesture.view!
         let translation = gesture.translation(in: self.view)
-        //let rect = self.kagamiView.frame
+        
         label.center = CGPoint(x: label.center.x + translation.x , y: label.center.y + translation.y)
         gesture.setTranslation(CGPoint.zero, in: self.view)
-        //TODO: - Math
-        // viewMin >= kagamiMin & viewMax <= kagamiMax
+        
+        //TODO: - MATH -- min > kagami.min && max < kagami.max
         
         if gesture.state == .began {
             dump("Parent View \(self.view.subviews.count)")
@@ -269,18 +248,16 @@ class KagamiViewController: UIViewController {
         if gesture.state == .ended {
             
             let centerOfLabel = self.kagamiView.convert(label.center, from: label.superview)
-//            print(centerOfLabel)
-//            print(kagamiView.bounds)
-//            
+            
             if kagamiView.bounds.contains(centerOfLabel) {
                 self.kagamiView.addSubview(label)
                 label.snp.remakeConstraints({ (make) in
                     make.center.equalTo(centerOfLabel)
                     make.height.width.equalTo(50.0)
                 })
-             kagamiView.layoutSubviews()
+                kagamiView.layoutSubviews()
                 userDefault.set(["onMirror" : true, "x" : label.frame.midX, "y" : label.frame.midY], forKey: label.accessibilityIdentifier!)
-                }
+            }
             else {
                 self.iconContainerView.addSubview(label)
                 label.snp.makeConstraints { (make) in
@@ -289,13 +266,13 @@ class KagamiViewController: UIViewController {
                     make.leading.equalToSuperview().offset((label.tag * 50) + (8 * label.tag) + 8)
                 }
                 userDefault.set(["onMirror" : false, "x" : label.frame.midX, "y" : label.frame.midY], forKey: label.accessibilityIdentifier!)
-                }
-        
+            }
+            
             for subView in kagamiView.subviews {
                 switch subView.accessibilityIdentifier! {
                 case "weather":
-                   let weatherNode = ref.child("weather")
-                   //weatherNode.updateChildValues(["x" : (subView.frame.minX / kagamiView.frame.maxX) , "y" : (subView.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
+                    let weatherNode = ref.child("weather")
+                    //weatherNode.updateChildValues(["x" : (subView.frame.minX / kagamiView.frame.maxX) , "y" : (subView.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
                     print("This Is \(subView.accessibilityIdentifier!)")
                     print(subView.frame)
                 case "time":
@@ -304,153 +281,16 @@ class KagamiViewController: UIViewController {
                 case "todos":
                     print("This Is \(subView.accessibilityIdentifier!)")
                     print(subView.frame)
-
+                    
                 default:
                     break
                 }
                 
             }
-            }
+        }
     }
-    
-    func annieSegue() {
-        navigationController?.pushViewController(SettingsViewController(), animated: true)
-        
-        let backItem = UIBarButtonItem()
-        backItem.tintColor = ColorPalette.whiteColor
-        navigationController?.navigationBar.tintColor = ColorPalette.whiteColor
-        navigationItem.backBarButtonItem = backItem
-    }
-    
-    /**
-     * Animations here! :) 👇👇👇
-     */
-    // MARK: - Movement
-
-//    internal func move(view: UIView, to point: CGPoint) {
-//        let _ = dynamicAnimator?.behaviors.map {
-//            if $0 is UISnapBehavior {
-//                dynamicAnimator?.removeBehavior($0)
-//            }
-//        }
-//        
-//        let snapBehavior = UISnapBehavior(item: view, snapTo: point)
-//        snapBehavior.damping = 1.0
-//        dynamicAnimator?.addBehavior(snapBehavior)
-//        
-//    }
-//    
-//    internal func pickUp(view: UIView) {
-//        self.animator = UIViewPropertyAnimator(duration: 0.5, curve: .easeOut) {
-//            view.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-//        }
-//        
-//        self.animator?.startAnimation()
-//        isCurrentlyHeld = true
-//    }
-//    
-//    internal func putDownView(view: UIView) {
-//        self.animator = UIViewPropertyAnimator(duration: 0.5, curve: .easeIn) {
-//            view.transform = CGAffineTransform.identity
-//        }
-//        
-//        let _ = dynamicAnimator?.behaviors.map {
-//            if $0 is UISnapBehavior {
-//                dynamicAnimator?.removeBehavior($0)
-//            }
-//        }
-//        
-//        isCurrentlyHeld = false
-//        self.animator?.startAnimation()
-//    }
-//    
-//    // MARK: - Tracking Touches
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        guard let touch = touches.first else { return }
-//        let wasInsideBlueFrame = darkBlueView.frame.contains(touch.location(in: view))
-//        
-//        if wasInsideBlueFrame {
-//            pickUp(view: darkBlueView)
-//        }
-//    }
-//    
-//    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        guard let touch = touches.first else { return }
-//        
-//        let touchLocationInView = touch.location(in: view)
-//        if isCurrentlyHeld {
-//            move(view: darkBlueView, to: touchLocationInView)
-//        }
-//    }
-//    
-//    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        dump(touches.count)
-//    }
-    
-    // MARK: - Drag And Drop Testing
-    
-    internal lazy var iconContainerView: UIView = {
-        let view: UIView = UIView()
-        view.backgroundColor = .gray
-        return view
-    }()
-    
-    internal lazy var testBlueView: UIImageView = {
-        let view: UIImageView = UIImageView()
-        view.image = #imageLiteral(resourceName: "sunny")
-        view.isUserInteractionEnabled = true
-        
-        return view
-    }()
-    
-    internal lazy var testRedView: UIView = {
-        let view: UIView = UIView()
-        view.backgroundColor = .red
-        view.isUserInteractionEnabled = true
-        return view
-    }()
-    
-    internal lazy var testPurpleView: UIView = {
-        let view: UIView = UIView()
-        view.backgroundColor = .purple
-        view.isUserInteractionEnabled = true
-        return view
-    }()
-    /**
-     * Animations here! :) ☝️☝️☝️
-     */
-    
     
     // MARK: - Lazy Instantiates
-    // hamburger
-    lazy var hamburger: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        return view
-    }()
-    
-    lazy var burgerBar1: UIView = {
-        let view = UIView()
-        view.backgroundColor = ColorPalette.blackColor
-        //        view.layer.cornerRadius = 5.0
-        return view
-    }()
-    
-    lazy var burgerBar2: UIView = {
-        let view = UIView()
-        view.backgroundColor = ColorPalette.blackColor
-        //        view.layer.cornerRadius = 5.0
-        return view
-    }()
-    
-    lazy var burgerBar3: UIView = {
-        let view = UIView()
-        view.backgroundColor = ColorPalette.blackColor
-        //        view.layer.cornerRadius = 5.0
-        return view
-    }()
-    
-    // kagami view
     lazy var kagamiView: UIView = {
         let view = UIView()
         view.backgroundColor = ColorPalette.accentColor
@@ -460,7 +300,19 @@ class KagamiViewController: UIViewController {
         return view
     }()
     
-
+    lazy var iconContainerView: UIView = {
+        let view: UIView = UIView()
+        view.backgroundColor = .clear
+        return view
+    }()
+    
+    lazy var toDoView: ToDoView = {
+        let view = ToDoView()
+        view.layer.opacity = 0.0
+        view.clipsToBounds = true
+        return view
+    }()
+}
 
 // Ignore for now
 class CollidingViewBehavior: UIDynamicBehavior  {
@@ -480,6 +332,6 @@ class CollidingViewBehavior: UIDynamicBehavior  {
         
     }
 }
-}
+
 
 
