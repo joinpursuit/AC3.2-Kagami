@@ -1,35 +1,118 @@
 //
-//  TimeViewController.swift
+//  ClockViewController.swift
 //  Kagami
 //
-//  Created by Eric Chang on 3/8/17.
+//  Created by Eashir Arafat on 3/6/17.
 //  Copyright © 2017 Eric Chang. All rights reserved.
 //
 
 import UIKit
+import SnapKit
 
 class TimeViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-//For branch commit
-        // Do any additional setup after loading the view.
+  
+  let formatter = DateFormatter()
+  let currentDateTime = Date()
+  let date = NSDate()
+  let calendar = NSCalendar.current
+  
+  var time = String()
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    view.backgroundColor = .white
+    
+    setupViewHierarchy()
+    configureConstraints()
+  }
+  
+  // MARK: UISegmentedControl
+  func timeFormatChanged(sender: UISegmentedControl) {
+    formatter.timeStyle = .short
+    formatter.dateStyle = .none
+    
+    switch sender.selectedSegmentIndex {
+    case 0:
+      timeLabel.text = formatter.string(from: currentDateTime)
+      time = formatter.string(from: currentDateTime)
+    case 1:
+      let hour = calendar.component(.hour, from: date as Date)
+      let minutes = calendar.component(.minute, from: date as Date)
+      
+      let amOrPm = formatter.string(from: currentDateTime).components(separatedBy: " ")
+      timeLabel.text = ("\(hour):\(minutes) ") + amOrPm[1]
+      time = ("\(hour):\(minutes)")
+    default:
+      print("Blah")
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+  }
+  
+  // MARK: Setup
+  func setupViewHierarchy () {
+    view.addSubview(clockAndTimeView)
+    view.addSubview(clockImageView)
+    view.addSubview(timeLabel)
+    view.addSubview(timeFormatSegmentedControl)
+  }
+  
+  func configureConstraints() {
+    clockAndTimeView.snp.makeConstraints { (view) in
+      view.top.trailing.leading.equalToSuperview()
+      view.height.equalTo(self.view.snp.height).multipliedBy(0.5)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    timeLabel.snp.makeConstraints { (label) in
+      label.centerX.equalTo(clockAndTimeView.snp.centerX)
+      label.centerY.equalTo(clockAndTimeView.snp.centerY)
     }
-    */
-
+    
+    clockImageView.snp.makeConstraints { (view) in
+      view.height.equalTo(clockAndTimeView.snp.height).multipliedBy(0.8)
+      view.width.equalTo(clockAndTimeView.snp.width).multipliedBy(0.8)
+      view.centerX.equalTo(clockAndTimeView.snp.centerX)
+      view.centerY.equalTo(clockAndTimeView.snp.centerY)
+    }
+    
+    timeFormatSegmentedControl.snp.makeConstraints { (view) in
+      view.top.equalTo(clockAndTimeView.snp.bottom)
+      view.centerX.equalTo(clockAndTimeView.snp.centerX)
+      view.height.equalTo(50)
+      view.width.equalTo(100)
+    }
+  }
+  
+  //MARK: Lazy Inits
+  //Labels
+  internal lazy var timeLabel: UILabel = {
+    let label: UILabel = UILabel()
+    label.font = UIFont(name: "DS-Digital", size: 60)
+    label.textColor = .white
+    return label
+  }()
+  
+  //Views
+  internal lazy var clockAndTimeView: UIView = {
+    let view: UIView = UIView()
+    view.translatesAutoresizingMaskIntoConstraints = false
+    return view
+  }()
+  
+  //ImageViews
+  internal lazy var clockImageView: UIImageView = {
+    let imageView: UIImageView = UIImageView()
+    imageView.image = #imageLiteral(resourceName: "Clock")
+    imageView.translatesAutoresizingMaskIntoConstraints = false
+    imageView.contentMode = .scaleAspectFit
+    return imageView
+  }()
+  
+  //UISegmentedControl
+  internal lazy var timeFormatSegmentedControl: UISegmentedControl = {
+    let segmentedControl: UISegmentedControl = UISegmentedControl(items: ["12 HR" , "24 HR"])
+    segmentedControl.layer.cornerRadius = 5.0  // Don't let background bleed
+    segmentedControl.backgroundColor = .black
+    segmentedControl.tintColor = .red
+    segmentedControl.addTarget(self, action: #selector(timeFormatChanged(sender:)), for: .valueChanged)
+    return segmentedControl
+  }()
 }
