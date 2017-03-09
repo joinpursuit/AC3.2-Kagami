@@ -44,9 +44,10 @@ class ToDoView: UIView, UITextFieldDelegate {
         self.addSubview(textFieldOne)
         self.addSubview(textFieldTwo)
         self.addSubview(textFieldThree)
-        self.addSubview(checkBoxOne)
-        self.addSubview(checkBoxTwo)
-        self.addSubview(checkBoxThree)
+        
+        textFieldOne.addSubview(checkBoxOne)
+        textFieldTwo.addSubview(checkBoxTwo)
+        textFieldThree.addSubview(checkBoxThree)
     }
     
     func setupConstraints() {
@@ -78,23 +79,20 @@ class ToDoView: UIView, UITextFieldDelegate {
         }
         
         // checkboxes
-        checkBoxOne.snp.makeConstraints { (view) in
-            view.top.equalTo(textFieldOne.snp.top).inset(8)
-            view.trailing.equalTo(textFieldOne.snp.trailing).inset(8)
-            view.bottom.equalTo(textFieldOne.snp.bottom).inset(8)
-            view.width.height.equalTo(40)
+        checkBoxOne.snp.makeConstraints { (make) in
+            make.trailing.equalToSuperview().inset(8.0)
+            make.centerY.equalToSuperview()
+            make.size.equalTo(40.0)
         }
-        checkBoxTwo.snp.makeConstraints { (view) in
-            view.top.equalTo(textFieldTwo.snp.top).inset(8)
-            view.trailing.equalTo(textFieldTwo.snp.trailing).inset(8)
-            view.bottom.equalTo(textFieldTwo.snp.bottom).inset(8)
-            view.width.height.equalTo(40)
+        checkBoxTwo.snp.makeConstraints { (make) in
+            make.trailing.equalToSuperview().inset(8.0)
+            make.centerY.equalToSuperview()
+            make.size.equalTo(40.0)
         }
-        checkBoxThree.snp.makeConstraints { (view) in
-            view.top.equalTo(textFieldThree.snp.top).inset(8)
-            view.trailing.equalTo(textFieldThree.snp.trailing).inset(8)
-            view.bottom.equalTo(textFieldThree.snp.bottom).inset(8)
-            view.width.height.equalTo(40)
+        checkBoxThree.snp.makeConstraints { (make) in
+            make.trailing.equalToSuperview().inset(8.0)
+            make.centerY.equalToSuperview()
+            make.size.equalTo(40.0)
         }
     }
     
@@ -186,28 +184,35 @@ class ToDoView: UIView, UITextFieldDelegate {
     //    }
     
     func loadUserDefaults() {
-        textFieldOne.text = userDefault.object(forKey: "item one") as? String
-        print(textFieldOne.text!)
-        print(userDefault.object(forKey: "item one completed") as! Bool)
-        let completedFirstItem = userDefault.object(forKey: "item one completed") as! Bool
-        if completedFirstItem {
-            addCheckMarkOne()
+        
+        if userDefault.object(forKey: "item one completed") != nil {
+            textFieldOne.text = userDefault.object(forKey: "item one") as? String
+            print(textFieldOne.text!)
+            print(userDefault.object(forKey: "item one completed") as! Bool)
+            let completedFirstItem = userDefault.object(forKey: "item one completed") as! Bool
+            if completedFirstItem {
+                addCheckMarkOne()
+            }
         }
         
-        textFieldTwo.text = userDefault.object(forKey: "item two") as? String
-        print(textFieldTwo.text!)
-        print(userDefault.object(forKey: "item two completed") as! Bool)
-        let completedSecondItem = userDefault.object(forKey: "item two completed") as! Bool
-        if completedSecondItem {
-            addCheckMarkTwo()
+        if userDefault.object(forKey: "item two completed") != nil {
+            textFieldTwo.text = userDefault.object(forKey: "item two") as? String
+            print(textFieldTwo.text!)
+            print(userDefault.object(forKey: "item two completed") as! Bool)
+            let completedSecondItem = userDefault.object(forKey: "item two completed") as! Bool
+            if completedSecondItem {
+                addCheckMarkTwo()
+            }
         }
         
-        textFieldThree.text = userDefault.object(forKey: "item three") as? String
-        print(textFieldThree.text!)
-        print(userDefault.object(forKey: "item three completed") as! Bool)
-        let completedThirdItem = userDefault.object(forKey: "item three completed") as! Bool
-        if completedThirdItem {
-            addCheckMarkThree()
+        if userDefault.object(forKey: "item three completed") != nil {
+            textFieldThree.text = userDefault.object(forKey: "item three") as? String
+            print(textFieldThree.text!)
+            print(userDefault.object(forKey: "item three completed") as! Bool)
+            let completedThirdItem = userDefault.object(forKey: "item three completed") as! Bool
+            if completedThirdItem {
+                addCheckMarkThree()
+            }
         }
     }
     
@@ -276,7 +281,6 @@ class ToDoView: UIView, UITextFieldDelegate {
     }
     
     // MARK: - Lazy Instances
-    
     lazy var button: UIButton = {
         let button = UIButton()
         button.setTitle("Add To Mirror", for: .normal)
@@ -311,14 +315,14 @@ class ToDoView: UIView, UITextFieldDelegate {
         field.layer.cornerRadius = 9
         field.tag = 1
         
-//        if let font = UIFont(name: "Code_Pro_Demo", size: 18.0) {
-//            let attributes = [
-////                NSForegroundColorAttributeName: ColorPalette.blackColor,
-//                NSFontAttributeName : font]
-//            let attributedString = NSMutableAttributedString(string: field.text!, attributes: attributes)
-//            let textLength = attributedString.string.characters.count
-//            field.attributedText = attributedString
-//        }
+        //        if let font = UIFont(name: "Code_Pro_Demo", size: 18.0) {
+        //            let attributes = [
+        ////                NSForegroundColorAttributeName: ColorPalette.blackColor,
+        //                NSFontAttributeName : font]
+        //            let attributedString = NSMutableAttributedString(string: field.text!, attributes: attributes)
+        //            let textLength = attributedString.string.characters.count
+        //            field.attributedText = attributedString
+        //        }
         
         return field
     }()
@@ -351,21 +355,21 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     lazy var checkBoxOne: UIButton = {
         let button = UIButton()
-        button.backgroundColor = ColorPalette.whiteColor
+        button.backgroundColor = UIColor(white: 1.0, alpha: 0.7)
         button.addTarget(self, action: #selector(checkOffItemOne), for: .touchUpInside)
         return button
     }()
     
     lazy var checkBoxTwo: UIButton = {
         let button = UIButton()
-        button.backgroundColor = ColorPalette.whiteColor
+        button.backgroundColor = UIColor(white: 1.0, alpha: 0.7)
         button.addTarget(self, action: #selector(checkOffItemTwo), for: .touchUpInside)
         return button
     }()
     
     lazy var checkBoxThree: UIButton = {
         let button = UIButton()
-        button.backgroundColor = ColorPalette.whiteColor
+        button.backgroundColor = UIColor(white: 1.0, alpha: 0.7)
         button.addTarget(self, action: #selector(checkOffItemThree), for: .touchUpInside)
         return button
     }()
