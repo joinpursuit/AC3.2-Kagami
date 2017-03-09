@@ -54,6 +54,7 @@ class KagamiViewController: UIViewController {
     
     var widgetArray = [Widget(category: .weather), Widget(category: .time), Widget(category: .todos)]
     var previousPoint: CGPoint?
+    
     var didTapWidget: () -> () = { }
     
     // MARK: - View Lifecycle
@@ -258,7 +259,7 @@ class KagamiViewController: UIViewController {
                         make.height.width.equalToSuperview().multipliedBy(0.8)
                         make.center.equalToSuperview()
                     })
-                    
+                    self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
                     self.toDoView.layer.opacity = 1.0
                     
                     self.view.layoutIfNeeded()
@@ -335,7 +336,7 @@ class KagamiViewController: UIViewController {
     
     func saveToDo() {
         propertyAnimator?.addAnimations {
-            <#code#>
+            
         }
     }
     
