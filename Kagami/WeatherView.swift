@@ -8,6 +8,7 @@
 
 import UIKit
 import SnapKit
+import TwicketSegmentedControl
 
 class WeatherView: UIView, UISearchBarDelegate {
     
@@ -27,11 +28,12 @@ class WeatherView: UIView, UISearchBarDelegate {
 //            make.height.width.equalTo(100.0)
 //        }
         
+        self.backgroundColor = .white
         searchBar.delegate = self
         setupHierarchy()
-        setupConstraints()
-        setupBlurEffect()
+//        setupBlurEffect()
         setupOverlayView()
+        setupConstraints()
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -54,23 +56,14 @@ class WeatherView: UIView, UISearchBarDelegate {
     // MARK: - Set up Hierarchy & Constraints
     
     func setupHierarchy() {
-        self.addSubview(backgroundImage)
+        self.addSubview(segmentView)
+        self.addSubview(cardView)
         self.addSubview(searchBar)
-    }
-    
-    func setupConstraints() {
-        backgroundImage.snp.makeConstraints { (view) in
-            view.top.bottom.left.right.equalToSuperview()
-        }
-        searchBar.snp.makeConstraints { (view) in
-            view.left.right.equalToSuperview()
-            view.top.equalTo(self.snp.top).inset(65)
-        }
+        segmentView.addSubview(customSegmentControl)
     }
     
     func setupOverlayView() {
         // over lay view
-        self.addSubview(cardView)
         cardView.snp.makeConstraints { (view) in
             view.centerX.centerY.equalToSuperview()
             view.height.equalTo(self).multipliedBy(0.4)
@@ -101,14 +94,36 @@ class WeatherView: UIView, UISearchBarDelegate {
         }
     }
     
+    
+    func setupConstraints() {
+        searchBar.snp.makeConstraints { (view) in
+            view.centerX.equalToSuperview()
+            //            view.bottom.equalToSuperview()
+            view.top.equalTo(cardView.snp.bottom).offset(30)
+            view.width.equalTo(self).multipliedBy(0.60)
+            view.height.equalTo(40)
+        }
+        segmentView.snp.makeConstraints { (view) in
+            view.left.right.equalToSuperview()
+            view.top.equalTo(self.snp.top).inset(150)
+            view.height.equalTo(40)
+            view.width.equalTo(370)
+        }
+        customSegmentControl.snp.makeConstraints { (control) in
+            control.top.bottom.equalTo(segmentView)
+            control.left.equalTo(segmentView).inset(120)
+            control.right.equalTo(segmentView).inset(120)
+        }
+    }
+    
     // MARK: - Methods
     
-    func setupBlurEffect() {
-        let blur = UIBlurEffect(style: UIBlurEffectStyle.extraLight)
-        let blurEffectView = UIVisualEffectView(effect: blur)
-        blurEffectView.frame = self.bounds
-        backgroundImage.addSubview(blurEffectView)
-    }
+//    func setupBlurEffect() {
+//        let blur = UIBlurEffect(style: UIBlurEffectStyle.extraLight)
+//        let blurEffectView = UIVisualEffectView(effect: blur)
+//        blurEffectView.frame = self.bounds
+//        backgroundImage.addSubview(blurEffectView)
+//    }
     
     func switchToFahrenheit() {
         if isSelected {
@@ -120,9 +135,9 @@ class WeatherView: UIView, UISearchBarDelegate {
         }
     }
     
-    func switchToCelcius() {
+    func switchToCelsius() {
         if isSelected {
-            print("celcius")
+            print("celsius")
             celsiusButton.setTitleColor(.gray, for: .normal)
             isSelected = !isSelected
         }else {
@@ -167,13 +182,6 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     // MARK: - Lazy Instances
     
-    lazy var backgroundImage: UIImageView = {
-        let image = UIImage(named: "weather-background")
-        let imageView = UIImageView(image: image)
-        imageView.contentMode = .scaleAspectFill
-        return imageView
-    }()
-    
     lazy var weatherIcon: UIImageView = {
         let image = UIImage(named: "sunny")
         let imageView = UIImageView(image: image)
@@ -184,7 +192,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     lazy var cardView: UIView = {
         let card = UIView()
         card.layer.cornerRadius = 9
-        card.backgroundColor = .white
+        card.backgroundColor = .gray
         return card
     }()
     
@@ -205,16 +213,47 @@ class WeatherView: UIView, UISearchBarDelegate {
     lazy var celsiusButton: UIButton = {
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 75, height: 75))
         button.setTitle("℃", for: .normal)
-        button.addTarget(self, action: #selector(switchToCelcius), for: .touchUpInside)
+        button.addTarget(self, action: #selector(switchToCelsius), for: .touchUpInside)
         button.setTitleColor(ColorPalette.blackColor, for: .normal)
         return button
     }()
     
     lazy var searchBar: UISearchBar = {
         let bar = UISearchBar()
-        bar.placeholder = "Enter a city here"
-        bar.barTintColor = ColorPalette.accentColor
+        bar.placeholder = "ENTER ZIPCODE"
+        bar.layer.cornerRadius = 15
+        bar.clipsToBounds = true
+        bar.searchBarStyle = UISearchBarStyle.prominent
+        bar.backgroundColor = ColorPalette.whiteColor
+//        bar.barTintColor = ColorPalette.accentColor
         return bar
     }()
+    
+    lazy var customSegmentControl: TwicketSegmentedControl = {
+        let frame = CGRect(x: 0, y: self.frame.height / 2, width: self.frame.width, height: 40)
+        let segmentedControl = TwicketSegmentedControl(frame: frame)
+        let titles = ["℉", "℃"]
+        segmentedControl.setSegmentItems(titles)
+        segmentedControl.delegate = self
+        segmentedControl.highlightTextColor = ColorPalette.whiteColor
+        segmentedControl.sliderBackgroundColor = ColorPalette.accentColor
+        segmentedControl.isSliderShadowHidden = false
+        return segmentedControl
+    }()
+    
+    lazy var segmentView: UIView = {
+        let view = UIView()
+        return view
+    }()
+}
 
+extension WeatherView: TwicketSegmentedControlDelegate {
+    func didSelect(_ segmentIndex: Int) {
+        print("Selected index at: \(segmentIndex)!")
+        if segmentIndex == 0 {
+            print("switch to fahrenheight")
+        } else {
+            print("Switch to celsius")
+        }
+    }
 }
