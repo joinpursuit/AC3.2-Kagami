@@ -205,15 +205,53 @@ class KagamiViewController: UIViewController {
             
             previousPoint = CGPoint(x: view.frame.midX, y: view.frame.midY)
             
+            propertyAnimator?.addAnimations {
+                view.snp.remakeConstraints({ (make) in
+                    make.leading.top.equalToSuperview().offset(8.0)
+                    make.size.equalTo(50.0)
+                })
+                self.view.layoutIfNeeded()
+            }
+            
             switch view.accessibilityIdentifier! {
-            default:
-                propertyAnimator?.addAnimations {
-                    view.snp.remakeConstraints({ (make) in
-                        make.leading.top.equalToSuperview().offset(8.0)
-                        make.size.equalTo(50.0)
+            case "weather":
+                propertyAnimator?.addAnimations ({
+                    self.weatherView.snp.remakeConstraints({ (make) in
+                        make.height.width.equalToSuperview().multipliedBy(0.8)
+                        make.center.equalToSuperview()
                     })
+                    
+                    self.weatherView.layer.opacity = 1.0
+                    
                     self.view.layoutIfNeeded()
-                }
+                }, delayFactor: 0.5)
+
+            case "time":
+                propertyAnimator?.addAnimations ({
+                    self.timeView.snp.remakeConstraints({ (make) in
+                        make.height.width.equalToSuperview().multipliedBy(0.8)
+                        make.center.equalToSuperview()
+                    })
+                    
+                    self.timeView.layer.opacity = 1.0
+                    
+                    self.view.layoutIfNeeded()
+                }, delayFactor: 0.5)
+
+            case "toDos":
+                propertyAnimator?.addAnimations ({
+                    self.toDoView.snp.remakeConstraints({ (make) in
+                        make.height.width.equalToSuperview().multipliedBy(0.8)
+                        make.center.equalToSuperview()
+                    })
+                    
+                    self.toDoView.layer.opacity = 1.0
+                    
+                    self.view.layoutIfNeeded()
+                }, delayFactor: 0.5)
+
+            default:
+                
                 
                 propertyAnimator?.addAnimations ({
                     self.toDoView.snp.remakeConstraints({ (make) in
@@ -303,7 +341,7 @@ class KagamiViewController: UIViewController {
     }()
     
     lazy var mirrorImageView: UIImageView = {
-        let image = UIImage(named: "mirrobackground")
+        let image = UIImage(named: "mirrorbackground")
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -317,6 +355,20 @@ class KagamiViewController: UIViewController {
     
     lazy var toDoView: ToDoView = {
         let view = ToDoView()
+        view.layer.opacity = 0.0
+        view.clipsToBounds = true
+        return view
+    }()
+    
+    lazy var weatherView: WeatherView = {
+        let view = WeatherView()
+        view.layer.opacity = 0.0
+        view.clipsToBounds = true
+        return view
+    }()
+    
+    lazy var timeView: TimeView = {
+        let view = TimeView()
         view.layer.opacity = 0.0
         view.clipsToBounds = true
         return view
