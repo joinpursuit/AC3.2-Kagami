@@ -42,7 +42,7 @@ class Router {
     }
     
     func hideWeather() {
-        navController?.popViewController(animated: true)
+//        navController?.popViewController(animated: true)
     }
     
 }
