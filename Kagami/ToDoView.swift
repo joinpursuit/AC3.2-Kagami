@@ -42,7 +42,6 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     func setupView() {
         self.addSubview(doneButton)
-        self.addSubview(backgroundView)
         self.addSubview(textFieldOne)
         self.addSubview(textFieldTwo)
         self.addSubview(textFieldThree)
@@ -56,14 +55,12 @@ class ToDoView: UIView, UITextFieldDelegate {
         doneButton.snp.makeConstraints { (view) in
             view.left.right.bottom.equalToSuperview()
         }
-        backgroundView.snp.makeConstraints { (view) in
-            view.top.bottom.left.right.equalToSuperview()
-        }
         
         // textfields
         textFieldOne.snp.makeConstraints { (field) in
             field.top.equalTo(self.snp.top).inset(100)
-            field.centerX.equalToSuperview()
+//            field.centerX.equalToSuperview()
+            field.leading.equalTo(self.snp.leading).inset(10)
             field.height.equalTo(self.snp.height).multipliedBy(0.08)
             field.width.equalTo(self.snp.width).multipliedBy(0.9)
         }
