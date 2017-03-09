@@ -96,24 +96,24 @@ class KagamiViewController: UIViewController {
         
         view.backgroundColor = .white
         
+        view.addSubview(mirrorImageView)
         view.addSubview(kagamiView)
-        kagamiView.addSubview(mirrorImageView)
         view.addSubview(iconContainerView)
         view.addSubview(toDoView)
         
-        //        hamburger.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(annieSegue)))
+        toDoView.doneButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
     }
     
     private func configureConstraints() {
         // mirror view
         kagamiView.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().offset(22.0)
-            make.leading.trailing.equalToSuperview()
+            make.leading.top.trailing.equalToSuperview()
             make.bottom.equalTo(iconContainerView.snp.top)
         }
         
-        mirrorImageView.snp.makeConstraints({ (view) in
-            view.top.bottom.left.right.equalTo(kagamiView)
+        mirrorImageView.snp.makeConstraints({ (make) in
+            make.top.left.right.equalToSuperview()
+            make.bottom.equalTo(iconContainerView.snp.top)
         })
         
         // widget dock
@@ -333,17 +333,24 @@ class KagamiViewController: UIViewController {
         }
     }
     
+    func saveToDo() {
+        propertyAnimator?.addAnimations {
+            <#code#>
+        }
+    }
+    
     // MARK: - Lazy Instantiates
 
     lazy var kagamiView: UIView = {
         let view = UIView()
+        view.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
         return view
     }()
     
     lazy var mirrorImageView: UIImageView = {
         let image = UIImage(named: "mirrorbackground")
         let imageView = UIImageView(image: image)
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
@@ -356,6 +363,7 @@ class KagamiViewController: UIViewController {
     lazy var toDoView: ToDoView = {
         let view = ToDoView()
         view.layer.opacity = 0.0
+        view.layer.cornerRadius = 10.0
         view.clipsToBounds = true
         return view
     }()

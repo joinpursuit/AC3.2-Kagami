@@ -41,7 +41,8 @@ class ToDoView: UIView, UITextFieldDelegate {
     // MARK: - Set up Hierarchy & constraints
     
     func setupView() {
-        self.addSubview(button)
+        self.addSubview(doneButton)
+        self.addSubview(backgroundView)
         self.addSubview(textFieldOne)
         self.addSubview(textFieldTwo)
         self.addSubview(textFieldThree)
@@ -52,9 +53,11 @@ class ToDoView: UIView, UITextFieldDelegate {
     }
     
     func setupConstraints() {
-        button.snp.makeConstraints { (view) in
-            view.left.right.equalToSuperview()
-            view.bottom.equalTo(self.snp.bottom).inset(30)
+        doneButton.snp.makeConstraints { (view) in
+            view.left.right.bottom.equalToSuperview()
+        }
+        backgroundView.snp.makeConstraints { (view) in
+            view.top.bottom.left.right.equalToSuperview()
         }
         
         // textfields
@@ -284,7 +287,7 @@ class ToDoView: UIView, UITextFieldDelegate {
     }
     
     // MARK: - Lazy Instances
-    lazy var button: UIButton = {
+    lazy var doneButton: UIButton = {
         let button = UIButton()
         button.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
         let image = UIImage(named: "Add Filled-50")
