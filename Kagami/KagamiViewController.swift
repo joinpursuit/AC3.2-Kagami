@@ -299,10 +299,6 @@ class KagamiViewController: UIViewController {
 
     lazy var kagamiView: UIView = {
         let view = UIView()
-//        view.backgroundColor = ColorPalette.accentColor
-//        view.layer.borderColor = ColorPalette.blackColor.cgColor
-//        view.layer.borderWidth = 1.0
-//        view.alpha = 0.8
         return view
     }()
     

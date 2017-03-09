@@ -30,6 +30,8 @@ class ToDoView: UIView, UITextFieldDelegate {
         setupView()
         setupConstraints()
         loadUserDefaults()
+        
+        self.backgroundColor = UIColor.white.withAlphaComponent(0.5)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -40,7 +42,6 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     func setupView() {
         self.addSubview(button)
-        self.addSubview(backgroundView)
         self.addSubview(textFieldOne)
         self.addSubview(textFieldTwo)
         self.addSubview(textFieldThree)
@@ -52,10 +53,8 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     func setupConstraints() {
         button.snp.makeConstraints { (view) in
-            view.left.right.bottom.equalToSuperview()
-        }
-        backgroundView.snp.makeConstraints { (view) in
-            view.top.bottom.left.right.equalToSuperview()
+            view.left.right.equalToSuperview()
+            view.bottom.equalTo(self.snp.bottom).inset(30)
         }
         
         // textfields
@@ -80,25 +79,28 @@ class ToDoView: UIView, UITextFieldDelegate {
         
         // checkboxes
         checkBoxOne.snp.makeConstraints { (make) in
-            make.trailing.equalToSuperview().inset(8.0)
-            make.centerY.equalToSuperview()
-            make.size.equalTo(40.0)
+            make.trailing.equalToSuperview().inset(8)
+            make.top.equalTo(textFieldOne.snp.top).inset(5)
+            make.bottom.equalTo(textFieldOne.snp.bottom).inset(5)
+            make.size.equalTo(35)
         }
         checkBoxTwo.snp.makeConstraints { (make) in
-            make.trailing.equalToSuperview().inset(8.0)
-            make.centerY.equalToSuperview()
-            make.size.equalTo(40.0)
+            make.trailing.equalToSuperview().inset(8)
+            make.top.equalTo(textFieldTwo.snp.top).inset(5)
+            make.bottom.equalTo(textFieldTwo.snp.bottom).inset(5)
+            make.size.equalTo(35)
         }
         checkBoxThree.snp.makeConstraints { (make) in
-            make.trailing.equalToSuperview().inset(8.0)
-            make.centerY.equalToSuperview()
-            make.size.equalTo(40.0)
+            make.trailing.equalToSuperview().inset(8)
+            make.top.equalTo(textFieldThree.snp.top).inset(5)
+            make.bottom.equalTo(textFieldThree.snp.bottom).inset(5)
+            make.size.equalTo(35)
         }
     }
     
     // MARK: - Methods
     
-    func addItem() {
+    func addToMirror() {
         print("add to mirror")
     }
     
@@ -283,9 +285,9 @@ class ToDoView: UIView, UITextFieldDelegate {
     // MARK: - Lazy Instances
     lazy var button: UIButton = {
         let button = UIButton()
-        button.setTitle("Add To Mirror", for: .normal)
-        button.setTitleColor(ColorPalette.blackColor, for: .normal)
-        button.addTarget(self, action: #selector(addItem), for: .touchUpInside)
+        button.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
+        let image = UIImage(named: "Add Filled-50")
+        button.setImage(image, for: .normal)
         return button
     }()
     
@@ -293,15 +295,6 @@ class ToDoView: UIView, UITextFieldDelegate {
         let tableView = UITableView()
         tableView.estimatedRowHeight = 70
         return tableView
-    }()
-    
-    lazy var backgroundView: UIImageView = {
-        let view = UIImageView()
-        let im = UIImage(named: "checklist-bg")
-        view.image = im
-        view.contentMode = .scaleAspectFill
-        view.alpha = 0.6
-        return view
     }()
     
     lazy var textFieldOne: UITextField = {
@@ -314,16 +307,7 @@ class ToDoView: UIView, UITextFieldDelegate {
         field.contentVerticalAlignment = .center
         field.layer.cornerRadius = 9
         field.tag = 1
-        
-        //        if let font = UIFont(name: "Code_Pro_Demo", size: 18.0) {
-        //            let attributes = [
-        ////                NSForegroundColorAttributeName: ColorPalette.blackColor,
-        //                NSFontAttributeName : font]
-        //            let attributedString = NSMutableAttributedString(string: field.text!, attributes: attributes)
-        //            let textLength = attributedString.string.characters.count
-        //            field.attributedText = attributedString
-        //        }
-        
+        field.font = UIFont(name: "Code-Pro-Demo", size: 20)
         return field
     }()
     
@@ -337,6 +321,7 @@ class ToDoView: UIView, UITextFieldDelegate {
         field.contentVerticalAlignment = .center
         field.layer.cornerRadius = 9
         field.tag = 2
+        field.font = UIFont(name: "Code-Pro-Demo", size: 20)
         return field
     }()
     
@@ -350,26 +335,27 @@ class ToDoView: UIView, UITextFieldDelegate {
         field.contentVerticalAlignment = .center
         field.layer.cornerRadius = 9
         field.tag = 3
+        field.font = UIFont(name: "Code-Pro-Demo", size: 20)
         return field
     }()
     
     lazy var checkBoxOne: UIButton = {
         let button = UIButton()
-        button.backgroundColor = UIColor(white: 1.0, alpha: 0.7)
+        button.backgroundColor = UIColor(white: 1.0, alpha: 0.9)
         button.addTarget(self, action: #selector(checkOffItemOne), for: .touchUpInside)
         return button
     }()
     
     lazy var checkBoxTwo: UIButton = {
         let button = UIButton()
-        button.backgroundColor = UIColor(white: 1.0, alpha: 0.7)
+        button.backgroundColor = UIColor(white: 1.0, alpha: 0.9)
         button.addTarget(self, action: #selector(checkOffItemTwo), for: .touchUpInside)
         return button
     }()
     
     lazy var checkBoxThree: UIButton = {
         let button = UIButton()
-        button.backgroundColor = UIColor(white: 1.0, alpha: 0.7)
+        button.backgroundColor = UIColor(white: 1.0, alpha: 0.9)
         button.addTarget(self, action: #selector(checkOffItemThree), for: .touchUpInside)
         return button
     }()
