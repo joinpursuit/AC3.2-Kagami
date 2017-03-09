@@ -35,6 +35,7 @@
 		9C49BA931E70A9D7001C4780 /* Code_Pro_Light_Demo.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C49BA911E70A9D7001C4780 /* Code_Pro_Light_Demo.otf */; };
 		9CBE48FA1E6D05F700F5BA84 /* CustomizeWeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBE48F91E6D05F700F5BA84 /* CustomizeWeatherViewController.swift */; };
 		CC3EF4561E70DDA200D6AA2A /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC3EF4551E70DDA200D6AA2A /* Time.swift */; };
+		CC9032DF1E71F59D00014276 /* TImeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9032DE1E71F59D00014276 /* TImeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,6 +70,7 @@
 		9CBE48F91E6D05F700F5BA84 /* CustomizeWeatherViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomizeWeatherViewController.swift; sourceTree = "<group>"; };
 		9F471247316DDB5A8497911B /* Pods_Kagami.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Kagami.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC3EF4551E70DDA200D6AA2A /* Time.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Time.swift; sourceTree = "<group>"; };
+		CC9032DE1E71F59D00014276 /* TImeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TImeView.swift; sourceTree = "<group>"; };
 		E91726256CD58FA69FD00264 /* Pods-Kagami.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kagami.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Kagami/Pods-Kagami.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -164,6 +166,7 @@
 			children = (
 				478B30B31E6DF95300FD580C /* WeatherView.swift */,
 				9C49BA7F1E6F02CC001C4780 /* ToDoView.swift */,
+				CC9032DE1E71F59D00014276 /* TImeView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -361,6 +364,7 @@
 				478B30B71E6DFDBE00FD580C /* Weather.swift in Sources */,
 				478B30A71E6763F600FD580C /* SelectionViewController.swift in Sources */,
 				478B30B41E6DF95300FD580C /* WeatherView.swift in Sources */,
+				CC9032DF1E71F59D00014276 /* TImeView.swift in Sources */,
 				3E91CEDC1E6780CF0074AA31 /* ForecastWeather.swift in Sources */,
 				9C49BA861E6F1FA9001C4780 /* ToDo.swift in Sources */,
 				478B30AC1E68D54700FD580C /* DailyWeatherCustomization.swift in Sources */,
