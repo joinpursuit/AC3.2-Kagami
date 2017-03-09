@@ -11,6 +11,7 @@ import SnapKit
 import Firebase
 import FirebaseDatabase
 import FirebaseAuth
+import TwicketSegmentedControl
 
 class TimeViewController: UIViewController {
   var time: Time?
@@ -40,16 +41,25 @@ class TimeViewController: UIViewController {
   }
   
   func configureConstraints() {
+    //Views
+    segmentView.snp.makeConstraints { (view) in
+      view.left.right.equalToSuperview()
+      view.top.equalTo(self.snp.top).inset(150)
+      view.height.equalTo(40)
+      view.width.equalTo(370)
+    }
     clockAndTimeView.snp.makeConstraints { (view) in
       view.top.trailing.leading.equalToSuperview()
       view.height.equalTo(self.view.snp.height).multipliedBy(0.5)
     }
     
+    //Labels
     timeLabel.snp.makeConstraints { (label) in
       label.centerX.equalTo(clockAndTimeView.snp.centerX)
       label.centerY.equalTo(clockAndTimeView.snp.centerY)
     }
     
+    //ImageViews
     clockImageView.snp.makeConstraints { (view) in
       view.height.equalTo(clockAndTimeView.snp.height).multipliedBy(0.8)
       view.width.equalTo(clockAndTimeView.snp.width).multipliedBy(0.8)
@@ -57,13 +67,14 @@ class TimeViewController: UIViewController {
       view.centerY.equalTo(clockAndTimeView.snp.centerY)
     }
     
+    //SegmentedControl
     timeFormatSegmentedControl.snp.makeConstraints { (view) in
-      view.top.equalTo(clockAndTimeView.snp.bottom)
-      view.centerX.equalTo(clockAndTimeView.snp.centerX)
-      view.height.equalTo(50)
-      view.width.equalTo(100)
+      control.top.bottom.equalTo(segmentView)
+      control.left.equalTo(segmentView).inset(120)
+      control.right.equalTo(segmentView).inset(120)
     }
     
+    //Button
     doneButton.snp.makeConstraints { (view) in
       view.centerX.equalToSuperview()
       view.bottom.equalToSuperview()
@@ -128,6 +139,10 @@ class TimeViewController: UIViewController {
     view.translatesAutoresizingMaskIntoConstraints = false
     return view
   }()
+  lazy var segmentView: UIView = {
+    let view = UIView()
+    return view
+  }()
   
   //ImageViews
   lazy var clockImageView: UIImageView = {
@@ -138,14 +153,15 @@ class TimeViewController: UIViewController {
     return imageView
   }()
   
-  //UISegmentedControl
-  lazy var timeFormatSegmentedControl: UISegmentedControl = {
-    let segmentedControl: UISegmentedControl = UISegmentedControl(items: ["12 HR" , "24 HR"])
-    segmentedControl.layer.cornerRadius = 5.0 
-    segmentedControl.backgroundColor = .black
-    segmentedControl.tintColor = .red
-    segmentedControl.addTarget(self, action: #selector(timeFormatChanged(sender:)), for: .valueChanged)
-    segmentedControl.selectedSegmentIndex = 0
+  //TwicketSegmentedControl
+  lazy var timeFormatSegmentControl: TwicketSegmentedControl = {
+    let segmentedControl = TwicketSegmentedControl(frame: frame)
+    let titles = ["12 HR", "24 HR"]
+    segmentedControl.setSegmentItems(titles)
+    segmentedControl.delegate = self
+    segmentedControl.highlightTextColor = ColorPalette.whiteColor
+    segmentedControl.sliderBackgroundColor = ColorPalette.accentColor
+    segmentedControl.isSliderShadowHidden = false
     return segmentedControl
   }()
   
