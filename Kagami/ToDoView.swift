@@ -42,6 +42,7 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     func setupView() {
         self.addSubview(doneButton)
+        self.addSubview(cancelButton)
         self.addSubview(textFieldOne)
         self.addSubview(textFieldTwo)
         self.addSubview(textFieldThree)
@@ -49,11 +50,18 @@ class ToDoView: UIView, UITextFieldDelegate {
         textFieldOne.addSubview(checkBoxOne)
         textFieldTwo.addSubview(checkBoxTwo)
         textFieldThree.addSubview(checkBoxThree)
+        
+        doneButton.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
+        cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
     }
     
     func setupConstraints() {
         doneButton.snp.makeConstraints { (view) in
-            view.left.right.bottom.equalToSuperview()
+            view.left.bottom.equalToSuperview()
+        }
+        
+        cancelButton.snp.makeConstraints { (view) in
+            view.right.bottom.equalToSuperview()
         }
         
         // textfields
@@ -102,6 +110,10 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     func addToMirror() {
         print("add to mirror")
+    }
+   
+    func cancelTapped() {
+        print("return to home page")
     }
     
     func checkOffItemOne() {
@@ -283,11 +295,20 @@ class ToDoView: UIView, UITextFieldDelegate {
     }
     
     // MARK: - Lazy Instances
+    
     lazy var doneButton: UIButton = {
         let button = UIButton()
-        button.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
-        let image = UIImage(named: "Add Filled-50")
+        let image = UIImage(named: "Done")
         button.setImage(image, for: .normal)
+        button.setTitle("Done", for: .normal)
+        return button
+    }()
+    
+    lazy var cancelButton: UIButton = {
+        let button = UIButton()
+        let image = UIImage(named: "Cancel")
+        button.setImage(image, for: .normal)
+        button.setTitle("Cancel", for: .normal)
         return button
     }()
     

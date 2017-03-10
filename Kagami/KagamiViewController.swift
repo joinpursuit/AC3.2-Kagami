@@ -23,9 +23,9 @@ struct Widget {
         
         var icon : UIImage {
             switch self {
-            case .weather: return UIImage(named: "Flash_Logo_01")!
-            case .time: return UIImage(named: "Watch-50")!
-            case .todos: return UIImage(named: "Appointment Reminders-50")!
+            case .weather: return UIImage(named: "cloud-icon")!
+            case .time: return UIImage(named: "clock-icon")!
+            case .todos: return UIImage(named: "checklist-icon")!
             }
         }
         
@@ -54,6 +54,7 @@ class KagamiViewController: UIViewController {
     
     var widgetArray = [Widget(category: .weather), Widget(category: .time), Widget(category: .todos)]
     var previousPoint: CGPoint?
+    var widgetBeingEdited: UIImageView?
     
     var didTapWidget: () -> () = { }
     
@@ -62,7 +63,7 @@ class KagamiViewController: UIViewController {
         super.viewDidLoad()
         
         self.title = "鏡"
-        propertyAnimator = UIViewPropertyAnimator(duration: 2.0, dampingRatio: 0.75, animations: nil)
+        propertyAnimator = UIViewPropertyAnimator(duration: 0.75, dampingRatio: 0.77, animations: nil)
         
         setupViewHierarchy()
         
@@ -104,7 +105,10 @@ class KagamiViewController: UIViewController {
         view.addSubview(timeView)
         view.addSubview(toDoView)
         
+        timeView.doneButton.addTarget(self, action: #selector(saveTime), for: .touchUpInside)
+        
         toDoView.doneButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
+        toDoView.cancelButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
     }
     
     private func configureConstraints() {
@@ -145,6 +149,7 @@ class KagamiViewController: UIViewController {
             let widgetDict = userDefault.dictionary(forKey: imageView.accessibilityIdentifier!)
             
             if widgetDict != nil {
+                
                 if widgetDict?["onMirror"] as! Bool == true {
                     let x = widgetDict?["x"] as! CGFloat
                     let y = widgetDict?["y"] as! CGFloat
@@ -153,7 +158,8 @@ class KagamiViewController: UIViewController {
                         make.center.equalTo(CGPoint(x: x, y: y))
                         make.height.width.equalTo(50.0)
                     })
-                } else {
+                }
+                else {
                     if widgetDict?["onMirror"] as! Bool == false {
                         self.iconContainerView.addSubview(imageView)
                         imageView.snp.makeConstraints({ (make) in
@@ -172,22 +178,21 @@ class KagamiViewController: UIViewController {
                     make.leading.equalToSuperview().offset((imageView.tag * 50) + (8 * imageView.tag) + 8)
                 }
             }
-            
         }
         
         weatherView.snp.makeConstraints { (make) in
-            make.leading.top.equalToSuperview()
-            make.size.equalTo(1.0)
+            make.center.equalTo(Widget(category: .weather).imageView)
+            make.size.equalTo(0.1)
         }
         
         timeView.snp.makeConstraints { (make) in
-            make.leading.top.equalToSuperview()
-            make.size.equalTo(1.0)
+            make.center.equalTo(widgetArray[1].imageView)
+            make.size.equalTo(0.1)
         }
         
         toDoView.snp.makeConstraints { (make) in
-            make.leading.top.equalToSuperview()
-            make.size.equalTo(1.0)
+            make.center.equalTo(widgetArray[2].imageView)
+            make.size.equalTo(0.1)
         }
     }
     
@@ -211,19 +216,12 @@ class KagamiViewController: UIViewController {
     }
     
     func wasTapped(_ gesture: UITapGestureRecognizer) {
+        
         let view = gesture.view!
         
         if gesture.state == .ended {
             
             previousPoint = CGPoint(x: view.frame.midX, y: view.frame.midY)
-            
-            propertyAnimator?.addAnimations {
-                view.snp.remakeConstraints({ (make) in
-                    make.leading.top.equalToSuperview().offset(8.0)
-                    make.size.equalTo(50.0)
-                })
-                self.view.layoutIfNeeded()
-            }
             
             switch view.accessibilityIdentifier! {
             case "weather":
@@ -237,8 +235,9 @@ class KagamiViewController: UIViewController {
                     self.weatherView.layer.opacity = 1.0
                     
                     self.view.layoutIfNeeded()
-                }, delayFactor: 0.5)
+                })
 
+                widgetBeingEdited = widgetArray[0].imageView
             case "time":
                 propertyAnimator?.addAnimations ({
                     self.timeView.snp.remakeConstraints({ (make) in
@@ -250,8 +249,9 @@ class KagamiViewController: UIViewController {
                     self.timeView.layer.opacity = 1.0
                     
                     self.view.layoutIfNeeded()
-                }, delayFactor: 0.5)
-
+                })
+                
+                widgetBeingEdited = widgetArray[1].imageView
             case "toDos":
                 propertyAnimator?.addAnimations ({
                     self.toDoView.snp.remakeConstraints({ (make) in
@@ -259,30 +259,19 @@ class KagamiViewController: UIViewController {
                         make.center.equalToSuperview()
                     })
                     
-                    self.toDoView.layer.opacity = 1.0
-                    
-                    self.view.layoutIfNeeded()
-                }, delayFactor: 0.5)
-
-            default:
-                
-                propertyAnimator?.addAnimations ({
-                    self.toDoView.snp.remakeConstraints({ (make) in
-                        make.height.width.equalToSuperview().multipliedBy(0.8)
-                        make.center.equalToSuperview()
-                    })
                     self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
                     self.toDoView.layer.opacity = 1.0
                     
                     self.view.layoutIfNeeded()
-                    }, delayFactor: 0.5)
+                })
 
-                propertyAnimator?.startAnimation()
+                widgetBeingEdited = widgetArray[2].imageView
+            default:
+                break
             }
             propertyAnimator?.startAnimation()
         }
     }
-    
     
     func wasDragged(_ gesture: UIPanGestureRecognizer) {
         let label = gesture.view!
@@ -310,7 +299,8 @@ class KagamiViewController: UIViewController {
                 self.kagamiView.addSubview(label)
                 label.snp.remakeConstraints({ (make) in
                     make.center.equalTo(centerOfLabel)
-                    make.height.width.equalTo(50.0)
+                    make.height.width.e
+                    qualTo(50.0)
                 })
                 kagamiView.layoutSubviews()
                 userDefault.set(["onMirror" : true, "x" : label.frame.midX, "y" : label.frame.midY], forKey: label.accessibilityIdentifier!)
@@ -323,19 +313,24 @@ class KagamiViewController: UIViewController {
                     make.leading.equalToSuperview().offset((label.tag * 50) + (8 * label.tag) + 8)
                 }
                 userDefault.set(["onMirror" : false, "x" : label.frame.midX, "y" : label.frame.midY], forKey: label.accessibilityIdentifier!)
+                ref.child(label.accessibilityIdentifier!).updateChildValues(["onMirror" : false])
             }
             
             for subView in kagamiView.subviews {
                 switch subView.accessibilityIdentifier! {
                 case "weather":
                     let weatherNode = ref.child("weather")
-                    //weatherNode.updateChildValues(["x" : (subView.frame.minX / kagamiView.frame.maxX) , "y" : (subView.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
+                    weatherNode.updateChildValues(["x" : (subView.frame.minX / kagamiView.frame.maxX) , "y" : (subView.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
                     print("This Is \(subView.accessibilityIdentifier!)")
                     print(subView.frame)
                 case "time":
+                    let timeNode = ref.child("time")
+                    timeNode.updateChildValues(["x" : (subView.frame.minX / kagamiView.frame.maxX) , "y" : (subView.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
                     print("This Is \(subView.accessibilityIdentifier!)")
                     print(subView.frame)
                 case "toDos":
+                    let toDoNode = ref.child("toDos")
+                    toDoNode.updateChildValues(["x" : (subView.frame.minX / kagamiView.frame.maxX) , "y" : (subView.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
                     print("This Is \(subView.accessibilityIdentifier!)")
                     print(subView.frame)
                     
@@ -347,10 +342,49 @@ class KagamiViewController: UIViewController {
         }
     }
     
-    func saveToDo() {
+    // MARK: - Save custom settings
+    //TODO: - Migrate to seperate file
+    func saveTime(_ sender: UIButton) {
+        guard let view = widgetBeingEdited else { return }
+        
+        if sender == timeView.doneButton {
+            // save to firebase
+            print("time done works")
+        }
+        
         propertyAnimator?.addAnimations {
             
+            self.timeView.snp.remakeConstraints({ (make) in
+                make.size.equalTo(0.1)
+                make.center.equalTo(view.snp.center)
+            })
+            
+            self.view.layoutIfNeeded()
         }
+        //TODO: backgroundColor inside animations will flash black screen for 0.5 seconds
+        self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
+        propertyAnimator?.startAnimation()
+    }
+    
+    func saveToDo(_ sender: UIButton) {
+        guard let view = widgetBeingEdited else { return }
+        
+        if sender == toDoView.doneButton {
+            // save to firebase
+            print("todo done works")
+        }
+        
+        propertyAnimator?.addAnimations {
+
+            self.toDoView.snp.remakeConstraints({ (make) in
+                make.size.equalTo(0.1)
+                make.center.equalTo(view.snp.center)
+            })
+            
+            self.view.layoutIfNeeded()
+        }
+        self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
+        propertyAnimator?.startAnimation()
     }
     
     // MARK: - Lazy Instantiates
@@ -358,11 +392,13 @@ class KagamiViewController: UIViewController {
     lazy var kagamiView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
+        view.layer.borderColor = UIColor.black.cgColor
+        view.layer.borderWidth = 2.0
         return view
     }()
     
     lazy var mirrorImageView: UIImageView = {
-        let image = UIImage(named: "mirrorbackground")
+        let image = UIImage(named: "mirror2")
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFill
         return imageView
@@ -370,7 +406,7 @@ class KagamiViewController: UIViewController {
     
     lazy var iconContainerView: UIView = {
         let view: UIView = UIView()
-        view.backgroundColor = .clear
+        view.backgroundColor = ColorPalette.whiteColor.withAlphaComponent(5)
         return view
     }()
     
@@ -390,7 +426,7 @@ class KagamiViewController: UIViewController {
     
     lazy var toDoView: ToDoView = {
         let view = ToDoView()
-        view.layer.opacity = 0.0
+        view.layer.opacity = 1.0
         view.layer.cornerRadius = 10.0
         view.clipsToBounds = true
         return view

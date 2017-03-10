@@ -18,7 +18,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.backgroundColor = .white
+        self.backgroundColor = ColorPalette.whiteColor//.withAlphaComponent(0.5)
         searchBar.delegate = self
         setupHierarchy()
 //        setupBlurEffect()
@@ -46,19 +46,24 @@ class WeatherView: UIView, UISearchBarDelegate {
         self.addSubview(locationLabel)
         self.addSubview(weatherIcon)
         self.addSubview(doneButton)
+        self.addSubview(degreeLabel)
         segmentView.addSubview(customSegmentControl)
     }
     
     func setupConstraints() {
         searchBar.snp.makeConstraints { (view) in
             view.centerX.equalToSuperview()
-            view.top.equalTo(self.snp.top).inset(150)
+            view.top.equalTo(self.snp.top).inset(50)
             view.width.equalTo(self).multipliedBy(0.60)
             view.height.equalTo(40)
         }
-        locationLabel.snp.makeConstraints { (label) in
+        degreeLabel.snp.makeConstraints { (label) in
             label.centerX.equalToSuperview()
             label.top.equalTo(searchBar.snp.bottom).offset(20)
+        }
+        locationLabel.snp.makeConstraints { (label) in
+            label.centerX.equalToSuperview()
+            label.top.equalTo(degreeLabel.snp.bottom).offset(10)
         }
         weatherIcon.snp.makeConstraints { (view) in
             view.top.equalTo(locationLabel.snp.bottom).offset(20)
@@ -72,12 +77,12 @@ class WeatherView: UIView, UISearchBarDelegate {
         }
         customSegmentControl.snp.makeConstraints { (control) in
             control.top.bottom.equalTo(segmentView)
-            control.left.equalTo(segmentView).inset(130)
-            control.right.equalTo(segmentView).inset(130)
+            control.left.equalTo(segmentView).inset(120)
+            control.right.equalTo(segmentView).inset(120)
         }
         doneButton.snp.makeConstraints { (view) in
             view.centerX.equalToSuperview()
-            view.top.equalTo(segmentView.snp.bottom).offset(20)
+            view.bottom.equalTo(self.snp.bottom).inset(30)
         }
     }
     
@@ -149,7 +154,14 @@ class WeatherView: UIView, UISearchBarDelegate {
     lazy var locationLabel: UILabel = {
         let label = UILabel()
         label.text = "New York"
-        label.font = UIFont(name: "Code-Pro-Demo", size: 38)
+        label.font = UIFont(name: "Code-Pro-Demo", size: 20)
+        return label
+    }()
+    
+    lazy var degreeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "69℉"
+        label.font = UIFont(name: "Code-Pro-Demo", size: 60)
         return label
     }()
     
