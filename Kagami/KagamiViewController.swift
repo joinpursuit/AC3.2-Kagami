@@ -299,8 +299,7 @@ class KagamiViewController: UIViewController {
                 self.kagamiView.addSubview(label)
                 label.snp.remakeConstraints({ (make) in
                     make.center.equalTo(centerOfLabel)
-                    make.height.width.e
-                    qualTo(50.0)
+                    make.height.width.equalTo(50.0)
                 })
                 kagamiView.layoutSubviews()
                 userDefault.set(["onMirror" : true, "x" : label.frame.midX, "y" : label.frame.midY], forKey: label.accessibilityIdentifier!)
@@ -329,6 +328,7 @@ class KagamiViewController: UIViewController {
                     print("This Is \(subView.accessibilityIdentifier!)")
                     print(subView.frame)
                 case "toDos":
+
                     let toDoNode = ref.child("toDos")
                     toDoNode.updateChildValues(["x" : (subView.frame.minX / kagamiView.frame.maxX) , "y" : (subView.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
                     print("This Is \(subView.accessibilityIdentifier!)")
