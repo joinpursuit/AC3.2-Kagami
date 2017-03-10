@@ -24,7 +24,8 @@ class TimeView: UIView {
   
   override init(frame: CGRect) {
     super.init(frame: frame)
-    self.backgroundColor = UIColor.white.withAlphaComponent(0.5)
+    self.backgroundColor = .white
+    self.alpha = 0.8
     self.layer.cornerRadius = 9
     
     databaseReference = FIRDatabase.database().reference()
@@ -52,9 +53,8 @@ class TimeView: UIView {
     //Views
     segmentView.snp.makeConstraints { (view) in
       view.left.right.equalToSuperview()
-      view.top.equalTo(self.snp.top).inset(150)
+      view.top.equalTo(self.snp.top).inset(250)
       view.height.equalTo(40)
-      view.width.equalTo(370)
     }
     clockAndTimeView.snp.makeConstraints { (view) in
       view.top.trailing.leading.equalToSuperview()
@@ -64,7 +64,7 @@ class TimeView: UIView {
     //Labels
     timeLabel.snp.makeConstraints { (label) in
       label.centerX.equalTo(clockAndTimeView.snp.centerX)
-      label.bottom.equalTo(segmentView.snp.top)
+      label.bottom.equalTo(segmentView.snp.top).offset(-70.0)
     }
     
     //ImageViews
@@ -127,8 +127,8 @@ class TimeView: UIView {
   //Labels
   lazy var timeLabel: UILabel = {
     let label: UILabel = UILabel()
-    label.font = UIFont(name: "Code-Pro-Light-Demo", size: 60)
-    label.textColor = .white
+    label.font = UIFont(name: "Code-Pro-Light-Demo", size: 72)
+    label.textColor = UIColor(red:0.76, green:0.83, blue:0.90, alpha:1.0)
     label.text = "0:00"
     return label
   }()
@@ -170,14 +170,10 @@ class TimeView: UIView {
   
   //Buttons
   lazy var doneButton: UIButton = {
-    let button = UIButton(type: .system)
-    button.translatesAutoresizingMaskIntoConstraints = false
-    button.setTitle("Done", for: .normal)
-    button.titleLabel?.font = UIFont(name: "Montserrat-Light", size: 20)
-    button.setTitleColor(UIColor.white, for: .normal)
-    button.layer.cornerRadius = 15
-    button.backgroundColor = UIColor(red:0.76, green:0.83, blue:0.90, alpha:1.0)
+    let button = UIButton()
     button.addTarget(self, action: #selector(dismissScreen), for: .touchUpInside)
+    let image = UIImage(named: "Add Filled-50")
+    button.setImage(image, for: .normal)
     return button
   }()
 }
