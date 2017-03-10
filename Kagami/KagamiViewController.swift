@@ -105,6 +105,8 @@ class KagamiViewController: UIViewController {
         view.addSubview(timeView)
         view.addSubview(toDoView)
         
+        timeView.doneButton.addTarget(self, action: #selector(saveTime), for: .touchUpInside)
+        
         toDoView.doneButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
         toDoView.cancelButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
     }
@@ -185,12 +187,12 @@ class KagamiViewController: UIViewController {
         }
         
         timeView.snp.makeConstraints { (make) in
-            make.center.equalTo(Widget(category: .time).imageView)
+            make.center.equalTo(widgetArray[1].imageView)
             make.size.equalTo(0.1)
         }
         
         toDoView.snp.makeConstraints { (make) in
-            make.center.equalTo(widgetArray[2].imageView.snp.center)
+            make.center.equalTo(widgetArray[2].imageView)
             make.size.equalTo(0.1)
         }
     }
@@ -258,6 +260,7 @@ class KagamiViewController: UIViewController {
                         make.center.equalToSuperview()
                     })
                     
+                    self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
                     self.toDoView.layer.opacity = 1.0
                     
                     self.view.layoutIfNeeded()
@@ -339,14 +342,38 @@ class KagamiViewController: UIViewController {
         }
     }
     
+    // MARK: - Save custom settings
+    //TODO: - Migrate to seperate file
+    func saveTime(_ sender: UIButton) {
+        guard let view = widgetBeingEdited else { return }
+        
+        if sender == timeView.doneButton {
+            // save to firebase
+            print("time done works")
+        }
+        
+        propertyAnimator?.addAnimations {
+            
+            self.timeView.snp.remakeConstraints({ (make) in
+                make.size.equalTo(0.1)
+                make.center.equalTo(view.snp.center)
+            })
+            
+            self.view.layoutIfNeeded()
+        }
+        //TODO: backgroundColor inside animations will flash black screen for 0.5 seconds
+        self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
+        propertyAnimator?.startAnimation()
+    }
+    
     func saveToDo(_ sender: UIButton) {
+        guard let view = widgetBeingEdited else { return }
         
         if sender == toDoView.doneButton {
             // save to firebase
-            print("done works")
+            print("todo done works")
         }
         
-        guard let view = widgetBeingEdited else { return }
         propertyAnimator?.addAnimations {
 
             self.toDoView.snp.remakeConstraints({ (make) in
@@ -356,11 +383,8 @@ class KagamiViewController: UIViewController {
             
             self.view.layoutIfNeeded()
         }
+        self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
         propertyAnimator?.startAnimation()
-    }
-    
-    func cancelToDo() {
-        
     }
     
     // MARK: - Lazy Instantiates
