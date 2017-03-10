@@ -23,9 +23,9 @@ struct Widget {
         
         var icon : UIImage {
             switch self {
-            case .weather: return UIImage(named: "Flash_Logo_01")!
-            case .time: return UIImage(named: "Watch-50")!
-            case .todos: return UIImage(named: "Appointment Reminders-50")!
+            case .weather: return UIImage(named: "cloud-icon")!
+            case .time: return UIImage(named: "clock-icon")!
+            case .todos: return UIImage(named: "checklist-icon")!
             }
         }
         
@@ -398,7 +398,7 @@ class KagamiViewController: UIViewController {
     }()
     
     lazy var mirrorImageView: UIImageView = {
-        let image = UIImage(named: "mirrorbackground")
+        let image = UIImage(named: "mirror2")
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFill
         return imageView
@@ -406,7 +406,7 @@ class KagamiViewController: UIViewController {
     
     lazy var iconContainerView: UIView = {
         let view: UIView = UIView()
-        view.backgroundColor = .clear
+        view.backgroundColor = ColorPalette.whiteColor.withAlphaComponent(5)
         return view
     }()
     

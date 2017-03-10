@@ -57,7 +57,11 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     func setupConstraints() {
         doneButton.snp.makeConstraints { (view) in
-            view.left.right.bottom.equalToSuperview()
+            view.left.bottom.equalToSuperview()
+        }
+        
+        cancelButton.snp.makeConstraints { (view) in
+            view.right.bottom.equalToSuperview()
         }
         
         // textfields
@@ -107,9 +111,9 @@ class ToDoView: UIView, UITextFieldDelegate {
     func addToMirror() {
         print("add to mirror")
     }
-    
+   
     func cancelTapped() {
-        
+        print("return to home page")
     }
     
     func checkOffItemOne() {
@@ -291,14 +295,19 @@ class ToDoView: UIView, UITextFieldDelegate {
     }
     
     // MARK: - Lazy Instances
+    
     lazy var doneButton: UIButton = {
         let button = UIButton()
+        let image = UIImage(named: "Done")
+        button.setImage(image, for: .normal)
         button.setTitle("Done", for: .normal)
         return button
     }()
     
     lazy var cancelButton: UIButton = {
         let button = UIButton()
+        let image = UIImage(named: "Cancel")
+        button.setImage(image, for: .normal)
         button.setTitle("Cancel", for: .normal)
         return button
     }()
