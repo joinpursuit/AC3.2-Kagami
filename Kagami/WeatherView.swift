@@ -22,7 +22,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         searchBar.delegate = self
         setupHierarchy()
 //        setupBlurEffect()
-        setupConstraints()
+        configureConstraints()
         addGestureToRemoveKeyboard()
         
         for family: String in UIFont.familyNames {
@@ -40,49 +40,57 @@ class WeatherView: UIView, UISearchBarDelegate {
     // MARK: - Set up Hierarchy & Constraints
     
     func setupHierarchy() {
-        self.addSubview(segmentView)
-        self.addSubview(cardView)
+//        self.addSubview(cardView)
         self.addSubview(searchBar)
+        self.addSubview(degreeLabel)
         self.addSubview(locationLabel)
         self.addSubview(weatherIcon)
+        self.addSubview(segmentView)
         self.addSubview(doneButton)
-        self.addSubview(degreeLabel)
+        
         segmentView.addSubview(customSegmentControl)
     }
     
-    func setupConstraints() {
+    func configureConstraints() {
         searchBar.snp.makeConstraints { (view) in
             view.centerX.equalToSuperview()
-            view.top.equalTo(self.snp.top).inset(50)
-            view.width.equalTo(self).multipliedBy(0.60)
+            view.top.equalToSuperview().offset(50)
+            view.width.equalToSuperview().multipliedBy(0.60)
             view.height.equalTo(40)
         }
+        
         degreeLabel.snp.makeConstraints { (label) in
             label.centerX.equalToSuperview()
             label.top.equalTo(searchBar.snp.bottom).offset(20)
         }
+        
         locationLabel.snp.makeConstraints { (label) in
             label.centerX.equalToSuperview()
             label.top.equalTo(degreeLabel.snp.bottom).offset(10)
         }
+        
         weatherIcon.snp.makeConstraints { (view) in
             view.top.equalTo(locationLabel.snp.bottom).offset(20)
-            view.centerX.equalTo(self.snp.centerX)
+            view.centerX.equalToSuperview()
         }
+        
         segmentView.snp.makeConstraints { (view) in
-            view.left.right.equalToSuperview()
+            view.centerX.equalToSuperview()
             view.top.equalTo(weatherIcon.snp.bottom).offset(20)
             view.height.equalTo(40)
             view.width.equalTo(370)
         }
+        
         customSegmentControl.snp.makeConstraints { (control) in
-            control.top.bottom.equalTo(segmentView)
-            control.left.equalTo(segmentView).inset(120)
-            control.right.equalTo(segmentView).inset(120)
+            control.top.bottom.equalToSuperview()
+            control.left.equalToSuperview().offset(120.0)
+            control.right.equalToSuperview().inset(120.0)
         }
+        
         doneButton.snp.makeConstraints { (view) in
             view.centerX.equalToSuperview()
-            view.bottom.equalTo(self.snp.bottom).inset(30)
+            view.bottom.equalToSuperview().inset(30)
+            view.size.equalTo(50.0)
         }
     }
     
@@ -95,7 +103,7 @@ class WeatherView: UIView, UISearchBarDelegate {
 //        backgroundImage.addSubview(blurEffectView)
 //    }
     
-    func addToMirror() {
+    func addToMirror(_ sender: UIButton) {
         print("adding to mirror")
     }
     
@@ -180,8 +188,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     }()
     
     lazy var customSegmentControl: TwicketSegmentedControl = {
-        let frame = CGRect(x: 0, y: self.frame.height / 2, width: self.frame.width, height: 40)
-        let segmentedControl = TwicketSegmentedControl(frame: frame)
+        let segmentedControl = TwicketSegmentedControl()
         let titles = ["℉", "℃"]
         segmentedControl.setSegmentItems(titles)
         segmentedControl.delegate = self
@@ -198,7 +205,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     lazy var doneButton: UIButton = {
         let button = UIButton()
-        button.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
+        button.addTarget(self, action: #selector(addToMirror), for: .touchDown)
         let image = UIImage(named: "Add Filled-50")
         button.setImage(image, for: .normal)
         return button
