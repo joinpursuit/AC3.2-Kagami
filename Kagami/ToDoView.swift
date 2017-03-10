@@ -50,6 +50,9 @@ class ToDoView: UIView, UITextFieldDelegate {
         textFieldOne.addSubview(checkBoxOne)
         textFieldTwo.addSubview(checkBoxTwo)
         textFieldThree.addSubview(checkBoxThree)
+        
+        doneButton.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
+        cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
     }
     
     func setupConstraints() {
@@ -108,8 +111,8 @@ class ToDoView: UIView, UITextFieldDelegate {
     func addToMirror() {
         print("add to mirror")
     }
-    
-    func returnToHome() {
+   
+    func cancelTapped() {
         print("return to home page")
     }
     
@@ -295,17 +298,17 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     lazy var doneButton: UIButton = {
         let button = UIButton()
-        button.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
         let image = UIImage(named: "Done")
         button.setImage(image, for: .normal)
+        button.setTitle("Done", for: .normal)
         return button
     }()
     
     lazy var cancelButton: UIButton = {
         let button = UIButton()
-        button.addTarget(self, action: #selector(returnToHome), for: .touchUpInside)
         let image = UIImage(named: "Cancel")
         button.setImage(image, for: .normal)
+        button.setTitle("Cancel", for: .normal)
         return button
     }()
     
