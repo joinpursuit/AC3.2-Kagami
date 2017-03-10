@@ -24,6 +24,9 @@ class TimeView: UIView {
   
   override init(frame: CGRect) {
     super.init(frame: frame)
+    self.backgroundColor = UIColor.white.withAlphaComponent(0.5)
+    self.layer.cornerRadius = 9
+    
     databaseReference = FIRDatabase.database().reference()
     time = Time(militaryTime: false)
     
@@ -75,48 +78,39 @@ class TimeView: UIView {
     //SegmentedControl
     timeFormatSegmentedControl.snp.makeConstraints { (control) in
       control.top.bottom.equalTo(segmentView)
-      control.left.equalTo(segmentView).inset(120)
-      control.right.equalTo(segmentView).inset(120)
+      control.left.equalTo(segmentView).inset(100)
+      control.right.equalTo(segmentView).inset(100)
     }
     
     //Button
-    doneButton.snp.makeConstraints { (view) in
-      view.centerX.equalToSuperview()
-      view.bottom.equalToSuperview()
+    doneButton.snp.makeConstraints { (button) in
+      button.centerX.equalToSuperview()
+      button.bottom.equalToSuperview().inset(100.0)
+      button.width.equalToSuperview().multipliedBy(0.15)
     }
   }
   
   // MARK: - UISegmentedControl
-  func timeFormatChanged(sender: UISegmentedControl) {
-    formatter.timeStyle = .short
-    formatter.dateStyle = .none
-    
-    switch sender.selectedSegmentIndex {
+  func setDefaultTimeLabelText() {
+    switch timeFormatSegmentedControl.selectedSegmentIndex {
     case 0:
       timeLabel.text = formatter.string(from: currentDateTime)
-      time?.militaryTime = false
     case 1:
       let hour = calendar.component(.hour, from: date as Date)
       let minutes = calendar.component(.minute, from: date as Date)
       
-      let amOrPm = formatter.string(from: currentDateTime).components(separatedBy: " ")
-      timeLabel.text = ("\(hour):\(minutes) ") + amOrPm[1]
-      time?.militaryTime = true
+      guard minutes > 9 else {
+        timeLabel.text = ("\(hour):0\(minutes) ")
+        break
+      }
+      timeLabel.text = ("\(hour):\(minutes) ")
     default:
       print("Blah")
     }
   }
   
   //MARK: - Actions
-  //KagamiViewController presents SettingsViewController
-  //ClockView gets removed from SettingsViewController
-  //Firebase gets user preference information
-  
   func dismissScreen() {
-    let svc = SettingsViewController()
-    svc.view.removeFromSuperview()
-    svc.dismiss(animated: true, completion: nil)
-    
     let militaryTimeRef = databaseReference.child("time/militaryTime")
     
     militaryTimeRef.setValue(time?.militaryTime) {(error, reference) in
@@ -133,8 +127,9 @@ class TimeView: UIView {
   //Labels
   lazy var timeLabel: UILabel = {
     let label: UILabel = UILabel()
-    label.font = UIFont(name: "DS-Digital", size: 60)
+    label.font = UIFont(name: "Code-Pro-Light-Demo", size: 60)
     label.textColor = .white
+    label.text = "0:00"
     return label
   }()
   
@@ -142,10 +137,12 @@ class TimeView: UIView {
   lazy var clockAndTimeView: UIView = {
     let view: UIView = UIView()
     view.translatesAutoresizingMaskIntoConstraints = false
+    view.backgroundColor = .clear
     return view
   }()
   lazy var segmentView: UIView = {
     let view = UIView()
+    view.backgroundColor = .clear
     return view
   }()
   
@@ -161,27 +158,25 @@ class TimeView: UIView {
   //TwicketSegmentedControl
   lazy var timeFormatSegmentedControl: TwicketSegmentedControl = {
     let titles = ["12 HR", "24 HR"]
-    let frame = CGRect(x: 0, y: self.frame.height / 2, width: self.frame.width, height: 40)
-    let segmentedControl = TwicketSegmentedControl(frame: frame)
+    let segmentedControl = TwicketSegmentedControl()
     segmentedControl.setSegmentItems(titles)
     segmentedControl.delegate = self
     segmentedControl.highlightTextColor = ColorPalette.whiteColor
     segmentedControl.sliderBackgroundColor = ColorPalette.accentColor
     segmentedControl.isSliderShadowHidden = false
+    segmentedControl.backgroundColor = .clear
     return segmentedControl
   }()
   
-  //UIButtons
+  //Buttons
   lazy var doneButton: UIButton = {
     let button = UIButton(type: .system)
     button.translatesAutoresizingMaskIntoConstraints = false
     button.setTitle("Done", for: .normal)
     button.titleLabel?.font = UIFont(name: "Montserrat-Light", size: 20)
     button.setTitleColor(UIColor.white, for: .normal)
-    button.layer.borderWidth = 1.5
-    button.layer.cornerRadius = 20
-    button.layer.borderColor = UIColor.black.cgColor
-    button.backgroundColor = UIColor.clear
+    button.layer.cornerRadius = 15
+    button.backgroundColor = UIColor(red:0.76, green:0.83, blue:0.90, alpha:1.0)
     button.addTarget(self, action: #selector(dismissScreen), for: .touchUpInside)
     return button
   }()
@@ -200,14 +195,15 @@ extension TimeView: TwicketSegmentedControlDelegate {
         let hour = calendar.component(.hour, from: date as Date)
         let minutes = calendar.component(.minute, from: date as Date)
         
-        let amOrPm = formatter.string(from: currentDateTime).components(separatedBy: " ")
-        timeLabel.text = ("\(hour):\(minutes) ") + amOrPm[1]
+       guard minutes > 10 else {
+          timeLabel.text = ("\(hour):0\(minutes) ")
+          break
+        }
+        timeLabel.text = ("\(hour):\(minutes) ")
         time?.militaryTime = true
       default:
         print("Blah")
       }
-    
-    
   }
 }
 
