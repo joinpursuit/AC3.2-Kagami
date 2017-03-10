@@ -105,6 +105,8 @@ class KagamiViewController: UIViewController {
         view.addSubview(timeView)
         view.addSubview(toDoView)
         
+        weatherView.doneButton.addTarget(self, action: #selector(saveWeather), for: .touchDown)
+        
         timeView.doneButton.addTarget(self, action: #selector(saveTime), for: .touchUpInside)
         
         toDoView.doneButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
@@ -182,8 +184,8 @@ class KagamiViewController: UIViewController {
         }
         
         weatherView.snp.makeConstraints { (make) in
-            make.center.equalTo(Widget(category: .weather).imageView)
-            make.size.equalTo(0.1)
+            make.center.equalTo(widgetArray[0].imageView)
+            make.size.equalTo(30.0)
         }
         
         timeView.snp.makeConstraints { (make) in
@@ -344,6 +346,28 @@ class KagamiViewController: UIViewController {
     
     // MARK: - Save custom settings
     //TODO: - Migrate to seperate file
+    func saveWeather(_ sender: UIButton) {
+        guard let view = widgetBeingEdited else { return }
+        
+        if sender == weatherView.doneButton {
+            // save to firebase
+            print("weather done works")
+        }
+        
+        propertyAnimator?.addAnimations {
+            
+            self.weatherView.snp.remakeConstraints({ (make) in
+                make.size.equalTo(0.1)
+                make.center.equalTo(view.snp.center)
+            })
+            
+            self.view.layoutIfNeeded()
+        }
+
+        self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
+        propertyAnimator?.startAnimation()
+    }
+    
     func saveTime(_ sender: UIButton) {
         guard let view = widgetBeingEdited else { return }
         
