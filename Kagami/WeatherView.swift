@@ -235,7 +235,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         let label = UILabel()
         label.text = "Entering a Zipcode above"
         label.font = UIFont(name: "Code-Pro-Demo", size: 20)
-        label.textColor = ColorPalette.accentColor
+        label.textColor = .darkGray
         return label
     }()
     
@@ -243,7 +243,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         let label = UILabel()
         label.text = "69"
         label.font = UIFont(name: "Code-Pro-Demo", size: 70)
-        label.textColor = .gray
+        label.textColor = ColorPalette.blackColor
         return label
     }()
     
@@ -251,7 +251,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         let label = UILabel()
         label.text = ""
         label.font = UIFont(name: "Code-Pro-Demo", size: 18)
-        label.textColor = ColorPalette.grayColor
+        label.textColor = ColorPalette.accentColor
         return label
     }()
     
