@@ -387,7 +387,7 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     lazy var headerImage: UIImageView = {
         let imageView = UIImageView()
-        let image = UIImage(named: "todo-header")
+        let image = UIImage(named: "todoheader")
         imageView.image = image
         imageView.contentMode = .scaleAspectFit
         return imageView
