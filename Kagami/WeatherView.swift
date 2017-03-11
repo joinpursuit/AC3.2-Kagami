@@ -18,19 +18,14 @@ class WeatherView: UIView, UISearchBarDelegate {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.backgroundColor = ColorPalette.whiteColor//.withAlphaComponent(0.5)
+        self.backgroundColor = ColorPalette.whiteColor
+        self.alpha = 0.8
+        self.layer.cornerRadius = 9
         searchBar.delegate = self
         setupHierarchy()
 //        setupBlurEffect()
         configureConstraints()
         addGestureToRemoveKeyboard()
-        
-        for family: String in UIFont.familyNames {
-            print("\(family)")
-            for names: String in UIFont.fontNames(forFamilyName: family) {
-                print("== \(names)")
-            }
-        }
     }
     
     required init(coder aDecoder: NSCoder) {
