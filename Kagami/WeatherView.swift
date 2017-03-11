@@ -9,15 +9,19 @@
 import UIKit
 import SnapKit
 import TwicketSegmentedControl
+import FirebaseDatabase
 
 class WeatherView: UIView, UISearchBarDelegate {
     
     var isSelected: Bool = true
     var isSearchActive: Bool = false
+    var database: FIRDatabaseReference!
+    let userDefault = UserDefaults.standard
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        self.database = FIRDatabase.database().reference().child("weather")
         self.backgroundColor = ColorPalette.whiteColor
         self.alpha = 0.8
         self.layer.cornerRadius = 9
@@ -25,7 +29,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         setupHierarchy()
 //        setupBlurEffect()
         configureConstraints()
-        addGestureToRemoveKeyboard()
+        loadUserDefaults()
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -35,15 +39,16 @@ class WeatherView: UIView, UISearchBarDelegate {
     // MARK: - Set up Hierarchy & Constraints
     
     func setupHierarchy() {
-//        self.addSubview(cardView)
         self.addSubview(searchBar)
         self.addSubview(degreeLabel)
         self.addSubview(locationLabel)
         self.addSubview(weatherIcon)
         self.addSubview(segmentView)
         self.addSubview(doneButton)
-        
+        self.addSubview(cancelButton)
         segmentView.addSubview(customSegmentControl)
+        doneButton.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
+        cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
     }
     
     func configureConstraints() {
@@ -78,14 +83,18 @@ class WeatherView: UIView, UISearchBarDelegate {
         
         customSegmentControl.snp.makeConstraints { (control) in
             control.top.bottom.equalToSuperview()
-            control.left.equalToSuperview().offset(120.0)
-            control.right.equalToSuperview().inset(120.0)
+            control.left.equalToSuperview().offset(130.0)
+            control.right.equalToSuperview().inset(130.0)
         }
         
         doneButton.snp.makeConstraints { (view) in
-            view.centerX.equalToSuperview()
-            view.bottom.equalToSuperview().inset(30)
-            view.size.equalTo(50.0)
+            view.right.equalTo(self.snp.right).inset(8)
+            view.bottom.equalTo(self.snp.bottom).inset(8)
+        }
+        
+        cancelButton.snp.makeConstraints { (view) in
+            view.left.equalTo(self.snp.left).inset(8)
+            view.bottom.equalTo(self.snp.bottom).inset(8)
         }
     }
     
@@ -98,8 +107,23 @@ class WeatherView: UIView, UISearchBarDelegate {
 //        backgroundImage.addSubview(blurEffectView)
 //    }
     
-    func addToMirror(_ sender: UIButton) {
+    func addToMirror() {
         print("adding to mirror")
+    }
+    
+    func cancelTapped() {
+        print("return to home page")
+    }
+    
+    func loadUserDefaults() {
+        if userDefault.object(forKey: "fahrenheit") != nil {
+            let isFahrenheit = userDefault.object(forKey: "fahrenheit") as! Bool
+            if isFahrenheit {
+                customSegmentControl.move(to: 0)
+            } else {
+                customSegmentControl.move(to: 1)
+            }
+        }
     }
     
     // MARK: - Search Bar Delegate
@@ -114,28 +138,14 @@ class WeatherView: UIView, UISearchBarDelegate {
         isSearchActive = false
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // called when text is changing
-    }
-    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        // api call here to search weather by location
+        database.child("location").setValue(searchBar.text)
         print("search")
         self.endEditing(true)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        //
         print("cancel")
-    }
-    
-    func addGestureToRemoveKeyboard() {
-        let gesture = UIGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        self.addGestureRecognizer(gesture)
-    }
-    
-    func dismissKeyboard() {
-        self.endEditing(true)
     }
     
     // MARK: - Lazy Instances
@@ -145,13 +155,6 @@ class WeatherView: UIView, UISearchBarDelegate {
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleToFill
         return imageView
-    }()
-    
-    lazy var cardView: UIView = {
-        let card = UIView()
-        card.layer.cornerRadius = 9
-        card.backgroundColor = .gray
-        return card
     }()
     
     lazy var locationLabel: UILabel = {
@@ -200,8 +203,14 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     lazy var doneButton: UIButton = {
         let button = UIButton()
-        button.addTarget(self, action: #selector(addToMirror), for: .touchDown)
-        let image = UIImage(named: "Add Filled-50")
+        let image = UIImage(named: "Ok-104")
+        button.setImage(image, for: .normal)
+        return button
+    }()
+    
+    lazy var cancelButton: UIButton = {
+        let button = UIButton()
+        let image = UIImage(named: "Cancel-104")
         button.setImage(image, for: .normal)
         return button
     }()
@@ -211,9 +220,13 @@ extension WeatherView: TwicketSegmentedControlDelegate {
     func didSelect(_ segmentIndex: Int) {
         print("Selected index at: \(segmentIndex)!")
         if segmentIndex == 0 {
-            print("switch to fahrenheight")
+            database.child("fahrenheit").setValue(true)
+            userDefault.setValue(true, forKey: "fahrenheit")
+            print("switch to fahrenheit and setting user default to true")
         } else {
-            print("Switch to celsius")
+            database.child("fahrenheit").setValue(false)
+            userDefault.setValue(false, forKey: "fahrenheit")
+            print("Switch to celsius and setting user default to false")
         }
     }
 }
