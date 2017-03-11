@@ -142,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				478B30B61E6DFDBE00FD580C /* Weather.swift */,
+				3E91CED91E6780C10074AA31 /* DailyWeather.swift */,
 				9C49BA851E6F1FA9001C4780 /* ToDo.swift */,
 				CC3EF4551E70DDA200D6AA2A /* Time.swift */,
 			);
@@ -169,7 +170,6 @@
 		478B30B51E6DF96A00FD580C /* Depcreciated - Will Be Deleted */ = {
 			isa = PBXGroup;
 			children = (
-				3E91CED91E6780C10074AA31 /* DailyWeather.swift */,
 				3E91CEDB1E6780CF0074AA31 /* ForecastWeather.swift */,
 				3E91CEDD1E688CE20074AA31 /* WordOfTheDay.swift */,
 				9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */,

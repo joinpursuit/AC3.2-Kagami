@@ -17,7 +17,8 @@ class WeatherView: UIView, UISearchBarDelegate {
     var isSearchActive: Bool = false
     var database: FIRDatabaseReference!
     let userDefault = UserDefaults.standard
-
+    var weather: DailyWeather?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -27,7 +28,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         self.layer.cornerRadius = 9
         searchBar.delegate = self
         setupHierarchy()
-//        setupBlurEffect()
+        //        setupBlurEffect()
         configureConstraints()
         loadUserDefaults()
     }
@@ -46,6 +47,10 @@ class WeatherView: UIView, UISearchBarDelegate {
         self.addSubview(segmentView)
         self.addSubview(doneButton)
         self.addSubview(cancelButton)
+        self.addSubview(descriptionLabel)
+        self.addSubview(lowestTempLabel)
+        self.addSubview(minMaxDegreeLabel)
+        self.addSubview(highestTempLabel)
         segmentView.addSubview(customSegmentControl)
         doneButton.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
@@ -69,22 +74,42 @@ class WeatherView: UIView, UISearchBarDelegate {
             label.top.equalTo(degreeLabel.snp.bottom).offset(10)
         }
         
+        descriptionLabel.snp.makeConstraints { (label) in
+            label.centerX.equalToSuperview()
+            label.top.equalTo(locationLabel.snp.bottom).offset(10)
+        }
+        
         weatherIcon.snp.makeConstraints { (view) in
-            view.top.equalTo(locationLabel.snp.bottom).offset(20)
+            view.top.equalTo(descriptionLabel.snp.bottom).offset(20)
             view.centerX.equalToSuperview()
+        }
+        
+        minMaxDegreeLabel.snp.makeConstraints { (label) in
+            label.centerX.equalToSuperview()
+            label.top.equalTo(weatherIcon.snp.bottom).offset(10)
+        }
+        
+        lowestTempLabel.snp.makeConstraints { (label) in
+            label.right.equalTo(minMaxDegreeLabel.snp.left)
+            label.centerY.equalTo(minMaxDegreeLabel)
+        }
+        
+        highestTempLabel.snp.makeConstraints { (label) in
+            label.left.equalTo(minMaxDegreeLabel.snp.right)
+            label.centerY.equalTo(minMaxDegreeLabel)
         }
         
         segmentView.snp.makeConstraints { (view) in
             view.centerX.equalToSuperview()
-            view.top.equalTo(weatherIcon.snp.bottom).offset(20)
+            view.top.equalTo(minMaxDegreeLabel.snp.bottom).offset(20)
             view.height.equalTo(40)
-            view.width.equalTo(370)
+            view.width.equalTo(330)
         }
         
         customSegmentControl.snp.makeConstraints { (control) in
             control.top.bottom.equalToSuperview()
-            control.left.equalToSuperview().offset(130.0)
-            control.right.equalToSuperview().inset(130.0)
+            control.left.equalToSuperview().offset(140.0)
+            control.right.equalToSuperview().inset(140.0)
         }
         
         doneButton.snp.makeConstraints { (view) in
@@ -100,12 +125,12 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     // MARK: - Methods
     
-//    func setupBlurEffect() {
-//        let blur = UIBlurEffect(style: UIBlurEffectStyle.extraLight)
-//        let blurEffectView = UIVisualEffectView(effect: blur)
-//        blurEffectView.frame = self.bounds
-//        backgroundImage.addSubview(blurEffectView)
-//    }
+    //    func setupBlurEffect() {
+    //        let blur = UIBlurEffect(style: UIBlurEffectStyle.extraLight)
+    //        let blurEffectView = UIVisualEffectView(effect: blur)
+    //        blurEffectView.frame = self.bounds
+    //        backgroundImage.addSubview(blurEffectView)
+    //    }
     
     func addToMirror() {
         print("adding to mirror")
@@ -124,6 +149,33 @@ class WeatherView: UIView, UISearchBarDelegate {
                 customSegmentControl.move(to: 1)
             }
         }
+        if userDefault.object(forKey: "zipcode") != nil {
+            let zipcode = userDefault.object(forKey: "zipcode") as? String ?? ""
+            APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(zipcode),us&units=imperial") { (data: Data?) in
+                guard let validData = data else { return }
+                if let weatherObject = DailyWeather.parseWeather(from: validData) {
+                    self.weather = weatherObject
+                    dump(self.weather)
+                    DispatchQueue.main.async {
+                        self.locationLabel.text = self.weather!.name
+                        self.degreeLabel.text = String(describing: self.weather!.temperature)
+                        self.descriptionLabel.text = self.weather!.weatherDescription
+                        self.lowestTempLabel.text = String(describing: self.weather!.minTemp)
+                        self.highestTempLabel.text = String(describing: self.weather!.maxTemp)
+                        self.layoutIfNeeded()
+                    }
+                }
+            }
+
+        }
+    }
+    
+    func convertToCelsius(fahrenheit: Int) -> Int {
+        return Int(5.0 / 9.0 * (Double(fahrenheit) - 32.0))
+    }
+    
+    func convertToFahrenheit(celsius: Int) -> Int {
+        return Int((celsius * 9) / 5) + 32
     }
     
     // MARK: - Search Bar Delegate
@@ -139,8 +191,12 @@ class WeatherView: UIView, UISearchBarDelegate {
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        database.child("location").setValue(searchBar.text)
         print("search")
+        guard searchBar.text != nil else { return }
+        database.child("location").setValue(searchBar.text)
+        userDefault.setValue(searchBar.text, forKey: "zipcode")
+        getAPIResults()
+        print("location setting to firebase and user default")
         self.endEditing(true)
     }
     
@@ -148,10 +204,28 @@ class WeatherView: UIView, UISearchBarDelegate {
         print("cancel")
     }
     
+    func getAPIResults() {
+        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(searchBar.text!),us&units=imperial") { (data: Data?) in
+            guard let validData = data else { return }
+            if let weatherObject = DailyWeather.parseWeather(from: validData) {
+                self.weather = weatherObject
+                dump(self.weather)
+                DispatchQueue.main.async {
+                    self.locationLabel.text = self.weather!.name
+                    self.degreeLabel.text = String(describing: self.weather!.temperature)
+                    self.descriptionLabel.text = self.weather!.weatherDescription
+                    self.lowestTempLabel.text = String(describing: self.weather!.minTemp)
+                    self.highestTempLabel.text = String(describing: self.weather!.maxTemp)
+                    self.layoutIfNeeded()
+                }
+            }
+        }
+    }
+    
     // MARK: - Lazy Instances
     
     lazy var weatherIcon: UIImageView = {
-        let image = UIImage(named: "Partly Cloudy Day-96")
+        let image = UIImage(named: "Partly Cloudy Day-100")
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleToFill
         return imageView
@@ -159,15 +233,49 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     lazy var locationLabel: UILabel = {
         let label = UILabel()
-        label.text = "New York"
+        label.text = "Entering a Zipcode above"
         label.font = UIFont(name: "Code-Pro-Demo", size: 20)
+        label.textColor = ColorPalette.accentColor
         return label
     }()
     
     lazy var degreeLabel: UILabel = {
         let label = UILabel()
-        label.text = "69℉"
-        label.font = UIFont(name: "Code-Pro-Demo", size: 60)
+        label.text = "69"
+        label.font = UIFont(name: "Code-Pro-Demo", size: 70)
+        label.textColor = .gray
+        return label
+    }()
+    
+    lazy var descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
+        label.textColor = ColorPalette.grayColor
+        return label
+    }()
+    
+    lazy var lowestTempLabel: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
+        label.textColor = ColorPalette.grayColor
+        return label
+    }()
+    
+    lazy var minMaxDegreeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "/"
+        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
+        label.textColor = ColorPalette.grayColor
+        return label
+    }()
+    
+    lazy var highestTempLabel: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
+        label.textColor = ColorPalette.grayColor
         return label
     }()
     
@@ -223,10 +331,24 @@ extension WeatherView: TwicketSegmentedControlDelegate {
             database.child("fahrenheit").setValue(true)
             userDefault.setValue(true, forKey: "fahrenheit")
             print("switch to fahrenheit and setting user default to true")
+            
+            if let mainTemp = degreeLabel.text, let minTemp = lowestTempLabel.text, let maxTemp = highestTempLabel.text {
+                degreeLabel.text = String(convertToFahrenheit(celsius: Int(mainTemp)!))
+                guard lowestTempLabel.text != "", highestTempLabel.text != "" else { return }
+                lowestTempLabel.text = String(convertToFahrenheit(celsius: Int(minTemp)!))
+                highestTempLabel.text = String(convertToFahrenheit(celsius: Int(maxTemp)!))
+            }
         } else {
             database.child("fahrenheit").setValue(false)
             userDefault.setValue(false, forKey: "fahrenheit")
             print("Switch to celsius and setting user default to false")
+            
+            if let mainTemp = degreeLabel.text, let minTemp = lowestTempLabel.text, let maxTemp = highestTempLabel.text  {
+                degreeLabel.text = String(convertToCelsius(fahrenheit: Int(mainTemp)!))
+                guard lowestTempLabel.text != "", highestTempLabel.text != "" else { return }
+                lowestTempLabel.text = String(convertToCelsius(fahrenheit: Int(minTemp)!))
+                highestTempLabel.text = String(convertToCelsius(fahrenheit: Int(maxTemp)!))
+            }
         }
     }
 }
