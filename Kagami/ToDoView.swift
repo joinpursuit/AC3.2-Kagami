@@ -48,6 +48,7 @@ class ToDoView: UIView, UITextFieldDelegate {
         self.addSubview(textFieldOne)
         self.addSubview(textFieldTwo)
         self.addSubview(textFieldThree)
+        self.addSubview(headerImage)
         
         self.addSubview(checkBoxOne)
         self.addSubview(checkBoxTwo)
@@ -71,9 +72,14 @@ class ToDoView: UIView, UITextFieldDelegate {
             view.bottom.equalTo(self.snp.bottom).inset(8)
         }
         
+        headerImage.snp.makeConstraints { (view) in
+            view.centerX.equalToSuperview()
+            view.top.equalTo(self.snp.top).inset(50)
+        }
+        
         // textfields
         textFieldOne.snp.makeConstraints { (field) in
-            field.top.equalTo(self.snp.top).inset(100)
+            field.top.equalTo(headerImage.snp.bottom).offset(40)
             field.leading.equalTo(self.snp.leading).inset(10)
             field.height.equalTo(self.snp.height).multipliedBy(0.08)
             field.width.equalTo(self.snp.width).multipliedBy(0.75)
@@ -355,7 +361,6 @@ class ToDoView: UIView, UITextFieldDelegate {
         field.tag = 3
         field.font = UIFont(name: "Code-Pro-Demo", size: 20)
         field.placeholder = "To Do"
-        //        field.layer.shadowColor = ColorPalette.blackColor.cgColor
         return field
     }()
     
@@ -378,5 +383,13 @@ class ToDoView: UIView, UITextFieldDelegate {
         button.layer.cornerRadius = 5
         button.setImage(UIImage(named:"unchecked"), for: .normal)
         return button
+    }()
+    
+    lazy var headerImage: UIImageView = {
+        let imageView = UIImageView()
+        let image = UIImage(named: "todoheader")
+        imageView.image = image
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }()
 }
