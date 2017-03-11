@@ -53,7 +53,7 @@ class DailyWeather {
         
         let name = dictionary["name"] as? String ?? "No city available"
         
-        self.init(temperature: temperature, icon: icon, mainCondition: mainCondition, weatherDescription: weatherDescription, pressure : pressure, humidity : humidity, minTemp : minTemp, maxTemp : maxTemp, name : name)
+        self.init(temperature: temperature, icon: icon, mainCondition: mainCondition, weatherDescription: weatherDescription, pressure : pressure, humidity : humidity, minTemp: minTemp, maxTemp: maxTemp, name : name)
     }
     
     static func parseWeather(from: Data?) -> DailyWeather? {
