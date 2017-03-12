@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Lottie
 import SnapKit
 import FirebaseDatabase
 
@@ -66,6 +67,7 @@ class KagamiViewController: UIViewController {
         
         self.title = "鏡"
         propertyAnimator = UIViewPropertyAnimator(duration: 0.75, dampingRatio: 0.77, animations: nil)
+        mirrorAnimationView.play()
         
         setupViewHierarchy()
         
@@ -99,14 +101,16 @@ class KagamiViewController: UIViewController {
     private func setupViewHierarchy() {
         
         view.backgroundColor = .white
-        
+      
         view.addSubview(mirrorImageView)
+        view.addSubview(mirrorAnimationView)
         view.addSubview(kagamiView)
         view.addSubview(iconContainerView)
         view.addSubview(weatherView)
         view.addSubview(timeView)
         view.addSubview(toDoView)
         view.addSubview(quoteView)
+      
         
         weatherView.doneButton.addTarget(self, action: #selector(saveWeather), for: .touchDown)
         weatherView.cancelButton.addTarget(self, action: #selector(saveWeather), for: .touchDown)
@@ -131,7 +135,12 @@ class KagamiViewController: UIViewController {
             make.top.left.right.equalToSuperview()
             make.bottom.equalTo(iconContainerView.snp.top)
         })
-        
+      
+        mirrorAnimationView.snp.makeConstraints({ (make) in
+          make.top.left.right.equalToSuperview()
+          make.bottom.equalTo(iconContainerView.snp.top)
+        })
+      
         // widget dock
         iconContainerView.snp.makeConstraints { (make) in
             make.leading.equalToSuperview()
@@ -511,11 +520,18 @@ class KagamiViewController: UIViewController {
         view.clipsToBounds = true
         return view
     }()
+  
+    lazy var mirrorAnimationView: LOTAnimationView = {
+      var view: LOTAnimationView = LOTAnimationView()
+      view.contentMode = .scaleAspectFit
+      view = LOTAnimationView(name:"BluePenGrayBook")
+      return view
+    }()
 }
 
 // Ignore for now
 class CollidingViewBehavior: UIDynamicBehavior  {
-    
+  
     override init() {}
     
     convenience init(items: [UIDynamicItem]) {

@@ -31,6 +31,9 @@
 		9C49BA921E70A9D7001C4780 /* Code_Pro_Demo.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C49BA901E70A9D7001C4780 /* Code_Pro_Demo.otf */; };
 		9C49BA931E70A9D7001C4780 /* Code_Pro_Light_Demo.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C49BA911E70A9D7001C4780 /* Code_Pro_Light_Demo.otf */; };
 		CC3EF4561E70DDA200D6AA2A /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC3EF4551E70DDA200D6AA2A /* Time.swift */; };
+		CC6282C21E753BBC00D8CF12 /* Kagami Mirror Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = CC6282C11E753BBC00D8CF12 /* Kagami Mirror Animation.json */; };
+		CC723BA81E7542E300A0DB3D /* KagamiMirrorAnimation2.json in Resources */ = {isa = PBXBuildFile; fileRef = CC723BA71E7542E300A0DB3D /* KagamiMirrorAnimation2.json */; };
+		CC723BAA1E7543C300A0DB3D /* BluePenGrayBook.json in Resources */ = {isa = PBXBuildFile; fileRef = CC723BA91E7543C300A0DB3D /* BluePenGrayBook.json */; };
 		CC9032DF1E71F59D00014276 /* TimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9032DE1E71F59D00014276 /* TimeView.swift */; };
 /* End PBXBuildFile section */
 
@@ -62,6 +65,9 @@
 		9C49BA911E70A9D7001C4780 /* Code_Pro_Light_Demo.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Code_Pro_Light_Demo.otf; sourceTree = "<group>"; };
 		9F471247316DDB5A8497911B /* Pods_Kagami.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Kagami.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC3EF4551E70DDA200D6AA2A /* Time.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Time.swift; sourceTree = "<group>"; };
+		CC6282C11E753BBC00D8CF12 /* Kagami Mirror Animation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Kagami Mirror Animation.json"; sourceTree = "<group>"; };
+		CC723BA71E7542E300A0DB3D /* KagamiMirrorAnimation2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = KagamiMirrorAnimation2.json; sourceTree = "<group>"; };
+		CC723BA91E7543C300A0DB3D /* BluePenGrayBook.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BluePenGrayBook.json; sourceTree = "<group>"; };
 		CC9032DE1E71F59D00014276 /* TimeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeView.swift; sourceTree = "<group>"; };
 		E91726256CD58FA69FD00264 /* Pods-Kagami.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kagami.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Kagami/Pods-Kagami.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -137,6 +143,8 @@
 			isa = PBXGroup;
 			children = (
 				478B30861E66257300FD580C /* KagamiViewController.swift */,
+				CC723BA91E7543C300A0DB3D /* BluePenGrayBook.json */,
+				CC723BA71E7542E300A0DB3D /* KagamiMirrorAnimation2.json */,
 				478B30AA1E68D44700FD580C /* Customize Selections */,
 			);
 			name = "View Controllers";
@@ -160,6 +168,7 @@
 				478B30B31E6DF95300FD580C /* WeatherView.swift */,
 				9C49BA7F1E6F02CC001C4780 /* ToDoView.swift */,
 				CC9032DE1E71F59D00014276 /* TimeView.swift */,
+				CC6282C11E753BBC00D8CF12 /* Kagami Mirror Animation.json */,
 				9C3A5D6B1E74E90900B949AC /* QuoteView.swift */,
 			);
 			name = Views;
@@ -273,8 +282,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				9C49BA931E70A9D7001C4780 /* Code_Pro_Light_Demo.otf in Resources */,
+				CC723BA81E7542E300A0DB3D /* KagamiMirrorAnimation2.json in Resources */,
+				CC6282C21E753BBC00D8CF12 /* Kagami Mirror Animation.json in Resources */,
 				9C49BA921E70A9D7001C4780 /* Code_Pro_Demo.otf in Resources */,
 				478B30781E66181500FD580C /* LaunchScreen.storyboard in Resources */,
+				CC723BAA1E7543C300A0DB3D /* BluePenGrayBook.json in Resources */,
 				478B30751E66181500FD580C /* Assets.xcassets in Resources */,
 				9C022C981E67381400AA2802 /* GoogleService-Info.plist in Resources */,
 			);
