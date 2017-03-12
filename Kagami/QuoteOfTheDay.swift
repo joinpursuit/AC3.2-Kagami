@@ -7,39 +7,37 @@
 //
 
 import Foundation
+import UIKit
 
 class QuoteOfTheDay {
+    
     var quote: String
     var author: String
-    var tags: [String]
     var category: String
-    var backgroundImage: String
+    var backgroundImageURL: String
     
-    init(quote: String, author: String, tags: [String], category: String, backgroundImage: String) {
+    init(quote: String, author: String, category: String, backgroundImageURL: String) {
         self.quote = quote
         self.author = author
-        self.tags = tags
         self.category = category
-        self.backgroundImage = backgroundImage
+        self.backgroundImageURL = backgroundImageURL
     }
     
     convenience init?(from dict: [String:Any]) {
         
         let contents = dict["contents"] as? [String:Any]
-        let quotes = contents["quotes"] as? [[String:Any]]
+        let quotes = contents?["quotes"] as? [[String:Any]]
         
-        let quote = quotes[0]["quote"] as? String
-        let author = quote[0]["author"] as? String
-        let tags = quotes[0]["tags"] as? [String]
-        let category = quotes[0]["category"] as? String
-        let backgroundImg = quote["background"] as? String
+        let quote = quotes?[0]["quote"] as? String ?? "no quote"
+        let author = quotes?[0]["author"] as? String ?? "no author"
+        let category = quotes?[0]["category"] as? String ?? "no category"
+        let backgroundImageURL = quotes?[0]["background"] as? String ?? "no image"
         
-        self.init(quote: String, author: String, tags: [String], category: String, backgroundImage: String)
+        self.init(quote: quote, author: author, category: category, backgroundImageURL: backgroundImageURL)
     }
     
     static func parseQuote(from data: Data?) -> QuoteOfTheDay? {
-        
-        let data = try? JSONSerialization.jsonObject(with: data, options: [])
+        let data = try? JSONSerialization.jsonObject(with: data!, options: [])
         guard let validJson = data as? [String:Any] else { return nil }
         
         return QuoteOfTheDay(from: validJson)
