@@ -38,8 +38,8 @@ class TimeView: UIView {
     setupViewHierarchy()
     configureConstraints()
     
-    setDefaultTimeLabelText()
     loadUserDefaults()
+    setDefaultTimeLabelText()
   }
   
   required init(coder aDecoder: NSCoder) {
@@ -132,7 +132,7 @@ class TimeView: UIView {
     switch timeFormatSegmentedControl.selectedSegmentIndex {
     case 0:
       timeLabel.text = dateFormatter.string(from: currentDateTime)
-       userDefault.setValue(true, forKey: "time")
+      
     case 1:
       let hour = calendar.component(.hour, from: date as Date)
       let minutes = calendar.component(.minute, from: date as Date)
@@ -142,7 +142,7 @@ class TimeView: UIView {
         break
       }
       timeLabel.text = ("\(hour):\(minutes) ")
-       userDefault.setValue(true, forKey: "time")
+      
     default:
       print("Blah")
     }
