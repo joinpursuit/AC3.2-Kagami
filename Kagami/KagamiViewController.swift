@@ -257,7 +257,7 @@ class KagamiViewController: UIViewController {
             case "toDos":
                 propertyAnimator?.addAnimations ({
                     self.toDoView.snp.remakeConstraints({ (make) in
-                        make.height.width.equalToSuperview().multipliedBy(0.8)
+                        make.height.width.equalToSuperview().multipliedBy(0.7)
                         make.center.equalToSuperview()
                     })
                     
