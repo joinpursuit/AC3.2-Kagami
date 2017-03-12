@@ -24,6 +24,7 @@
 		8272D0DA3A138F18F4C84361 /* Pods_Kagami.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F471247316DDB5A8497911B /* Pods_Kagami.framework */; };
 		9C022C981E67381400AA2802 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9C022C971E67381400AA2802 /* GoogleService-Info.plist */; };
 		9C022C9C1E67667700AA2802 /* SelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */; };
+		9C3A5D6A1E74D49B00B949AC /* QuoteOfTheDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3A5D691E74D49B00B949AC /* QuoteOfTheDay.swift */; };
 		9C49BA801E6F02CC001C4780 /* ToDoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C49BA7F1E6F02CC001C4780 /* ToDoView.swift */; };
 		9C49BA861E6F1FA9001C4780 /* ToDo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C49BA851E6F1FA9001C4780 /* ToDo.swift */; };
 		9C49BA921E70A9D7001C4780 /* Code_Pro_Demo.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C49BA901E70A9D7001C4780 /* Code_Pro_Demo.otf */; };
@@ -52,6 +53,7 @@
 		478B30BE1E7062C800FD580C /* RouterServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterServices.swift; sourceTree = "<group>"; };
 		9C022C971E67381400AA2802 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionCollectionViewCell.swift; sourceTree = "<group>"; };
+		9C3A5D691E74D49B00B949AC /* QuoteOfTheDay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuoteOfTheDay.swift; sourceTree = "<group>"; };
 		9C49BA7F1E6F02CC001C4780 /* ToDoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoView.swift; sourceTree = "<group>"; };
 		9C49BA851E6F1FA9001C4780 /* ToDo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDo.swift; sourceTree = "<group>"; };
 		9C49BA901E70A9D7001C4780 /* Code_Pro_Demo.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Code_Pro_Demo.otf; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 				3E91CED91E6780C10074AA31 /* DailyWeather.swift */,
 				9C49BA851E6F1FA9001C4780 /* ToDo.swift */,
 				CC3EF4551E70DDA200D6AA2A /* Time.swift */,
+				9C3A5D691E74D49B00B949AC /* QuoteOfTheDay.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -339,6 +342,7 @@
 				CC9032DF1E71F59D00014276 /* TimeView.swift in Sources */,
 				3E91CEDC1E6780CF0074AA31 /* ForecastWeather.swift in Sources */,
 				9C49BA861E6F1FA9001C4780 /* ToDo.swift in Sources */,
+				9C3A5D6A1E74D49B00B949AC /* QuoteOfTheDay.swift in Sources */,
 				478B30BF1E7062C800FD580C /* RouterServices.swift in Sources */,
 				478B306E1E66181500FD580C /* AppDelegate.swift in Sources */,
 				9C49BA801E6F02CC001C4780 /* ToDoView.swift in Sources */,
