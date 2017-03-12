@@ -15,10 +15,12 @@ import TwicketSegmentedControl
 
 class TimeView: UIView {
   var time: Time?
-  let formatter = DateFormatter()
+  let dateFormatter = DateFormatter()
   let currentDateTime = Date()
   let date = NSDate()
   let calendar = NSCalendar.current
+  let userDefault = UserDefaults.standard
+  
   var databaseReference: FIRDatabaseReference!
   var user: FIRUser?
   
@@ -31,8 +33,13 @@ class TimeView: UIView {
     databaseReference = FIRDatabase.database().reference()
     time = Time(militaryTime: false)
     
+    setDateFormatterStyles()
+    
     setupViewHierarchy()
     configureConstraints()
+    
+    setDefaultTimeLabelText()
+    loadUserDefaults()
   }
   
   required init(coder aDecoder: NSCoder) {
@@ -90,27 +97,8 @@ class TimeView: UIView {
     }
   }
   
-  // MARK: - UISegmentedControl
-  func setDefaultTimeLabelText() {
-    switch timeFormatSegmentedControl.selectedSegmentIndex {
-    case 0:
-      timeLabel.text = formatter.string(from: currentDateTime)
-    case 1:
-      let hour = calendar.component(.hour, from: date as Date)
-      let minutes = calendar.component(.minute, from: date as Date)
-      
-      guard minutes > 9 else {
-        timeLabel.text = ("\(hour):0\(minutes) ")
-        break
-      }
-      timeLabel.text = ("\(hour):\(minutes) ")
-    default:
-      print("Blah")
-    }
-  }
-  
-  //MARK: - Actions
-  func dismissScreen() {
+  //MARK: - Methods
+  func setTimeFormat() {
     let militaryTimeRef = databaseReference.child("time/militaryTime")
     
     militaryTimeRef.setValue(time?.militaryTime) {(error, reference) in
@@ -123,13 +111,50 @@ class TimeView: UIView {
     }
   }
   
+  func loadUserDefaults() {
+    if userDefault.object(forKey: "time") != nil {
+      let is12Hr = userDefault.object(forKey: "time") as! Bool
+      if is12Hr {
+        timeFormatSegmentedControl.move(to: 0)
+      } else {
+        timeFormatSegmentedControl.move(to: 1)
+      }
+    }
+  }
+  
+  func setDateFormatterStyles() {
+    dateFormatter.timeStyle = .short
+    dateFormatter.dateStyle = .none
+  }
+  
+  func setDefaultTimeLabelText() {
+    
+    switch timeFormatSegmentedControl.selectedSegmentIndex {
+    case 0:
+      timeLabel.text = dateFormatter.string(from: currentDateTime)
+       userDefault.setValue(true, forKey: "time")
+    case 1:
+      let hour = calendar.component(.hour, from: date as Date)
+      let minutes = calendar.component(.minute, from: date as Date)
+      
+      guard minutes > 9 else {
+        timeLabel.text = ("\(hour):0\(minutes) ")
+        break
+      }
+      timeLabel.text = ("\(hour):\(minutes) ")
+       userDefault.setValue(true, forKey: "time")
+    default:
+      print("Blah")
+    }
+  }
+
   //MARK: - Lazy Inits
   //Labels
   lazy var timeLabel: UILabel = {
     let label: UILabel = UILabel()
     label.font = UIFont(name: "Code-Pro-Light-Demo", size: 72)
     label.textColor = UIColor(red:0.76, green:0.83, blue:0.90, alpha:1.0)
-    label.text = "0:00"
+
     return label
   }()
   
@@ -173,19 +198,20 @@ class TimeView: UIView {
     let button = UIButton()
     let image = UIImage(named: "Add Filled-50")
     button.setImage(image, for: .normal)
+    button.addTarget(self, action: #selector(setTimeFormat), for: .touchUpInside)
     return button
   }()
 }
 
 extension TimeView: TwicketSegmentedControlDelegate {
   func didSelect(_ segmentIndex: Int) {
-      formatter.timeStyle = .short
-      formatter.dateStyle = .none
       
       switch segmentIndex {
       case 0:
-        timeLabel.text = formatter.string(from: currentDateTime)
+        timeLabel.text = dateFormatter.string(from: currentDateTime)
         time?.militaryTime = false
+        userDefault.setValue(true, forKey: "time")
+        
       case 1:
         let hour = calendar.component(.hour, from: date as Date)
         let minutes = calendar.component(.minute, from: date as Date)
@@ -196,6 +222,7 @@ extension TimeView: TwicketSegmentedControlDelegate {
         }
         timeLabel.text = ("\(hour):\(minutes) ")
         time?.militaryTime = true
+        userDefault.setValue(false, forKey: "time")
       default:
         print("Blah")
       }
