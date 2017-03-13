@@ -196,9 +196,9 @@ class TimeView: UIView {
   //Buttons
   lazy var doneButton: UIButton = {
     let button = UIButton()
+    button.addTarget(self, action: #selector(setTimeFormat), for: .touchUpInside)
     let image = UIImage(named: "Add Filled-50")
     button.setImage(image, for: .normal)
-    button.addTarget(self, action: #selector(setTimeFormat), for: .touchUpInside)
     return button
   }()
 }
