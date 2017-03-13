@@ -108,12 +108,8 @@ class KagamiViewController: UIViewController {
         view.addSubview(toDoView)
         view.addSubview(quoteView)
         
-<<<<<<< HEAD
-        weatherView.doneButton.addTarget(self, action: #selector(saveWeather), for: .touchUpInside)
-=======
         weatherView.doneButton.addTarget(self, action: #selector(saveWeather), for: .touchDown)
         weatherView.cancelButton.addTarget(self, action: #selector(saveWeather), for: .touchDown)
->>>>>>> d0e0489f3c0f557b88e086f67a88b109e4d2171a
         
         timeView.doneButton.addTarget(self, action: #selector(saveTime), for: .touchUpInside)
         
