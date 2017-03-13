@@ -23,7 +23,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         setupHierarchy()
 //        setupBlurEffect()
         configureConstraints()
-        addGestureToRemoveKeyboard()
+//        addGestureToRemoveKeyboard()
         
         for family: String in UIFont.familyNames {
             print("\(family)")
@@ -134,10 +134,10 @@ class WeatherView: UIView, UISearchBarDelegate {
         print("cancel")
     }
     
-    func addGestureToRemoveKeyboard() {
-        let gesture = UIGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        self.addGestureRecognizer(gesture)
-    }
+//    func addGestureToRemoveKeyboard() {
+//        let gesture = UIGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+//        self.addGestureRecognizer(gesture)
+//    }
     
     func dismissKeyboard() {
         self.endEditing(true)
@@ -205,7 +205,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     lazy var doneButton: UIButton = {
         let button = UIButton()
-        button.addTarget(self, action: #selector(addToMirror), for: .touchDown)
+        button.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
         let image = UIImage(named: "Add Filled-50")
         button.setImage(image, for: .normal)
         return button
