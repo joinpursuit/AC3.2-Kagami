@@ -158,7 +158,6 @@ class TimeView: UIView {
     let label: UILabel = UILabel()
     label.font = UIFont(name: "Code-Pro-Light-Demo", size: 72)
     label.textColor = UIColor(red:0.76, green:0.83, blue:0.90, alpha:1.0)
-
     return label
   }()
   
