@@ -22,7 +22,7 @@ class QuoteView: UIView {
         self.layer.cornerRadius = 9
         setupHierarchy()
         setupConstraints()
-        getAPIResults()
+       // getAPIResults()
     }
     
     required init?(coder aDecoder: NSCoder) {
