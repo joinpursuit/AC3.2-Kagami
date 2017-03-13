@@ -15,6 +15,8 @@ import SnapKit
  * !! DEPRECIATED NOT IN USE !!
  * !! DEPRECIATED NOT IN USE !!
  */
+
+/*
 class SelectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     let testArray = ["Watch-50", "Partly Cloudy Day-50", "Appointment Reminders-50", "Quote-50", "News-50", "Push Notifications-50"]
@@ -99,4 +101,4 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     }
     */
 
-}
+}*/

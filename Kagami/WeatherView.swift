@@ -9,28 +9,28 @@
 import UIKit
 import SnapKit
 import TwicketSegmentedControl
+import FirebaseDatabase
 
 class WeatherView: UIView, UISearchBarDelegate {
     
     var isSelected: Bool = true
     var isSearchActive: Bool = false
-
+    var database: FIRDatabaseReference!
+    let userDefault = UserDefaults.standard
+    var weather: DailyWeather?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.backgroundColor = ColorPalette.whiteColor//.withAlphaComponent(0.5)
+        self.database = FIRDatabase.database().reference().child("weather")
+        self.backgroundColor = ColorPalette.whiteColor
+        self.alpha = 0.8
+        self.layer.cornerRadius = 9
         searchBar.delegate = self
         setupHierarchy()
-//        setupBlurEffect()
+        //        setupBlurEffect()
         configureConstraints()
-//        addGestureToRemoveKeyboard()
-        
-        for family: String in UIFont.familyNames {
-            print("\(family)")
-            for names: String in UIFont.fontNames(forFamilyName: family) {
-                print("== \(names)")
-            }
-        }
+        loadUserDefaults()
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -40,15 +40,20 @@ class WeatherView: UIView, UISearchBarDelegate {
     // MARK: - Set up Hierarchy & Constraints
     
     func setupHierarchy() {
-//        self.addSubview(cardView)
         self.addSubview(searchBar)
         self.addSubview(degreeLabel)
         self.addSubview(locationLabel)
         self.addSubview(weatherIcon)
         self.addSubview(segmentView)
         self.addSubview(doneButton)
-        
+        self.addSubview(cancelButton)
+        self.addSubview(descriptionLabel)
+        self.addSubview(lowestTempLabel)
+        self.addSubview(minMaxDegreeLabel)
+        self.addSubview(highestTempLabel)
         segmentView.addSubview(customSegmentControl)
+        doneButton.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
+        cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
     }
     
     func configureConstraints() {
@@ -69,42 +74,108 @@ class WeatherView: UIView, UISearchBarDelegate {
             label.top.equalTo(degreeLabel.snp.bottom).offset(10)
         }
         
+        descriptionLabel.snp.makeConstraints { (label) in
+            label.centerX.equalToSuperview()
+            label.top.equalTo(locationLabel.snp.bottom).offset(10)
+        }
+        
         weatherIcon.snp.makeConstraints { (view) in
-            view.top.equalTo(locationLabel.snp.bottom).offset(20)
+            view.top.equalTo(descriptionLabel.snp.bottom).offset(20)
             view.centerX.equalToSuperview()
+        }
+        
+        minMaxDegreeLabel.snp.makeConstraints { (label) in
+            label.centerX.equalToSuperview()
+            label.top.equalTo(weatherIcon.snp.bottom).offset(10)
+        }
+        
+        lowestTempLabel.snp.makeConstraints { (label) in
+            label.right.equalTo(minMaxDegreeLabel.snp.left)
+            label.centerY.equalTo(minMaxDegreeLabel)
+        }
+        
+        highestTempLabel.snp.makeConstraints { (label) in
+            label.left.equalTo(minMaxDegreeLabel.snp.right)
+            label.centerY.equalTo(minMaxDegreeLabel)
         }
         
         segmentView.snp.makeConstraints { (view) in
             view.centerX.equalToSuperview()
-            view.top.equalTo(weatherIcon.snp.bottom).offset(20)
+            view.top.equalTo(minMaxDegreeLabel.snp.bottom).offset(20)
             view.height.equalTo(40)
-            view.width.equalTo(370)
+            view.width.equalTo(330)
         }
         
         customSegmentControl.snp.makeConstraints { (control) in
             control.top.bottom.equalToSuperview()
-            control.left.equalToSuperview().offset(120.0)
-            control.right.equalToSuperview().inset(120.0)
+            control.left.equalToSuperview().offset(140.0)
+            control.right.equalToSuperview().inset(140.0)
         }
         
         doneButton.snp.makeConstraints { (view) in
-            view.centerX.equalToSuperview()
-            view.bottom.equalToSuperview().inset(30)
-            view.size.equalTo(50.0)
+            view.right.equalTo(self.snp.right).inset(8)
+            view.bottom.equalTo(self.snp.bottom).inset(8)
+        }
+        
+        cancelButton.snp.makeConstraints { (view) in
+            view.left.equalTo(self.snp.left).inset(8)
+            view.bottom.equalTo(self.snp.bottom).inset(8)
         }
     }
     
     // MARK: - Methods
     
-//    func setupBlurEffect() {
-//        let blur = UIBlurEffect(style: UIBlurEffectStyle.extraLight)
-//        let blurEffectView = UIVisualEffectView(effect: blur)
-//        blurEffectView.frame = self.bounds
-//        backgroundImage.addSubview(blurEffectView)
-//    }
+    //    func setupBlurEffect() {
+    //        let blur = UIBlurEffect(style: UIBlurEffectStyle.extraLight)
+    //        let blurEffectView = UIVisualEffectView(effect: blur)
+    //        blurEffectView.frame = self.bounds
+    //        backgroundImage.addSubview(blurEffectView)
+    //    }
     
-    func addToMirror(_ sender: UIButton) {
+    func addToMirror() {
         print("adding to mirror")
+    }
+    
+    func cancelTapped() {
+        print("return to home page")
+    }
+    
+    func loadUserDefaults() {
+        if userDefault.object(forKey: "fahrenheit") != nil {
+            let isFahrenheit = userDefault.object(forKey: "fahrenheit") as! Bool
+            if isFahrenheit {
+                customSegmentControl.move(to: 0)
+            } else {
+                customSegmentControl.move(to: 1)
+            }
+        }
+        if userDefault.object(forKey: "zipcode") != nil {
+            let zipcode = userDefault.object(forKey: "zipcode") as? String ?? ""
+            APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(zipcode),us&units=imperial") { (data: Data?) in
+                guard let validData = data else { return }
+                if let weatherObject = DailyWeather.parseWeather(from: validData) {
+                    self.weather = weatherObject
+                    dump(self.weather)
+                    DispatchQueue.main.async {
+                        self.locationLabel.text = self.weather!.name
+                        self.degreeLabel.text = String(describing: self.weather!.temperature)
+                        self.descriptionLabel.text = self.weather!.weatherDescription
+                        self.lowestTempLabel.text = String(describing: self.weather!.minTemp)
+                        self.highestTempLabel.text = String(describing: self.weather!.maxTemp)
+                        self.layoutIfNeeded()
+                    }
+                }
+            }
+
+        }
+    }
+    
+    func convertToCelsius(fahrenheit: Int) -> Int {
+        return Int(5.0 / 9.0 * (Double(fahrenheit) - 32.0))
+    }
+    
+    func convertToFahrenheit(celsius: Int) -> Int {
+        return Int((celsius * 9) / 5) + 32
     }
     
     // MARK: - Search Bar Delegate
@@ -119,57 +190,92 @@ class WeatherView: UIView, UISearchBarDelegate {
         isSearchActive = false
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // called when text is changing
-    }
-    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        // api call here to search weather by location
         print("search")
+        guard searchBar.text != nil else { return }
+        database.child("location").setValue(searchBar.text)
+        userDefault.setValue(searchBar.text, forKey: "zipcode")
+        getAPIResults()
+        print("location setting to firebase and user default")
         self.endEditing(true)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        //
         print("cancel")
     }
     
-//    func addGestureToRemoveKeyboard() {
-//        let gesture = UIGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-//        self.addGestureRecognizer(gesture)
-//    }
-    
-    func dismissKeyboard() {
-        self.endEditing(true)
+    func getAPIResults() {
+        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(searchBar.text!),us&units=imperial") { (data: Data?) in
+            guard let validData = data else { return }
+            if let weatherObject = DailyWeather.parseWeather(from: validData) {
+                self.weather = weatherObject
+                dump(self.weather)
+                DispatchQueue.main.async {
+                    self.locationLabel.text = self.weather!.name
+                    self.degreeLabel.text = String(describing: self.weather!.temperature)
+                    self.descriptionLabel.text = self.weather!.weatherDescription
+                    self.lowestTempLabel.text = String(describing: self.weather!.minTemp)
+                    self.highestTempLabel.text = String(describing: self.weather!.maxTemp)
+                    self.layoutIfNeeded()
+                }
+            }
+        }
     }
     
     // MARK: - Lazy Instances
     
     lazy var weatherIcon: UIImageView = {
-        let image = UIImage(named: "Partly Cloudy Day-96")
+        let image = UIImage(named: "Partly Cloudy Day-100")
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleToFill
         return imageView
     }()
     
-    lazy var cardView: UIView = {
-        let card = UIView()
-        card.layer.cornerRadius = 9
-        card.backgroundColor = .gray
-        return card
-    }()
-    
     lazy var locationLabel: UILabel = {
         let label = UILabel()
-        label.text = "New York"
+        label.text = "Entering a Zipcode above"
         label.font = UIFont(name: "Code-Pro-Demo", size: 20)
+        label.textColor = .darkGray
         return label
     }()
     
     lazy var degreeLabel: UILabel = {
         let label = UILabel()
-        label.text = "69℉"
-        label.font = UIFont(name: "Code-Pro-Demo", size: 60)
+        label.text = "69"
+        label.font = UIFont(name: "Code-Pro-Demo", size: 70)
+        label.textColor = ColorPalette.blackColor
+        return label
+    }()
+    
+    lazy var descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
+        label.textColor = ColorPalette.accentColor
+        return label
+    }()
+    
+    lazy var lowestTempLabel: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
+        label.textColor = ColorPalette.grayColor
+        return label
+    }()
+    
+    lazy var minMaxDegreeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "/"
+        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
+        label.textColor = ColorPalette.grayColor
+        return label
+    }()
+    
+    lazy var highestTempLabel: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
+        label.textColor = ColorPalette.grayColor
         return label
     }()
     
@@ -205,8 +311,14 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     lazy var doneButton: UIButton = {
         let button = UIButton()
-        button.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
-        let image = UIImage(named: "Add Filled-50")
+        let image = UIImage(named: "Ok-104")
+        button.setImage(image, for: .normal)
+        return button
+    }()
+    
+    lazy var cancelButton: UIButton = {
+        let button = UIButton()
+        let image = UIImage(named: "Cancel-104")
         button.setImage(image, for: .normal)
         return button
     }()
@@ -216,9 +328,27 @@ extension WeatherView: TwicketSegmentedControlDelegate {
     func didSelect(_ segmentIndex: Int) {
         print("Selected index at: \(segmentIndex)!")
         if segmentIndex == 0 {
-            print("switch to fahrenheight")
+            database.child("fahrenheit").setValue(true)
+            userDefault.setValue(true, forKey: "fahrenheit")
+            print("switch to fahrenheit and setting user default to true")
+            
+            if let mainTemp = degreeLabel.text, let minTemp = lowestTempLabel.text, let maxTemp = highestTempLabel.text {
+                degreeLabel.text = String(convertToFahrenheit(celsius: Int(mainTemp)!))
+                guard lowestTempLabel.text != "", highestTempLabel.text != "" else { return }
+                lowestTempLabel.text = String(convertToFahrenheit(celsius: Int(minTemp)!))
+                highestTempLabel.text = String(convertToFahrenheit(celsius: Int(maxTemp)!))
+            }
         } else {
-            print("Switch to celsius")
+            database.child("fahrenheit").setValue(false)
+            userDefault.setValue(false, forKey: "fahrenheit")
+            print("Switch to celsius and setting user default to false")
+            
+            if let mainTemp = degreeLabel.text, let minTemp = lowestTempLabel.text, let maxTemp = highestTempLabel.text  {
+                degreeLabel.text = String(convertToCelsius(fahrenheit: Int(mainTemp)!))
+                guard lowestTempLabel.text != "", highestTempLabel.text != "" else { return }
+                lowestTempLabel.text = String(convertToCelsius(fahrenheit: Int(minTemp)!))
+                highestTempLabel.text = String(convertToCelsius(fahrenheit: Int(maxTemp)!))
+            }
         }
     }
 }

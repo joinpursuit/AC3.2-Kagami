@@ -19,13 +19,14 @@ struct Widget {
     }
     
     enum Category : Int {
-        case weather, time, todos
+        case weather, time, todos, quote
         
         var icon : UIImage {
             switch self {
             case .weather: return UIImage(named: "cloud-icon")!
             case .time: return UIImage(named: "clock-icon")!
             case .todos: return UIImage(named: "checklist-icon")!
+            case .quote: return UIImage(named: "quote")!
             }
         }
         
@@ -34,6 +35,7 @@ struct Widget {
             case .weather: return "weather"
             case .time: return "time"
             case .todos: return "toDos"
+            case .quote: return "quote"
             }
         }
     }
@@ -52,7 +54,7 @@ class KagamiViewController: UIViewController {
     var panRecognizer = UIPanGestureRecognizer()
     var tapRecognizer = UITapGestureRecognizer()
     
-    var widgetArray = [Widget(category: .weather), Widget(category: .time), Widget(category: .todos)]
+    var widgetArray = [Widget(category: .weather), Widget(category: .time), Widget(category: .todos), Widget(category: .quote)]
     var previousPoint: CGPoint?
     var widgetBeingEdited: UIImageView?
     
@@ -104,13 +106,22 @@ class KagamiViewController: UIViewController {
         view.addSubview(weatherView)
         view.addSubview(timeView)
         view.addSubview(toDoView)
+        view.addSubview(quoteView)
         
+<<<<<<< HEAD
         weatherView.doneButton.addTarget(self, action: #selector(saveWeather), for: .touchUpInside)
+=======
+        weatherView.doneButton.addTarget(self, action: #selector(saveWeather), for: .touchDown)
+        weatherView.cancelButton.addTarget(self, action: #selector(saveWeather), for: .touchDown)
+>>>>>>> d0e0489f3c0f557b88e086f67a88b109e4d2171a
         
         timeView.doneButton.addTarget(self, action: #selector(saveTime), for: .touchUpInside)
         
         toDoView.doneButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
         toDoView.cancelButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
+        
+        quoteView.doneButton.addTarget(self, action: #selector(saveQuote), for: .touchUpInside)
+        quoteView.cancelButton.addTarget(self, action: #selector(saveQuote), for: .touchUpInside)
     }
     
     private func configureConstraints() {
@@ -197,6 +208,11 @@ class KagamiViewController: UIViewController {
             make.center.equalTo(widgetArray[2].imageView)
             make.size.equalTo(0.1)
         }
+        
+        quoteView.snp.makeConstraints { (make) in
+            make.center.equalTo(widgetArray[3].imageView)
+            make.size.equalTo(0.1)
+        }
     }
     
     // add gestures
@@ -269,6 +285,20 @@ class KagamiViewController: UIViewController {
                 })
 
                 widgetBeingEdited = widgetArray[2].imageView
+            case "quote":
+                propertyAnimator?.addAnimations ({
+                    self.quoteView.snp.remakeConstraints({ (make) in
+                        make.height.width.equalToSuperview().multipliedBy(0.8)
+                        make.center.equalToSuperview()
+                    })
+                    
+                    self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
+                    self.quoteView.layer.opacity = 1.0
+                    
+                    self.view.layoutIfNeeded()
+                })
+                
+                widgetBeingEdited = widgetArray[3].imageView
             default:
                 break
             }
@@ -335,11 +365,14 @@ class KagamiViewController: UIViewController {
                     toDoNode.updateChildValues(["x" : (subView.frame.minX / kagamiView.frame.maxX) , "y" : (subView.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
                     print("This Is \(subView.accessibilityIdentifier!)")
                     print(subView.frame)
-                    
+                case "quote":
+                    let toDoNode = ref.child("quote")
+                    toDoNode.updateChildValues(["x" : (subView.frame.minX / kagamiView.frame.maxX) , "y" : (subView.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
+                    print("This Is \(subView.accessibilityIdentifier!)")
+                    print(subView.frame)
                 default:
                     break
                 }
-                
             }
         }
     }
@@ -410,6 +443,25 @@ class KagamiViewController: UIViewController {
         self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
         propertyAnimator?.startAnimation()
     }
+    func saveQuote(_ sender: UIButton) {
+        guard let view = widgetBeingEdited else { return }
+        
+        if sender == quoteView.doneButton {
+            print("quote done buttonworks")
+        }
+        
+        propertyAnimator?.addAnimations {
+            
+            self.quoteView.snp.remakeConstraints({ (make) in
+                make.size.equalTo(0.1)
+                make.center.equalTo(view.snp.center)
+            })
+            
+            self.view.layoutIfNeeded()
+        }
+        self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
+        propertyAnimator?.startAnimation()
+    }
     
     // MARK: - Lazy Instantiates
 
@@ -450,6 +502,14 @@ class KagamiViewController: UIViewController {
     
     lazy var toDoView: ToDoView = {
         let view = ToDoView()
+        view.layer.opacity = 1.0
+        view.layer.cornerRadius = 10.0
+        view.clipsToBounds = true
+        return view
+    }()
+    
+    lazy var quoteView: QuoteView = {
+        let view = QuoteView()
         view.layer.opacity = 1.0
         view.layer.cornerRadius = 10.0
         view.clipsToBounds = true
