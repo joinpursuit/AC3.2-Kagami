@@ -11,5 +11,5 @@ target 'Kagami' do
   pod 'Firebase/Database'
   pod 'Firebase/Auth'
   pod 'TwicketSegmentedControl'
-
+  pod ‘lottie-ios’
 end
