@@ -250,7 +250,6 @@
 				TargetAttributes = {
 					478B30691E66181500FD580C = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = F7PK37W634;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -477,7 +476,7 @@
 			baseConfigurationReference = E91726256CD58FA69FD00264 /* Pods-Kagami.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = F7PK37W634;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Kagami/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nyc.c4q.atung.Kagami;
@@ -491,7 +490,7 @@
 			baseConfigurationReference = 28B5280557D9DBC696BF6E1A /* Pods-Kagami.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = F7PK37W634;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Kagami/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nyc.c4q.atung.Kagami;
