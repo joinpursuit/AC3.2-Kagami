@@ -40,6 +40,10 @@ class TimeView: UIView {
     
     loadUserDefaults()
     setDefaultTimeLabelText()
+    
+    for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
+      print("WOOO \(key) = \(value) \n")
+    }
   }
   
   required init(coder aDecoder: NSCoder) {
@@ -112,8 +116,8 @@ class TimeView: UIView {
   }
   
   func loadUserDefaults() {
-    if userDefault.object(forKey: "time") != nil {
-      let is12Hr = userDefault.object(forKey: "time") as! Bool
+    if userDefault.object(forKey: "timeBool") != nil {
+      let is12Hr = userDefault.object(forKey: "timeBool") as! Bool
       if is12Hr {
         timeFormatSegmentedControl.move(to: 0)
       } else {
@@ -209,7 +213,7 @@ extension TimeView: TwicketSegmentedControlDelegate {
       case 0:
         timeLabel.text = dateFormatter.string(from: currentDateTime)
         time?.militaryTime = false
-        userDefault.setValue(true, forKey: "time")
+        userDefault.setValue(true, forKey: "timeBool")
         
       case 1:
         let hour = calendar.component(.hour, from: date as Date)
@@ -221,7 +225,7 @@ extension TimeView: TwicketSegmentedControlDelegate {
         }
         timeLabel.text = ("\(hour):\(minutes) ")
         time?.militaryTime = true
-        userDefault.setValue(false, forKey: "time")
+        userDefault.setValue(false, forKey: "timeBool")
       default:
         print("Blah")
       }
