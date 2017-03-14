@@ -300,7 +300,7 @@ class ToDoView: UIView, UITextFieldDelegate {
         print("should return")
         guard activeTextField == textField, activeTextField?.text != "" else { return false }
         self.endEditing(true)
-        return false
+        return true
     }
     
     // MARK: - Lazy Instances

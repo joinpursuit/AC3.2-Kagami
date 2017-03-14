@@ -188,6 +188,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         print("did end")
         isSearchActive = false
+        self.searchBar.showsCancelButton = true
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -202,6 +203,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         print("cancel")
+        isSearchActive = false
     }
     
     func getAPIResults() {

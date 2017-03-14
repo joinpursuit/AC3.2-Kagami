@@ -24,6 +24,7 @@
 		8272D0DA3A138F18F4C84361 /* Pods_Kagami.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F471247316DDB5A8497911B /* Pods_Kagami.framework */; };
 		9C022C981E67381400AA2802 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9C022C971E67381400AA2802 /* GoogleService-Info.plist */; };
 		9C022C9C1E67667700AA2802 /* SelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */; };
+		9C0411F71E783F97006469DB /* QuoteCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0411F61E783F97006469DB /* QuoteCollectionViewCell.swift */; };
 		9C3A5D6A1E74D49B00B949AC /* QuoteOfTheDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3A5D691E74D49B00B949AC /* QuoteOfTheDay.swift */; };
 		9C3A5D6C1E74E90900B949AC /* QuoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3A5D6B1E74E90900B949AC /* QuoteView.swift */; };
 		9C49BA801E6F02CC001C4780 /* ToDoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C49BA7F1E6F02CC001C4780 /* ToDoView.swift */; };
@@ -55,6 +56,7 @@
 		478B30BE1E7062C800FD580C /* RouterServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterServices.swift; sourceTree = "<group>"; };
 		9C022C971E67381400AA2802 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionCollectionViewCell.swift; sourceTree = "<group>"; };
+		9C0411F61E783F97006469DB /* QuoteCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuoteCollectionViewCell.swift; sourceTree = "<group>"; };
 		9C3A5D691E74D49B00B949AC /* QuoteOfTheDay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuoteOfTheDay.swift; sourceTree = "<group>"; };
 		9C3A5D6B1E74E90900B949AC /* QuoteView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuoteView.swift; sourceTree = "<group>"; };
 		9C49BA7F1E6F02CC001C4780 /* ToDoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoView.swift; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 				9C49BA7F1E6F02CC001C4780 /* ToDoView.swift */,
 				CC9032DE1E71F59D00014276 /* TimeView.swift */,
 				9C3A5D6B1E74E90900B949AC /* QuoteView.swift */,
+				9C0411F61E783F97006469DB /* QuoteCollectionViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -356,6 +359,7 @@
 				9C49BA801E6F02CC001C4780 /* ToDoView.swift in Sources */,
 				478B30A91E6767AD00FD580C /* Utilities.swift in Sources */,
 				478B30B11E6DF87400FD580C /* SettingsViewController.swift in Sources */,
+				9C0411F71E783F97006469DB /* QuoteCollectionViewCell.swift in Sources */,
 				9C022C9C1E67667700AA2802 /* SelectionCollectionViewCell.swift in Sources */,
 				478B30871E66257300FD580C /* KagamiViewController.swift in Sources */,
 			);
