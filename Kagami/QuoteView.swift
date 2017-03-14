@@ -27,7 +27,6 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(QuoteCollectionViewCell.self, forCellWithReuseIdentifier: "categories")
-
     }
     
     required init?(coder aDecoder: NSCoder) {
