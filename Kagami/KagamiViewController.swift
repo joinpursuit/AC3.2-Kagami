@@ -188,6 +188,8 @@ class KagamiViewController: UIViewController {
                 if widgetDict?["onMirror"] as! Bool == true {
                     let x = widgetDict?["x"] as! CGFloat
                     let y = widgetDict?["y"] as! CGFloat
+                    widgetView.subviews[0].isHidden = true
+                    widgetView.subviews[1].isHidden = false
                     widgetView.snp.makeConstraints({ (make) in
                         make.center.equalTo(CGPoint(x: x, y: y))
                         make.height.width.equalTo(50.0)
