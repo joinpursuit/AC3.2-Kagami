@@ -167,7 +167,6 @@ class KagamiViewController: UIViewController {
             widget.mirrorView.image = widget.category.mirrorIcon
             widgetView.addSubview(widget.dockView)
             widgetView.addSubview(widget.mirrorView)
-            
             //            imageView.layer.borderColor = ColorPalette.blackColor.cgColor
             //            imageView.layer.borderWidth = 1.0
             widget.dockView.snp.makeConstraints({ (make) in
@@ -186,7 +185,6 @@ class KagamiViewController: UIViewController {
             widgetView.addGestureRecognizer(setTapRecognizer())
             widgetView.isUserInteractionEnabled = true
             self.view.addSubview(widgetView)
-            iconContainerView.bringSubview(toFront: widgetView)
             
             let widgetDict = userDefault.dictionary(forKey: widgetView.accessibilityIdentifier!)
             
@@ -225,22 +223,25 @@ class KagamiViewController: UIViewController {
         
         weatherView.snp.makeConstraints { (make) in
             make.center.equalTo(widgetArray[0].widgetView)
-            make.size.equalTo(30.0)
+            make.size.equalTo(0.1)
         }
         
         timeView.snp.makeConstraints { (make) in
             make.center.equalTo(widgetArray[1].widgetView)
             make.size.equalTo(0.1)
+
         }
         
         toDoView.snp.makeConstraints { (make) in
             make.center.equalTo(widgetArray[2].widgetView)
             make.size.equalTo(0.1)
+
         }
         
         quoteView.snp.makeConstraints { (make) in
             make.center.equalTo(widgetArray[3].widgetView)
             make.size.equalTo(0.1)
+
         }
     }
     
@@ -281,7 +282,7 @@ class KagamiViewController: UIViewController {
                     
                     self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
                     self.weatherView.layer.opacity = 1.0
-                    
+                    self.view.bringSubview(toFront: self.weatherView)
                     self.view.layoutIfNeeded()
                 })
                 
@@ -296,7 +297,7 @@ class KagamiViewController: UIViewController {
                     
                     self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
                     self.timeView.layer.opacity = 1.0
-                    
+                    self.view.bringSubview(toFront: self.timeView)
                     self.view.layoutIfNeeded()
                 })
                 
@@ -310,7 +311,7 @@ class KagamiViewController: UIViewController {
                     
                     self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
                     self.toDoView.layer.opacity = 1.0
-                    
+                    self.view.bringSubview(toFront: self.toDoView)
                     self.view.layoutIfNeeded()
                 })
                 
@@ -324,7 +325,7 @@ class KagamiViewController: UIViewController {
                     
                     self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
                     self.quoteView.layer.opacity = 1.0
-                    
+                    self.view.bringSubview(toFront: self.quoteView)
                     self.view.layoutIfNeeded()
                 })
                 
