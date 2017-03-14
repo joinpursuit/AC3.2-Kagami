@@ -6,7 +6,7 @@
 //  Copyright © 2017 Eric Chang. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 //For temperature in Celsius use units=metric
 

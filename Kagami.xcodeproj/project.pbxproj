@@ -21,6 +21,8 @@
 		478B30B41E6DF95300FD580C /* WeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30B31E6DF95300FD580C /* WeatherView.swift */; };
 		478B30B71E6DFDBE00FD580C /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30B61E6DFDBE00FD580C /* Weather.swift */; };
 		478B30BF1E7062C800FD580C /* RouterServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30BE1E7062C800FD580C /* RouterServices.swift */; };
+		478B30C71E772D4500FD580C /* Horoscope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30C61E772D4500FD580C /* Horoscope.swift */; };
+		478B30C91E77362800FD580C /* WidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30C81E77362800FD580C /* WidgetView.swift */; };
 		8272D0DA3A138F18F4C84361 /* Pods_Kagami.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F471247316DDB5A8497911B /* Pods_Kagami.framework */; };
 		9C022C981E67381400AA2802 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9C022C971E67381400AA2802 /* GoogleService-Info.plist */; };
 		9C022C9C1E67667700AA2802 /* SelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */; };
@@ -52,6 +54,8 @@
 		478B30B31E6DF95300FD580C /* WeatherView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherView.swift; sourceTree = "<group>"; };
 		478B30B61E6DFDBE00FD580C /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		478B30BE1E7062C800FD580C /* RouterServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterServices.swift; sourceTree = "<group>"; };
+		478B30C61E772D4500FD580C /* Horoscope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Horoscope.swift; sourceTree = "<group>"; };
+		478B30C81E77362800FD580C /* WidgetView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WidgetView.swift; sourceTree = "<group>"; };
 		9C022C971E67381400AA2802 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionCollectionViewCell.swift; sourceTree = "<group>"; };
 		9C3A5D691E74D49B00B949AC /* QuoteOfTheDay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuoteOfTheDay.swift; sourceTree = "<group>"; };
@@ -150,6 +154,7 @@
 				9C49BA851E6F1FA9001C4780 /* ToDo.swift */,
 				CC3EF4551E70DDA200D6AA2A /* Time.swift */,
 				9C3A5D691E74D49B00B949AC /* QuoteOfTheDay.swift */,
+				478B30C61E772D4500FD580C /* Horoscope.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -161,6 +166,7 @@
 				9C49BA7F1E6F02CC001C4780 /* ToDoView.swift */,
 				CC9032DE1E71F59D00014276 /* TimeView.swift */,
 				9C3A5D6B1E74E90900B949AC /* QuoteView.swift */,
+				478B30C81E77362800FD580C /* WidgetView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -343,6 +349,8 @@
 				478B30A71E6763F600FD580C /* SelectionViewController.swift in Sources */,
 				478B30B41E6DF95300FD580C /* WeatherView.swift in Sources */,
 				CC9032DF1E71F59D00014276 /* TimeView.swift in Sources */,
+				478B30C71E772D4500FD580C /* Horoscope.swift in Sources */,
+				478B30C91E77362800FD580C /* WidgetView.swift in Sources */,
 				3E91CEDC1E6780CF0074AA31 /* ForecastWeather.swift in Sources */,
 				9C3A5D6C1E74E90900B949AC /* QuoteView.swift in Sources */,
 				9C49BA861E6F1FA9001C4780 /* ToDo.swift in Sources */,

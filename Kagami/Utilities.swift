@@ -31,3 +31,17 @@ extension UIButton {
         self.layer.shouldRasterize = true
     }
 }
+
+// Widget protocol
+protocol Widgetable: class {
+    var category: String { get }
+    var iconImage: UIImage { get }
+    var description: String { get }
+}
+
+
+
+
+
+
+
