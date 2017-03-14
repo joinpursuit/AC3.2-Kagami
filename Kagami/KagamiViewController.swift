@@ -328,19 +328,49 @@ class KagamiViewController: UIViewController {
     func wasDragged(_ gesture: UIPanGestureRecognizer) {
         let widgetView = gesture.view!
         let translation = gesture.translation(in: self.view)
-        
+        let view = gesture.view!
+
         widgetView.center = CGPoint(x: widgetView.center.x + translation.x , y: widgetView.center.y + translation.y)
         gesture.setTranslation(CGPoint.zero, in: self.view)
         
         //TODO: - MATH -- min > kagami.min && max < kagami.max
-        
+      
+      
         if gesture.state == .began {
+          for widget in widgetArray {
+            let widgetDict = userDefault.dictionary(forKey:view.accessibilityIdentifier!)
+            if widgetDict != nil {
+              if widgetDict?["onMirror"] as! Bool == true {
+                let x = widgetDict?["x"] as! CGFloat
+                let y = widgetDict?["y"] as! CGFloat
+                
+                view.snp.remakeConstraints({ (make) in
+                  make.center.equalTo(CGPoint(x:x, y:y))
+                  make.height.width.equalTo(55)
+                })
+              }
+              else {
+                if widgetDict?["onMirror"] as! Bool == false {
+                  view.snp.remakeConstraints({ (make) in
+                    make.leading.equalToSuperview().offset((view.tag * 50) + (8 * view.tag) + 8)
+                    make.bottom.equalToSuperview().offset(-5)
+                    make.height.width.equalTo(55)
+                  })
+                }
+              }
+            }
             
+            else {
+              view.snp.remakeConstraints({ (make) in
+                make.bottom.equalToSuperview().offset((view.tag * 50) + (8 * view.tag) + 8)
+              })
+            }
+          }
             dump("Parent View \(self.view.subviews.count)")
             dump("Kagami View \(self.kagamiView.subviews.count)")
             dump(widgetView)
         }
-        
+      
         if gesture.state == .changed {
             let centerOfWidget = self.kagamiView.convert(widgetView.center, from: widgetView.superview)
             
