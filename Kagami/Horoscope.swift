@@ -8,11 +8,11 @@
 
 import UIKit
 
-class Horoscope: Widgetable {
-    
-    var sign: String
-    var category: String = "horoscope"
+//class Horoscope: Widgetable {
+//    
+//    var sign: String
+//    var category: String = "horoscope"
 //    var iconImage: UIImage
-    var description: String = "horoscope"
-    
-}
+//    var description: String = "horoscope"
+//    
+//}

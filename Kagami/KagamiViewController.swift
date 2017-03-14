@@ -67,7 +67,7 @@ class KagamiViewController: UIViewController {
     var panRecognizer = UIPanGestureRecognizer()
     var tapRecognizer = UITapGestureRecognizer()
     
-    var widgetArray = [Widgetable]()
+    var widgetArray = [Widget(category: .weather), Widget(category: .time), Widget(category: .todos), Widget(category: .quote)]
     var previousPoint: CGPoint?
     var widgetBeingEdited: UIView?
     

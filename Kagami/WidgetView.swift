@@ -11,9 +11,8 @@ import UIKit
 protocol WidgetViewable: class {
     var panRecognizer: UIPanGestureRecognizer { get set }
     var tapRecognizer: UITapGestureRecognizer { get set }
-    var previousPoint: CGPoint { get set }
-    var propertyAnimator: UIViewPropertyAnimator { get set }
-    var userDefaults: UserDefaults { get set }
+    var propertyAnimator: UIViewPropertyAnimator? { get set }
+    var userDefaults: UserDefaults? { get set }
     
     func setupAnimationConstraint()
     
@@ -24,6 +23,34 @@ protocol WidgetViewable: class {
 }
 
 extension WidgetViewable {
+    
+    
+}
+
+class WidgetView: UIView, WidgetViewable {
+    
+    internal var userDefaults: UserDefaults?
+    internal var propertyAnimator: UIViewPropertyAnimator?
+    internal var tapRecognizer = UITapGestureRecognizer()
+    internal var panRecognizer = UIPanGestureRecognizer()
+
+    // MARK: - Properties
+    var widget: Widgetable
+    let kagami = KagamiViewController()
+    var iconImageView: UIImageView?
+    var widgetImageView: UIImageView?
+    weak var delegate: WidgetViewable?
+    
+    func setupAnimationConstraint() {
+        self.snp.remakeConstraints({ (make) in
+            make.height.width.equalToSuperview().multipliedBy(0.8)
+            make.center.equalToSuperview()
+        })
+        
+        self.layer.opacity = 1.0
+        
+        self.layoutIfNeeded()
+    }
     
     func setPanGestureRecognizer() -> UIPanGestureRecognizer {
         panRecognizer = UIPanGestureRecognizer (target: self, action: #selector(wasDragged(_:)))
@@ -41,45 +68,21 @@ extension WidgetViewable {
         tapRecognizer.require(toFail: panRecognizer)
         return tapRecognizer
     }
-    
+
     func wasTapped(_ gesture: UITapGestureRecognizer) {
         
         let view = gesture.view!
         
         if gesture.state == .ended {
             
-            previousPoint = CGPoint(x: view.frame.midX, y: view.frame.midY)
             
-            propertyAnimator.addAnimations ({
+            
+            propertyAnimator?.addAnimations ({
                 self.setupAnimationConstraint()
             })
             
-            propertyAnimator.startAnimation()
+            propertyAnimator?.startAnimation()
         }
-    }
-}
-
-class WidgetView: UIView, WidgetViewable {
-    
-    internal var tapRecognizer = UITapGestureRecognizer()
-    internal var panRecognizer = UIPanGestureRecognizer()
-
-    // MARK: - Properties
-    var widget: Widgetable
-    var kagamiView: UIView?
-    var iconImageView: UIImageView
-    var widgetImageView: UIImageView
-    weak var delegate: WidgetViewable?
-    
-    func setupConstraint() {
-        self.snp.remakeConstraints({ (make) in
-            make.height.width.equalToSuperview().multipliedBy(0.8)
-            make.center.equalToSuperview()
-        })
-        
-        self.layer.opacity = 1.0
-        
-        self.layoutIfNeeded()
     }
     
     func wasDragged(_ gesture: UIPanGestureRecognizer) {
@@ -100,8 +103,11 @@ class WidgetView: UIView, WidgetViewable {
         }
         
         if gesture.state == .ended {
+            let kagamiView = kagami.kagamiView
             
-            let centerOfLabel = self.kagamiView?.convert(self.center, from: self.superview)
+            let centerOfLabel = self.convert(self.center, from: self.superview)
+            let topLeft = self.convert((x: self.bounds.minX, y: self.bounds.minY), from: self.superview)
+            
             
             if kagamiView?.bounds.contains(centerOfLabel) {
                 self.kagamiView!.addSubview(self)
@@ -122,7 +128,7 @@ class WidgetView: UIView, WidgetViewable {
                 ref.child(self.accessibilityIdentifier!).updateChildValues(["onMirror" : false])
             }
             
-            if (my subview is within the kagamiview bounds) {
+            if kagamiView.bounds.contains(self) {
                 let weatherNode = ref.child(self.widget.description)
                 weatherNode.updateChildValues(["x" : (subView.frame.minX / kagamiView.frame.maxX) , "y" : (subView.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
                 print("This Is \(subView.accessibilityIdentifier!)")
@@ -130,6 +136,8 @@ class WidgetView: UIView, WidgetViewable {
             }
         }
     }
+    
+    
     /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
