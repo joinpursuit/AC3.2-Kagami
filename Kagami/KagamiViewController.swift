@@ -23,9 +23,9 @@ struct Widget {
         
         var dockIcon : UIImage {
             switch self {
-            case .weather: return UIImage(named: "cloud-icon")!
-            case .time: return UIImage(named: "clock-icon")!
-            case .todos: return UIImage(named: "checklist-icon")!
+            case .weather: return UIImage(named: "cloud")!
+            case .time: return UIImage(named: "clock")!
+            case .todos: return UIImage(named: "checklist")!
             case .quote: return UIImage(named: "quote")!
             }
         }
