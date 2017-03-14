@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Lottie
 import SnapKit
 import FirebaseDatabase
 
@@ -75,10 +76,11 @@ class KagamiViewController: UIViewController {
     // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+      
         self.title = "鏡"
+        mirrorAnimationView.play()
         propertyAnimator = UIViewPropertyAnimator(duration: 0.75, dampingRatio: 0.77, animations: nil)
-        
+      
         setupViewHierarchy()
         
         ref = FIRDatabase.database().reference()
@@ -111,8 +113,8 @@ class KagamiViewController: UIViewController {
     private func setupViewHierarchy() {
         
         view.backgroundColor = .white
-        
         view.addSubview(mirrorImageView)
+        view.addSubview(mirrorAnimationView)
         view.addSubview(kagamiView)
         view.addSubview(iconContainerView)
         view.addSubview(weatherView)
@@ -143,6 +145,11 @@ class KagamiViewController: UIViewController {
             make.top.left.right.equalToSuperview()
             make.bottom.equalTo(iconContainerView.snp.top)
         })
+      
+        mirrorAnimationView.snp.makeConstraints { (make) in
+          make.top.left.right.equalToSuperview()
+          make.bottom.equalTo(iconContainerView.snp.top)
+      }
         
         // widget dock
         iconContainerView.snp.makeConstraints { (make) in
@@ -575,6 +582,13 @@ class KagamiViewController: UIViewController {
         view.layer.cornerRadius = 10.0
         view.clipsToBounds = true
         return view
+    }()
+  
+    lazy var mirrorAnimationView: LOTAnimationView = {
+      var view: LOTAnimationView = LOTAnimationView(name: "KagamiMirrorAnimation")
+      view.contentMode = .scaleAspectFill
+    
+      return view
     }()
 }
 
