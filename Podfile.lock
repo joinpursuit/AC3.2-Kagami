@@ -31,7 +31,7 @@ PODS:
     - GoogleToolboxForMac/Defines (= 2.1.1)
     - GoogleToolboxForMac/NSString+URLArguments (= 2.1.1)
   - GoogleToolboxForMac/NSString+URLArguments (2.1.1)
-  - GTMSessionFetcher/Core (1.1.8)
+  - GTMSessionFetcher/Core (1.1.9)
   - lottie-ios (1.5.1)
   - SnapKit (3.2.0)
   - TwicketSegmentedControl (0.1.2)
@@ -52,11 +52,11 @@ SPEC CHECKSUMS:
   FirebaseDatabase: 05c96d7b43a7368dc91c07791adb49683e1738d1
   FirebaseInstanceID: 2d0518b1378fe9d685ef40cbdd63d2fdc1125339
   GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
-  GTMSessionFetcher: 6f8d8b28b7e345549ac471071608170b31cb4977
+  GTMSessionFetcher: 5c046c76a1f859bc9c187e918f18e4fc7bb57b5e
   lottie-ios: f680a7c4cb7a567ecf258fde0f967913aff111b8
   SnapKit: 1ca44df72cfa543218d177cb8aab029d10d86ea7
   TwicketSegmentedControl: 6d7a4cf243657e0ac3f00d06d873a25334c04042
 
 PODFILE CHECKSUM: b6d6e9761f8fba5864c12d2c64366ff97814e85f
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.1.1

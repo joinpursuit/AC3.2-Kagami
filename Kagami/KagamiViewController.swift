@@ -122,6 +122,7 @@ class KagamiViewController: UIViewController {
         view.addSubview(toDoView)
         view.addSubview(quoteView)
         
+        
         weatherView.doneButton.addTarget(self, action: #selector(saveWeather), for: .touchDown)
         weatherView.cancelButton.addTarget(self, action: #selector(saveWeather), for: .touchDown)
         
@@ -176,7 +177,7 @@ class KagamiViewController: UIViewController {
                 make.trailing.bottom.top.leading.equalToSuperview()
             })
             
-            widget.mirrorView.isHidden = true
+            widget.mirrorView.alpha = 0.0
             widgetView.alpha = 0.8
             widgetView.tag = widget.category.rawValue
             widgetView.accessibilityIdentifier = widget.category.description
@@ -195,8 +196,8 @@ class KagamiViewController: UIViewController {
                 if widgetDict?["onMirror"] as! Bool == true {
                     let x = widgetDict?["x"] as! CGFloat
                     let y = widgetDict?["y"] as! CGFloat
-                    widgetView.subviews[0].isHidden = true
-                    widgetView.subviews[1].isHidden = false
+                    widgetView.subviews[0].alpha = 0.0
+                    widgetView.subviews[1].alpha = 1.0
                     widgetView.snp.makeConstraints({ (make) in
                         make.center.equalTo(CGPoint(x: x, y: y))
                         make.height.width.equalTo(50.0)
@@ -263,7 +264,7 @@ class KagamiViewController: UIViewController {
     }
     
     func wasTapped(_ gesture: UITapGestureRecognizer) {
-        
+
         let view = gesture.view!
         
         if gesture.state == .ended {
@@ -290,6 +291,7 @@ class KagamiViewController: UIViewController {
                     self.timeView.snp.remakeConstraints({ (make) in
                         make.height.width.equalToSuperview().multipliedBy(0.8)
                         make.center.equalToSuperview()
+                        
                     })
                     
                     self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
@@ -384,21 +386,24 @@ class KagamiViewController: UIViewController {
             let centerOfWidget = self.kagamiView.convert(widgetView.center, from: widgetView.superview)
             
             if kagamiView.bounds.contains(centerOfWidget) {
-                dump(widgetView.subviews)
-                print("We in the mirror")
-                widgetView.subviews[0].isHidden = true
-                widgetView.subviews[1].isHidden = false
+                let animator = UIViewPropertyAnimator(duration: 0.5, curve: .easeOut, animations: {
+                    widgetView.subviews[0].alpha = 0.0
+                    widgetView.subviews[1].alpha = 1.0
+                })
+                animator.startAnimation()
+                
             } else {
-                widgetView.subviews[0].isHidden = false
-                widgetView.subviews[1].isHidden = true
+                let animator = UIViewPropertyAnimator(duration: 1.0, curve: .easeOut, animations: {
+                widgetView.subviews[0].alpha = 1.0
+                widgetView.subviews[1].alpha = 0.0
+            })
+                animator.startAnimation()
             }
         }
         
         if gesture.state == .ended {
             
             let centerOfWidget = self.kagamiView.convert(widgetView.center, from: widgetView.superview)
-            print(kagamiView.bounds.contains(centerOfWidget))
-            let originOfWidget = self.kagamiView.convert(widgetView.frame.origin, from: widgetView.superview)
             
             if kagamiView.bounds.contains(centerOfWidget) {
                 // self.kagamiView.addSubview(widgetView)
