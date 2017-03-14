@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseDatabase
 
 protocol WidgetViewable: class {
     var panRecognizer: UIPanGestureRecognizer { get set }
@@ -29,17 +30,20 @@ extension WidgetViewable {
 
 class WidgetView: UIView, WidgetViewable {
     
+
+    // MARK: - Properties
     internal var userDefaults: UserDefaults?
     internal var propertyAnimator: UIViewPropertyAnimator?
     internal var tapRecognizer = UITapGestureRecognizer()
     internal var panRecognizer = UIPanGestureRecognizer()
 
-    // MARK: - Properties
-    var widget: Widgetable
-    let kagami = KagamiViewController()
+    var widget: Widgetable?
     var iconImageView: UIImageView?
     var widgetImageView: UIImageView?
     weak var delegate: WidgetViewable?
+    
+    var ref: FIRDatabaseReference!
+    let kagami = KagamiViewController()
     
     func setupAnimationConstraint() {
         self.snp.remakeConstraints({ (make) in
@@ -105,18 +109,27 @@ class WidgetView: UIView, WidgetViewable {
         if gesture.state == .ended {
             let kagamiView = kagami.kagamiView
             
-            let centerOfLabel = self.convert(self.center, from: self.superview)
-            let topLeft = self.convert((x: self.bounds.minX, y: self.bounds.minY), from: self.superview)
+            let center = self.convert(self.center, from: self.superview)
+            let topLeft = self.convert(CGPoint(x: self.bounds.minX, y: self.bounds.minY), from: kagamiView)
+            let topRight = self.convert(CGPoint(x: self.bounds.maxX, y: self.bounds.minY), from: kagamiView)
+            let bottomRight = self.convert(CGPoint(x: self.bounds.maxX, y: self.bounds.maxY), from: kagamiView)
+            let bottomLeft = self.convert(CGPoint(x: self.bounds.minX, y: self.bounds.maxY), from: kagamiView)
             
             
-            if kagamiView?.bounds.contains(centerOfLabel) {
-                self.kagamiView!.addSubview(self)
+            if kagamiView.bounds.contains(topLeft),
+                kagamiView.bounds.contains(topRight),
+                kagamiView.bounds.contains(bottomRight),
+                kagamiView.bounds.contains(bottomLeft) {
+                kagamiView.addSubview(self)
                 self.snp.remakeConstraints({ (make) in
-                    make.center.equalTo(centerOfLabel)
+                    make.center.equalTo(center)
                     make.height.width.equalTo(50.0)
                 })
                 kagamiView.layoutSubviews()
-                userDefaults.set(["onMirror" : true, "x" : self.frame.midX, "y" : self.frame.midY], forKey: self.accessibilityIdentifier!)
+                userDefaults?.set(["onMirror" : true, "x" : self.frame.minX, "y" : self.frame.minY], forKey: self.accessibilityIdentifier!)
+                
+                let widgetNode = ref.child((self.widget?.description)!)
+                widgetNode.updateChildValues(["x" : (self.frame.minX / kagamiView.frame.maxX) , "y" : (self.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
             }
             else {
                 self.snp.makeConstraints { (make) in
@@ -124,15 +137,8 @@ class WidgetView: UIView, WidgetViewable {
                     make.width.height.equalTo(50.0)
                     make.leading.equalToSuperview().offset((self.tag * 50) + (8 * self.tag) + 8)
                 }
-                userDefaults.set(["onMirror" : false, "x" : self.frame.midX, "y" : self.frame.midY], forKey: self.accessibilityIdentifier!)
+                userDefaults?.set(["onMirror" : false, "x" : self.frame.midX, "y" : self.frame.midY], forKey: self.accessibilityIdentifier!)
                 ref.child(self.accessibilityIdentifier!).updateChildValues(["onMirror" : false])
-            }
-            
-            if kagamiView.bounds.contains(self) {
-                let weatherNode = ref.child(self.widget.description)
-                weatherNode.updateChildValues(["x" : (subView.frame.minX / kagamiView.frame.maxX) , "y" : (subView.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
-                print("This Is \(subView.accessibilityIdentifier!)")
-                print(subView.frame)
             }
         }
     }
