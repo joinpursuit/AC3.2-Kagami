@@ -40,18 +40,18 @@ class DailyWeather {
         //Descriptions Of Weather
         let weather = dictionary["weather"] as? [[String:Any]]
         let mainCondition = weather?[0]["main"] as? String ?? "No Weather"
-        let weatherDescription = weather?[0]["description"] as? String ?? "No Description"
+        let weatherDescription = weather?[0]["description"] as? String ?? "No description yet"
         let icon = weather?[0]["icon"] as? String ?? "No Icon"
         
         //Main Temperature
-        let mainTemperature = dictionary["main"] as! [String: Int]
-        let temperature = mainTemperature["temp"]!
-        let pressure = mainTemperature["pressure"]!
-        let humidity = mainTemperature["humidity"]!
-        let minTemp = mainTemperature["temp_min"]!
-        let maxTemp = mainTemperature["temp_max"]!
+        let mainTemperature = dictionary["main"] as? [String: Int] ?? ["no temp available":0]
         
-        let name = dictionary["name"] as? String ?? "No city available"
+        let temperature = mainTemperature["temp"] ?? 0
+        let pressure = mainTemperature["pressure"] ?? 0
+        let humidity = mainTemperature["humidity"] ?? 0
+        let minTemp = mainTemperature["temp_min"] ?? 0
+        let maxTemp = mainTemperature["temp_max"] ?? 0
+        let name = dictionary["name"] as? String ?? "Enter a Zipcode above"
         
         self.init(temperature: temperature, icon: icon, mainCondition: mainCondition, weatherDescription: weatherDescription, pressure : pressure, humidity : humidity, minTemp: minTemp, maxTemp: maxTemp, name : name)
     }

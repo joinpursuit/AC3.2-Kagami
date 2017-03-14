@@ -117,6 +117,7 @@
 		478B307F1E66185700FD580C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				9C0411F61E783F97006469DB /* QuoteCollectionViewCell.swift */,
 				478B30A81E6767AD00FD580C /* Utilities.swift */,
 				478B306D1E66181500FD580C /* AppDelegate.swift */,
 				478B30741E66181500FD580C /* Assets.xcassets */,
@@ -166,7 +167,6 @@
 				9C49BA7F1E6F02CC001C4780 /* ToDoView.swift */,
 				CC9032DE1E71F59D00014276 /* TimeView.swift */,
 				9C3A5D6B1E74E90900B949AC /* QuoteView.swift */,
-				9C0411F61E783F97006469DB /* QuoteCollectionViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";

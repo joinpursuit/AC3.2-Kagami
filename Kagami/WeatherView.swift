@@ -170,14 +170,6 @@ class WeatherView: UIView, UISearchBarDelegate {
         }
     }
     
-    func convertToCelsius(fahrenheit: Int) -> Int {
-        return Int(5.0 / 9.0 * (Double(fahrenheit) - 32.0))
-    }
-    
-    func convertToFahrenheit(celsius: Int) -> Int {
-        return Int((celsius * 9) / 5) + 32
-    }
-    
     // MARK: - Search Bar Delegate
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -196,7 +188,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         guard searchBar.text != nil else { return }
         database.child("location").setValue(searchBar.text)
         userDefault.setValue(searchBar.text, forKey: "zipcode")
-        getAPIResults()
+        getAPIResultsForFahrenheit()
         print("location setting to firebase and user default")
         self.endEditing(true)
     }
@@ -206,8 +198,26 @@ class WeatherView: UIView, UISearchBarDelegate {
         isSearchActive = false
     }
     
-    func getAPIResults() {
+    func getAPIResultsForFahrenheit() {
         APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(searchBar.text!),us&units=imperial") { (data: Data?) in
+            guard let validData = data else { return }
+            if let weatherObject = DailyWeather.parseWeather(from: validData) {
+                self.weather = weatherObject
+                dump(self.weather)
+                DispatchQueue.main.async {
+                    self.locationLabel.text = self.weather!.name
+                    self.degreeLabel.text = String(describing: self.weather!.temperature)
+                    self.descriptionLabel.text = self.weather!.weatherDescription
+                    self.lowestTempLabel.text = String(describing: self.weather!.minTemp)
+                    self.highestTempLabel.text = String(describing: self.weather!.maxTemp)
+                    self.layoutIfNeeded()
+                }
+            }
+        }
+    }
+    
+    func getAPIResultsForCelsius() {
+        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(searchBar.text!),us&units=metric") { (data: Data?) in
             guard let validData = data else { return }
             if let weatherObject = DailyWeather.parseWeather(from: validData) {
                 self.weather = weatherObject
@@ -334,23 +344,16 @@ extension WeatherView: TwicketSegmentedControlDelegate {
             userDefault.setValue(true, forKey: "fahrenheit")
             print("switch to fahrenheit and setting user default to true")
             
-            if let mainTemp = degreeLabel.text, let minTemp = lowestTempLabel.text, let maxTemp = highestTempLabel.text {
-                degreeLabel.text = String(convertToFahrenheit(celsius: Int(mainTemp)!))
-                guard lowestTempLabel.text != "", highestTempLabel.text != "" else { return }
-                lowestTempLabel.text = String(convertToFahrenheit(celsius: Int(minTemp)!))
-                highestTempLabel.text = String(convertToFahrenheit(celsius: Int(maxTemp)!))
-            }
+            guard searchBar.text != "" else { return }
+            getAPIResultsForFahrenheit()
+            
         } else {
             database.child("fahrenheit").setValue(false)
             userDefault.setValue(false, forKey: "fahrenheit")
             print("Switch to celsius and setting user default to false")
             
-            if let mainTemp = degreeLabel.text, let minTemp = lowestTempLabel.text, let maxTemp = highestTempLabel.text  {
-                degreeLabel.text = String(convertToCelsius(fahrenheit: Int(mainTemp)!))
-                guard lowestTempLabel.text != "", highestTempLabel.text != "" else { return }
-                lowestTempLabel.text = String(convertToCelsius(fahrenheit: Int(minTemp)!))
-                highestTempLabel.text = String(convertToCelsius(fahrenheit: Int(maxTemp)!))
-            }
+            guard searchBar.text != "" else { return }
+            getAPIResultsForCelsius()
         }
     }
 }
