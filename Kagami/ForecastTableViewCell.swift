@@ -33,30 +33,34 @@ class ForecastTableViewCell: UITableViewCell {
         self.addSubview(dayLabel)
         self.addSubview(minLabel)
         self.addSubview(maxLabel)
+        self.addSubview(minMaxSepLabel)
         self.addSubview(descriptionLabel)
         dayLabel.snp.makeConstraints { (label) in
             label.top.equalTo(self.snp.top).inset(8)
             label.centerX.equalToSuperview()
         }
-
         descriptionLabel.snp.makeConstraints { (label) in
             label.top.equalTo(dayLabel.snp.bottom)
             label.centerX.equalToSuperview()
         }
-        minLabel.snp.makeConstraints { (label) in
+        minMaxSepLabel.snp.makeConstraints { (label) in
             label.top.equalTo(descriptionLabel.snp.bottom)
             label.centerX.equalToSuperview()
         }
+        minLabel.snp.makeConstraints { (label) in
+            label.top.equalTo(descriptionLabel.snp.bottom)
+            label.right.equalTo(minMaxSepLabel.snp.left)
+        }
         maxLabel.snp.makeConstraints { (label) in
-            label.top.equalTo(minLabel.snp.bottom)
-            label.centerX.equalToSuperview()
+            label.top.equalTo(descriptionLabel.snp.bottom)
+            label.left.equalTo(minMaxSepLabel.snp.right)
         }
     }
     
     lazy var minLabel: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
+        label.font = UIFont(name: "Code-Pro-Demo", size: 16)
         label.textColor = ColorPalette.accentColor
         return label
     }()
@@ -64,15 +68,23 @@ class ForecastTableViewCell: UITableViewCell {
     lazy var maxLabel: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
+        label.font = UIFont(name: "Code-Pro-Demo", size: 16)
         label.textColor = ColorPalette.accentColor
+        return label
+    }()
+    
+    lazy var minMaxSepLabel: UILabel = {
+        let label = UILabel()
+        label.text = "/"
+        label.font = UIFont(name: "Code-Pro-Demo", size: 16)
+        label.textColor = ColorPalette.grayColor
         return label
     }()
     
     lazy var dayLabel: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.font = UIFont(name: "Code-Pro-Demo", size: 22)
+        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
         label.textColor = ColorPalette.blackColor
         return label
     }()
@@ -80,10 +92,8 @@ class ForecastTableViewCell: UITableViewCell {
     lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
+        label.font = UIFont(name: "Code-Pro-Demo", size: 16)
         label.textColor = ColorPalette.grayColor
         return label
     }()
-    
-    
 }

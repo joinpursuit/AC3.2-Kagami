@@ -50,6 +50,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         self.addSubview(lowestTempLabel)
         self.addSubview(minMaxDegreeLabel)
         self.addSubview(highestTempLabel)
+        self.addSubview(headerImage)
         segmentView.addSubview(customSegmentControl)
         doneButton.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
@@ -57,15 +58,18 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     func configureConstraints() {
         searchBar.snp.makeConstraints { (view) in
+            view.top.left.right.equalToSuperview()
+            view.height.equalTo(50)
+        }
+        
+        headerImage.snp.makeConstraints { (view) in
             view.centerX.equalToSuperview()
-            view.top.equalToSuperview().offset(50)
-            view.width.equalToSuperview().multipliedBy(0.60)
-            view.height.equalTo(40)
+            view.top.equalTo(searchBar.snp.bottom)
         }
         
         degreeLabel.snp.makeConstraints { (label) in
             label.centerX.equalToSuperview()
-            label.top.equalTo(searchBar.snp.bottom).offset(20)
+            label.top.equalTo(headerImage.snp.bottom).offset(25)
         }
         
         locationLabel.snp.makeConstraints { (label) in
@@ -79,7 +83,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         }
         
         weatherIcon.snp.makeConstraints { (view) in
-            view.top.equalTo(descriptionLabel.snp.bottom).offset(20)
+            view.top.equalTo(descriptionLabel.snp.bottom).offset(10)
             view.centerX.equalToSuperview()
         }
         
@@ -100,7 +104,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         
         segmentView.snp.makeConstraints { (view) in
             view.centerX.equalToSuperview()
-            view.top.equalTo(minMaxDegreeLabel.snp.bottom).offset(20)
+            view.top.equalTo(minMaxDegreeLabel.snp.bottom).offset(10)
             view.height.equalTo(40)
             view.width.equalTo(330)
         }
@@ -165,7 +169,7 @@ class WeatherView: UIView, UISearchBarDelegate {
                     }
                 }
             }
-
+            
         }
     }
     
@@ -236,7 +240,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     // MARK: - Lazy Instances
     
     lazy var weatherIcon: UIImageView = {
-        let image = UIImage(named: "Partly Cloudy Day-100")
+        let image = UIImage(named: "Partly Cloudy Day-96")
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleToFill
         return imageView
@@ -244,7 +248,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     lazy var locationLabel: UILabel = {
         let label = UILabel()
-        label.text = "Entering a Zipcode above"
+        label.text = ""
         label.font = UIFont(name: "Code-Pro-Demo", size: 20)
         label.textColor = .darkGray
         return label
@@ -252,7 +256,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     lazy var degreeLabel: UILabel = {
         let label = UILabel()
-        label.text = "69"
+        label.text = "0"
         label.font = UIFont(name: "Code-Pro-Demo", size: 70)
         label.textColor = ColorPalette.blackColor
         return label
@@ -292,15 +296,12 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     lazy var searchBar: UISearchBar = {
         let bar = UISearchBar()
-        bar.placeholder = "ENTER ZIPCODE"
-        bar.tintColor = UIColor.white
+        bar.placeholder = "SEARCH BY ZIPCODE"
+        bar.tintColor = ColorPalette.whiteColor
         bar.barTintColor = ColorPalette.whiteColor
-        bar.backgroundColor = UIColor.clear
-        bar.searchBarStyle = UISearchBarStyle.default
-        bar.layer.cornerRadius = 20
         bar.layer.borderWidth = 1
-        bar.layer.borderColor = ColorPalette.grayColor.cgColor
-        bar.clipsToBounds = true
+        bar.layer.borderColor = UIColor.white.cgColor
+        bar.searchBarStyle = UISearchBarStyle.default
         return bar
     }()
     
@@ -332,6 +333,14 @@ class WeatherView: UIView, UISearchBarDelegate {
         let image = UIImage(named: "Cancel-104")
         button.setImage(image, for: .normal)
         return button
+    }()
+    
+    lazy var headerImage: UIImageView = {
+        let imageView = UIImageView()
+        let image = UIImage(named: "weatherheader")
+        imageView.image = image
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }()
 }
 
