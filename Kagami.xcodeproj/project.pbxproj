@@ -27,6 +27,9 @@
 		9C022C981E67381400AA2802 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9C022C971E67381400AA2802 /* GoogleService-Info.plist */; };
 		9C022C9C1E67667700AA2802 /* SelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */; };
 		9C0411F71E783F97006469DB /* QuoteCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0411F61E783F97006469DB /* QuoteCollectionViewCell.swift */; };
+		9C0411FB1E78B693006469DB /* ForecastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0411FA1E78B693006469DB /* ForecastView.swift */; };
+		9C0411FD1E78B952006469DB /* Forecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0411FC1E78B952006469DB /* Forecast.swift */; };
+		9C0411FF1E78C117006469DB /* ForecastTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0411FE1E78C117006469DB /* ForecastTableViewCell.swift */; };
 		9C3A5D6A1E74D49B00B949AC /* QuoteOfTheDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3A5D691E74D49B00B949AC /* QuoteOfTheDay.swift */; };
 		9C3A5D6C1E74E90900B949AC /* QuoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3A5D6B1E74E90900B949AC /* QuoteView.swift */; };
 		9C49BA801E6F02CC001C4780 /* ToDoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C49BA7F1E6F02CC001C4780 /* ToDoView.swift */; };
@@ -61,6 +64,9 @@
 		9C022C971E67381400AA2802 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9C022C9B1E67667700AA2802 /* SelectionCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionCollectionViewCell.swift; sourceTree = "<group>"; };
 		9C0411F61E783F97006469DB /* QuoteCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuoteCollectionViewCell.swift; sourceTree = "<group>"; };
+		9C0411FA1E78B693006469DB /* ForecastView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForecastView.swift; sourceTree = "<group>"; };
+		9C0411FC1E78B952006469DB /* Forecast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Forecast.swift; sourceTree = "<group>"; };
+		9C0411FE1E78C117006469DB /* ForecastTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForecastTableViewCell.swift; sourceTree = "<group>"; };
 		9C3A5D691E74D49B00B949AC /* QuoteOfTheDay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuoteOfTheDay.swift; sourceTree = "<group>"; };
 		9C3A5D6B1E74E90900B949AC /* QuoteView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuoteView.swift; sourceTree = "<group>"; };
 		9C49BA7F1E6F02CC001C4780 /* ToDoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoView.swift; sourceTree = "<group>"; };
@@ -121,6 +127,7 @@
 		478B307F1E66185700FD580C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				9C0411FE1E78C117006469DB /* ForecastTableViewCell.swift */,
 				9C0411F61E783F97006469DB /* QuoteCollectionViewCell.swift */,
 				478B30A81E6767AD00FD580C /* Utilities.swift */,
 				478B306D1E66181500FD580C /* AppDelegate.swift */,
@@ -157,6 +164,7 @@
 			children = (
 				478B30B61E6DFDBE00FD580C /* Weather.swift */,
 				3E91CED91E6780C10074AA31 /* DailyWeather.swift */,
+				9C0411FC1E78B952006469DB /* Forecast.swift */,
 				9C49BA851E6F1FA9001C4780 /* ToDo.swift */,
 				CC3EF4551E70DDA200D6AA2A /* Time.swift */,
 				9C3A5D691E74D49B00B949AC /* QuoteOfTheDay.swift */,
@@ -169,6 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				478B30B31E6DF95300FD580C /* WeatherView.swift */,
+				9C0411FA1E78B693006469DB /* ForecastView.swift */,
 				9C49BA7F1E6F02CC001C4780 /* ToDoView.swift */,
 				CC9032DE1E71F59D00014276 /* TimeView.swift */,
 				9C3A5D6B1E74E90900B949AC /* QuoteView.swift */,
@@ -353,6 +362,7 @@
 				478B30851E66192300FD580C /* APIRequestManager.swift in Sources */,
 				478B30B71E6DFDBE00FD580C /* Weather.swift in Sources */,
 				478B30A71E6763F600FD580C /* SelectionViewController.swift in Sources */,
+				9C0411FF1E78C117006469DB /* ForecastTableViewCell.swift in Sources */,
 				478B30B41E6DF95300FD580C /* WeatherView.swift in Sources */,
 				CC9032DF1E71F59D00014276 /* TimeView.swift in Sources */,
 				478B30C71E772D4500FD580C /* Horoscope.swift in Sources */,
@@ -360,6 +370,7 @@
 				3E91CEDC1E6780CF0074AA31 /* ForecastWeather.swift in Sources */,
 				9C3A5D6C1E74E90900B949AC /* QuoteView.swift in Sources */,
 				9C49BA861E6F1FA9001C4780 /* ToDo.swift in Sources */,
+				9C0411FB1E78B693006469DB /* ForecastView.swift in Sources */,
 				9C3A5D6A1E74D49B00B949AC /* QuoteOfTheDay.swift in Sources */,
 				478B30BF1E7062C800FD580C /* RouterServices.swift in Sources */,
 				478B306E1E66181500FD580C /* AppDelegate.swift in Sources */,
@@ -368,6 +379,7 @@
 				478B30B11E6DF87400FD580C /* SettingsViewController.swift in Sources */,
 				9C0411F71E783F97006469DB /* QuoteCollectionViewCell.swift in Sources */,
 				9C022C9C1E67667700AA2802 /* SelectionCollectionViewCell.swift in Sources */,
+				9C0411FD1E78B952006469DB /* Forecast.swift in Sources */,
 				478B30871E66257300FD580C /* KagamiViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
