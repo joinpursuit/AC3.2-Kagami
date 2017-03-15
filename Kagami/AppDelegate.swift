@@ -25,7 +25,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = KagamiViewController()
+        
+        let view = TimeView()
+        view.layer.opacity = 0.0
+        view.clipsToBounds = true
+        
+        let widgetViews = [view]
+        window?.rootViewController = MyKagamiViewController(widgetViews: widgetViews)
         window?.makeKeyAndVisible()
         
         return true

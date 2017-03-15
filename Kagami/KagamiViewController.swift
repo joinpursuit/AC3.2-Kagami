@@ -58,6 +58,11 @@ struct Widget {
     
 }
 
+// should be for dock if dock/mirror are put into own UIView class - separate from KVC
+protocol KagamiViewControllerDataSource : class {
+    var widgetViews: [WidgetView] { get set }
+}
+
 class KagamiViewController: UIViewController {
     
     // MARK: - Properties
@@ -67,8 +72,9 @@ class KagamiViewController: UIViewController {
     
     var panRecognizer = UIPanGestureRecognizer()
     var tapRecognizer = UITapGestureRecognizer()
+    weak var delegate : KagamiViewControllerDataSource?
     
-    var widgetArray = [Widget(category: .weather), Widget(category: .forecast), Widget(category: .time), Widget(category: .todos), Widget(category: .quote)]
+//    var widgetArray = [Widget(category: .weather), Widget(category: .forecast), Widget(category: .time), Widget(category: .todos), Widget(category: .quote)]
     var previousPoint: CGPoint?
     var widgetBeingEdited: UIView?
     
@@ -108,8 +114,7 @@ class KagamiViewController: UIViewController {
         
         propertyAnimator = nil
     }
-    
-    
+
     // MARK: - Setup View Hierarchy & Constraints
     private func setupViewHierarchy() {
         
@@ -123,20 +128,6 @@ class KagamiViewController: UIViewController {
         view.addSubview(timeView)
         view.addSubview(toDoView)
         view.addSubview(quoteView)
-        
-        weatherView.doneButton.addTarget(self, action: #selector(saveWeather), for: .touchDown)
-        weatherView.cancelButton.addTarget(self, action: #selector(saveWeather), for: .touchDown)
-        
-        forecastView.doneButton.addTarget(self, action: #selector(saveForecast), for: .touchDown)
-        forecastView.cancelButton.addTarget(self, action: #selector(saveForecast), for: .touchDown)
-        
-        timeView.doneButton.addTarget(self, action: #selector(saveTime), for: .touchUpInside)
-        
-        toDoView.doneButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
-        toDoView.cancelButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
-        
-        quoteView.doneButton.addTarget(self, action: #selector(saveQuote), for: .touchUpInside)
-        quoteView.cancelButton.addTarget(self, action: #selector(saveQuote), for: .touchUpInside)
     }
     
     private func configureConstraints() {
@@ -164,34 +155,15 @@ class KagamiViewController: UIViewController {
         }
         
         // instantiate Widgets
-        for widget in widgetArray {
+        
+        guard let widgetViews = self.delegate?.widgetViews else { return }
+        
+        for widgetView in widgetViews {
             
-            let widgetView = widget.widgetView
-            widget.dockView.image = widget.category.dockIcon
-            widget.mirrorView.image = widget.category.mirrorIcon
-            widgetView.addSubview(widget.dockView)
-            widgetView.addSubview(widget.mirrorView)
-            //            imageView.layer.borderColor = ColorPalette.blackColor.cgColor
-            //            imageView.layer.borderWidth = 1.0
-            widget.dockView.snp.makeConstraints({ (make) in
-                make.trailing.bottom.top.leading.equalToSuperview()
-            })
-            widget.mirrorView.snp.makeConstraints({ (make) in
-                make.trailing.bottom.top.leading.equalToSuperview()
-            })
-            
-            widget.mirrorView.alpha = 0.0
-            widgetView.alpha = 0.8
-            widgetView.tag = widget.category.rawValue
-            widgetView.accessibilityIdentifier = widget.category.description
-            
-            widgetView.addGestureRecognizer(setPanGestureRecognizer())
-            widgetView.addGestureRecognizer(setTapRecognizer())
             widgetView.isUserInteractionEnabled = true
             self.view.addSubview(widgetView)
             
             let widgetDict = userDefault.dictionary(forKey: widgetView.accessibilityIdentifier!)
-            
             
             if widgetDict != nil {
                 
@@ -221,262 +193,6 @@ class KagamiViewController: UIViewController {
                     make.bottom.equalTo(iconContainerView.snp.bottom).offset(-5.0)
                     make.width.height.equalTo(50.0)
                     make.leading.equalTo(iconContainerView.snp.leading).offset((widgetView.tag * 50) + (8 * widgetView.tag) + 8)
-                }
-            }
-        }
-        
-        weatherView.snp.makeConstraints { (make) in
-            make.center.equalTo(widgetArray[0].widgetView)
-            make.size.equalTo(0.1)
-        }
-        
-        forecastView.snp.makeConstraints { (make) in
-            make.center.equalTo(widgetArray[1].widgetView)
-            make.size.equalTo(0.1)
-        }
-        
-        timeView.snp.makeConstraints { (make) in
-            make.center.equalTo(widgetArray[2].widgetView)
-            make.size.equalTo(0.1)
-
-        }
-        
-        toDoView.snp.makeConstraints { (make) in
-            make.center.equalTo(widgetArray[3].widgetView)
-            make.size.equalTo(0.1)
-
-        }
-        
-        quoteView.snp.makeConstraints { (make) in
-            make.center.equalTo(widgetArray[4].widgetView)
-            make.size.equalTo(0.1)
-
-        }
-    }
-    
-    // add gestures
-    func setPanGestureRecognizer() -> UIPanGestureRecognizer {
-        
-        panRecognizer = UIPanGestureRecognizer (target: self, action: #selector(self.wasDragged(_:)))
-        panRecognizer.minimumNumberOfTouches = 1
-        panRecognizer.maximumNumberOfTouches = 1
-        panRecognizer.cancelsTouchesInView = false
-        return panRecognizer
-    }
-    
-    func setTapRecognizer() -> UITapGestureRecognizer {
-        tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.wasTapped(_:)))
-        tapRecognizer.numberOfTapsRequired = 1
-        tapRecognizer.cancelsTouchesInView = false
-        tapRecognizer.numberOfTouchesRequired = 1
-        tapRecognizer.require(toFail: panRecognizer)
-        return tapRecognizer
-    }
-    
-    func wasTapped(_ gesture: UITapGestureRecognizer) {
-
-        let view = gesture.view!
-        
-        if gesture.state == .ended {
-            
-            previousPoint = CGPoint(x: view.frame.midX, y: view.frame.midY)
-            
-            switch view.accessibilityIdentifier! {
-            case "weather":
-                propertyAnimator?.addAnimations ({
-                    self.weatherView.snp.remakeConstraints({ (make) in
-                        make.height.width.equalToSuperview().multipliedBy(0.8)
-                        make.center.equalToSuperview()
-                    })
-                    
-                    self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
-                    self.weatherView.layer.opacity = 1.0
-                    self.view.bringSubview(toFront: self.weatherView)
-                    self.view.layoutIfNeeded()
-                })
-                
-                widgetBeingEdited = widgetArray[0].widgetView
-            case "forecast":
-                propertyAnimator?.addAnimations ({
-                    self.forecastView.snp.remakeConstraints({ (make) in
-                        make.height.width.equalToSuperview().multipliedBy(0.8)
-                        make.center.equalToSuperview()
-                    })
-                    
-                    self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
-                    self.forecastView.layer.opacity = 1.0
-                    self.view.bringSubview(toFront: self.weatherView)
-                    self.view.layoutIfNeeded()
-                })
-                
-                widgetBeingEdited = widgetArray[1].widgetView
-            case "time":
-                propertyAnimator?.addAnimations ({
-                    self.timeView.snp.remakeConstraints({ (make) in
-                        make.height.width.equalToSuperview().multipliedBy(0.8)
-                        make.center.equalToSuperview()
-                        
-                    })
-                    
-                    self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
-                    self.timeView.layer.opacity = 1.0
-                    self.view.bringSubview(toFront: self.timeView)
-                    self.view.layoutIfNeeded()
-                })
-                
-                widgetBeingEdited = widgetArray[2].widgetView
-            case "toDos":
-                propertyAnimator?.addAnimations ({
-                    self.toDoView.snp.remakeConstraints({ (make) in
-                        make.height.width.equalToSuperview().multipliedBy(0.7)
-                        make.center.equalToSuperview()
-                    })
-                    
-                    self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
-                    self.toDoView.layer.opacity = 1.0
-                    self.view.bringSubview(toFront: self.toDoView)
-                    self.view.layoutIfNeeded()
-                })
-                
-                widgetBeingEdited = widgetArray[3].widgetView
-            case "quote":
-                propertyAnimator?.addAnimations ({
-                    self.quoteView.snp.remakeConstraints({ (make) in
-                        make.height.width.equalToSuperview().multipliedBy(0.8)
-                        make.center.equalToSuperview()
-                    })
-                    
-                    self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
-                    self.quoteView.layer.opacity = 1.0
-                    self.view.bringSubview(toFront: self.quoteView)
-                    self.view.layoutIfNeeded()
-                })
-                
-                widgetBeingEdited = widgetArray[4].widgetView
-            default:
-                break
-            }
-            propertyAnimator?.startAnimation()
-        }
-    }
-    
-    func wasDragged(_ gesture: UIPanGestureRecognizer) {
-        let widgetView = gesture.view!
-        let translation = gesture.translation(in: self.view)
-        let view = gesture.view!
-
-        widgetView.center = CGPoint(x: widgetView.center.x + translation.x , y: widgetView.center.y + translation.y)
-        gesture.setTranslation(CGPoint.zero, in: self.view)
-        
-        //TODO: - MATH -- min > kagami.min && max < kagami.max
-      
-      
-        if gesture.state == .began {
-          for widget in widgetArray {
-            let widgetDict = userDefault.dictionary(forKey:view.accessibilityIdentifier!)
-            if widgetDict != nil {
-              if widgetDict?["onMirror"] as! Bool == true {
-                let x = widgetDict?["x"] as! CGFloat
-                let y = widgetDict?["y"] as! CGFloat
-                
-                view.snp.remakeConstraints({ (make) in
-                  make.center.equalTo(CGPoint(x:x, y:y))
-                  make.height.width.equalTo(55)
-                })
-              }
-              else {
-                if widgetDict?["onMirror"] as! Bool == false {
-                  view.snp.remakeConstraints({ (make) in
-                    make.leading.equalToSuperview().offset((view.tag * 50) + (8 * view.tag) + 8)
-                    make.bottom.equalToSuperview().offset(-5)
-                    make.height.width.equalTo(55)
-                  })
-                }
-              }
-            }
-            
-            else {
-              view.snp.remakeConstraints({ (make) in
-                make.bottom.equalToSuperview().offset((view.tag * 50) + (8 * view.tag) + 8)
-              })
-            }
-          }
-            dump("Parent View \(self.view.subviews.count)")
-            dump("Kagami View \(self.kagamiView.subviews.count)")
-            dump(widgetView)
-        }
-      
-        if gesture.state == .changed {
-            let centerOfWidget = self.kagamiView.convert(widgetView.center, from: widgetView.superview)
-            
-            if kagamiView.bounds.contains(centerOfWidget) {
-                let animator = UIViewPropertyAnimator(duration: 0.5, curve: .easeOut, animations: {
-                    widgetView.subviews[0].alpha = 0.0
-                    widgetView.subviews[1].alpha = 1.0
-                })
-                animator.startAnimation()
-                
-            } else {
-                let animator = UIViewPropertyAnimator(duration: 1.0, curve: .easeOut, animations: {
-                widgetView.subviews[0].alpha = 1.0
-                widgetView.subviews[1].alpha = 0.0
-            })
-                animator.startAnimation()
-            }
-        }
-        
-        if gesture.state == .ended {
-            
-            let centerOfWidget = self.kagamiView.convert(widgetView.center, from: widgetView.superview)
-            
-            if kagamiView.bounds.contains(centerOfWidget) {
-                // self.kagamiView.addSubview(widgetView)
-                widgetView.snp.remakeConstraints({ (make) in
-                    make.center.equalTo(centerOfWidget)
-                    make.height.width.equalTo(50.0)
-                })
-                self.view.layoutSubviews()
-                userDefault.set(["onMirror" : true, "x" : centerOfWidget.x, "y" : centerOfWidget.y], forKey: widgetView.accessibilityIdentifier!)
-               
-            }
-            else {
-                widgetView.snp.remakeConstraints  { (make) in
-                    make.bottom.equalTo(iconContainerView.snp.bottom).offset(-5.0)
-                    make.width.height.equalTo(50.0)
-                    make.leading.equalTo(iconContainerView.snp.leading).offset((widgetView.tag * 50) + (8 * widgetView.tag) + 8)
-                }
-                dump("Center of \(widgetView.accessibilityIdentifier!) is \(centerOfWidget)")
-                self.view.layoutSubviews()
-                userDefault.set(["onMirror" : false, "x" : centerOfWidget.x, "y" : centerOfWidget.y], forKey: widgetView.accessibilityIdentifier!)
-                ref.child(widgetView.accessibilityIdentifier!).updateChildValues(["onMirror" : false])
-            }
-            
-            for widget in widgetArray {
-                let widgetCenter = self.kagamiView.convert(widget.widgetView.center, from: widgetView.superview)
-                let widgetOrigin = self.kagamiView.convert(CGPoint.init(x: widget.widgetView.frame.minX, y: widget.widgetView.frame.minY), from: widgetView.superview)
-
-                if self.kagamiView.bounds.contains(widgetCenter) {
-                    switch widget.category {
-                    case .weather:
-                        let weatherNode = ref.child("weather")
-                        weatherNode.updateChildValues(["x" : (widgetOrigin.x / kagamiView.frame.maxX) , "y" : (widgetOrigin.y / kagamiView.bounds.maxY), "onMirror" : true])
-                    case .forecast:
-                        let weatherNode = ref.child("forecast")
-                        weatherNode.updateChildValues(["x" : (widgetOrigin.x / kagamiView.frame.maxX) , "y" : (widgetOrigin.y / kagamiView.bounds.maxY), "onMirror" : true])
-                    case .time:
-                        let timeNode = ref.child("time")
-                        timeNode.updateChildValues(["x" : (widgetOrigin.x / kagamiView.frame.maxX) , "y" : (widgetOrigin.y / kagamiView.bounds.maxY), "onMirror" : true])
-                        
-                    case .todos:
-                        
-                        let toDoNode = ref.child("toDos")
-                        toDoNode.updateChildValues(["x" : (widgetOrigin.x / kagamiView.frame.maxX) , "y" : (widgetOrigin.y / kagamiView.bounds.maxY), "onMirror" : true])
-                        
-                    case .quote:
-                        let quoteNode = ref.child("quote")
-                        quoteNode.updateChildValues(["x" : (widgetOrigin.x / kagamiView.frame.maxX) , "y" : (widgetOrigin.y / kagamiView.bounds.maxY), "onMirror" : true])
-                        
-                    }
                 }
             }
         }

@@ -21,6 +21,9 @@ protocol WidgetViewable: class {
     func setTapRecognizer() -> UITapGestureRecognizer
     func wasTapped(_ gesture: UITapGestureRecognizer)
     func wasDragged(_ gesture: UIPanGestureRecognizer)
+    
+    var mirrorIcon: UIImage
+    var dockIcon: UIImage
 }
 
 extension WidgetViewable {
@@ -29,7 +32,6 @@ extension WidgetViewable {
 
 class WidgetView: UIView, WidgetViewable {
     
-
     // MARK: - Properties
     internal var userDefaults: UserDefaults?
     internal var propertyAnimator: UIViewPropertyAnimator?
@@ -37,8 +39,9 @@ class WidgetView: UIView, WidgetViewable {
     internal var panRecognizer = UIPanGestureRecognizer()
 
     var widget: Widgetable?
-    var iconImageView: UIImageView?
-    var widgetImageView: UIImageView?
+    var mirrorView = UIImageView()
+    var dockView = UIImageView()
+    
     weak var delegate: WidgetViewable?
     
     var ref: FIRDatabaseReference!
