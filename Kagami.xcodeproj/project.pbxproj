@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		31C0869A1E78CECA00F897AA /* MyKagamiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C086991E78CECA00F897AA /* MyKagamiViewController.swift */; };
 		3E91CEDA1E6780C10074AA31 /* DailyWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E91CED91E6780C10074AA31 /* DailyWeather.swift */; };
 		3E91CEDC1E6780CF0074AA31 /* ForecastWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E91CEDB1E6780CF0074AA31 /* ForecastWeather.swift */; };
 		3E91CEDE1E688CE20074AA31 /* WordOfTheDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E91CEDD1E688CE20074AA31 /* WordOfTheDay.swift */; };
@@ -43,6 +44,7 @@
 
 /* Begin PBXFileReference section */
 		28B5280557D9DBC696BF6E1A /* Pods-Kagami.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kagami.release.xcconfig"; path = "Pods/Target Support Files/Pods-Kagami/Pods-Kagami.release.xcconfig"; sourceTree = "<group>"; };
+		31C086991E78CECA00F897AA /* MyKagamiViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyKagamiViewController.swift; sourceTree = "<group>"; };
 		3E91CED91E6780C10074AA31 /* DailyWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DailyWeather.swift; sourceTree = "<group>"; };
 		3E91CEDB1E6780CF0074AA31 /* ForecastWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForecastWeather.swift; sourceTree = "<group>"; };
 		3E91CEDD1E688CE20074AA31 /* WordOfTheDay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WordOfTheDay.swift; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				478B30861E66257300FD580C /* KagamiViewController.swift */,
+				31C086991E78CECA00F897AA /* MyKagamiViewController.swift */,
 				478B30AA1E68D44700FD580C /* Customize Selections */,
 			);
 			name = "View Controllers";
@@ -370,6 +373,7 @@
 				3E91CEDC1E6780CF0074AA31 /* ForecastWeather.swift in Sources */,
 				9C3A5D6C1E74E90900B949AC /* QuoteView.swift in Sources */,
 				9C49BA861E6F1FA9001C4780 /* ToDo.swift in Sources */,
+				31C0869A1E78CECA00F897AA /* MyKagamiViewController.swift in Sources */,
 				9C0411FB1E78B693006469DB /* ForecastView.swift in Sources */,
 				9C3A5D6A1E74D49B00B949AC /* QuoteOfTheDay.swift in Sources */,
 				478B30BF1E7062C800FD580C /* RouterServices.swift in Sources */,
