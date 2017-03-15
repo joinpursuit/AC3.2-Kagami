@@ -33,7 +33,7 @@ extension UIButton {
 }
 
 // Widget protocol
-protocol Widgetable: class {
+protocol Widgetable {
     var category: String { get }
     var iconImage: UIImage { get }
     var description: String { get }

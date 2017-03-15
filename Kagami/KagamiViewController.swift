@@ -123,11 +123,11 @@ class KagamiViewController: UIViewController {
         view.addSubview(mirrorAnimationView)
         view.addSubview(kagamiView)
         view.addSubview(iconContainerView)
-        view.addSubview(weatherView)
-        view.addSubview(forecastView)
-        view.addSubview(timeView)
-        view.addSubview(toDoView)
-        view.addSubview(quoteView)
+//        view.addSubview(weatherView)
+//        view.addSubview(forecastView)
+//        view.addSubview(timeView)
+//        view.addSubview(toDoView)
+//        view.addSubview(quoteView)
     }
     
     private func configureConstraints() {
@@ -158,44 +158,44 @@ class KagamiViewController: UIViewController {
         
         guard let widgetViews = self.delegate?.widgetViews else { return }
         
-        for widgetView in widgetViews {
-            
-            widgetView.isUserInteractionEnabled = true
-            self.view.addSubview(widgetView)
-            
-            let widgetDict = userDefault.dictionary(forKey: widgetView.accessibilityIdentifier!)
-            
-            if widgetDict != nil {
-                
-                if widgetDict?["onMirror"] as! Bool == true {
-                    let x = widgetDict?["x"] as! CGFloat
-                    let y = widgetDict?["y"] as! CGFloat
-                    widgetView.subviews[0].alpha = 0.0
-                    widgetView.subviews[1].alpha = 1.0
-                    widgetView.snp.makeConstraints({ (make) in
-                        make.center.equalTo(CGPoint(x: x, y: y))
-                        make.height.width.equalTo(50.0)
-                    })
-                }
-                else {
-                    if widgetDict?["onMirror"] as! Bool == false {
-                        widgetView.snp.makeConstraints({ (make) in
-                            make.bottom.equalTo(iconContainerView.snp.bottom).offset(-5.0)
-                            make.width.height.equalTo(50.0)
-                            make.leading.equalTo(iconContainerView.snp.leading).offset((widgetView.tag * 50) + (8 * widgetView.tag) + 8)
-                        })
-                        
-                    }
-                }
-            }
-            else {
-                widgetView.snp.makeConstraints { (make) in
-                    make.bottom.equalTo(iconContainerView.snp.bottom).offset(-5.0)
-                    make.width.height.equalTo(50.0)
-                    make.leading.equalTo(iconContainerView.snp.leading).offset((widgetView.tag * 50) + (8 * widgetView.tag) + 8)
-                }
-            }
-        }
+//        for widgetView in widgetViews {
+//            
+//            widgetView.isUserInteractionEnabled = true
+//            self.view.addSubview(widgetView)
+//            
+//            let widgetDict = userDefault.dictionary(forKey: widgetView.accessibilityIdentifier!)
+//            
+//            if widgetDict != nil {
+//                
+//                if widgetDict?["onMirror"] as! Bool == true {
+//                    let x = widgetDict?["x"] as! CGFloat
+//                    let y = widgetDict?["y"] as! CGFloat
+//                    widgetView.subviews[0].alpha = 0.0
+//                    widgetView.subviews[1].alpha = 1.0
+//                    widgetView.snp.makeConstraints({ (make) in
+//                        make.center.equalTo(CGPoint(x: x, y: y))
+//                        make.height.width.equalTo(50.0)
+//                    })
+//                }
+//                else {
+//                    if widgetDict?["onMirror"] as! Bool == false {
+//                        widgetView.snp.makeConstraints({ (make) in
+//                            make.bottom.equalTo(iconContainerView.snp.bottom).offset(-5.0)
+//                            make.width.height.equalTo(50.0)
+//                            make.leading.equalTo(iconContainerView.snp.leading).offset((widgetView.tag * 50) + (8 * widgetView.tag) + 8)
+//                        })
+//                        
+//                    }
+//                }
+//            }
+//            else {
+//                widgetView.snp.makeConstraints { (make) in
+//                    make.bottom.equalTo(iconContainerView.snp.bottom).offset(-5.0)
+//                    make.width.height.equalTo(50.0)
+//                    make.leading.equalTo(iconContainerView.snp.leading).offset((widgetView.tag * 50) + (8 * widgetView.tag) + 8)
+//                }
+//            }
+//        }
     }
     
     // MARK: - Save custom settings
@@ -344,7 +344,7 @@ class KagamiViewController: UIViewController {
     }()
     
     lazy var timeView: TimeView = {
-        let view = TimeView()
+        let view = TimeView(widget: Time(militaryTime: true))
         view.layer.opacity = 0.0
         view.clipsToBounds = true
         return view

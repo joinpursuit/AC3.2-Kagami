@@ -26,8 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
-        let view = TimeView()
-        view.layer.opacity = 0.0
+        let view = TimeView(widget: Time(militaryTime: true))
+        view.layer.opacity = 1.0
         view.clipsToBounds = true
         
         let widgetViews = [view]

@@ -13,30 +13,34 @@ import FirebaseDatabase
 import FirebaseAuth
 import TwicketSegmentedControl
 
-class TimeView: WidgetView {
-    var time: Time?
+class TimeView: WidgetView, WidgetViewable {
     let dateFormatter = DateFormatter()
     let currentDateTime = Date()
     let date = NSDate()
     let calendar = NSCalendar.current
-    let userDefault = UserDefaults.standard
     
-    var widget: Widgetable = Time(militaryTime: true)
-    var mirrorView: UIImageView?
-    var dockView: UIImageView?
+    let userDefault = UserDefaults.standard
+    var dockIcon: UIImage = #imageLiteral(resourceName: "clock")
+    var mirrorIcon: UIImage = #imageLiteral(resourceName: "Flash_Logo_01")
+    
     weak var delegate: WidgetViewable?
+    var timeWidget: Time?
     
     var databaseReference: FIRDatabaseReference!
     var user: FIRUser?
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(widget: Widgetable) {
+        super.init(widget: widget)
         self.backgroundColor = .white
         self.alpha = 0.8
         self.layer.cornerRadius = 9
         
+        self.widget = widget
+        if let time = widget as? Time {
+            self.timeWidget = time
+        }
+        
         databaseReference = FIRDatabase.database().reference()
-        time = Time(militaryTime: false)
         
         setDateFormatterStyles()
         
@@ -46,9 +50,9 @@ class TimeView: WidgetView {
         loadUserDefaults()
         setDefaultTimeLabelText()
         
-        for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
-            print("WOOO \(key) = \(value) \n")
-        }
+//        for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
+//            print("WOOO \(key) = \(value) \n")
+//        }
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -57,15 +61,34 @@ class TimeView: WidgetView {
     
     // MARK: Setup
     func setupViewHierarchy () {
+        self.addSubview(dockImageView)
+        self.addSubview(mirrorImageView)
+        
+        self.addGestureRecognizer(setTapRecognizer())
+        self.addGestureRecognizer(setPanGestureRecognizer())
+    }
+    
+    func configureConstraints() {
+        
+        dockImageView.snp.remakeConstraints { (make) in
+            make.size.equalTo(50.0)
+            make.center.equalToSuperview()
+        }
+        
+        mirrorImageView.snp.remakeConstraints { (make) in
+            make.size.equalTo(0.1)
+            make.center.equalToSuperview()
+        }
+    }
+    
+    func addSettings() {
         self.addSubview(clockAndTimeView)
         self.addSubview(segmentView)
         self.addSubview(clockImageView)
         self.addSubview(timeLabel)
         self.addSubview(doneButton)
         segmentView.addSubview(timeFormatSegmentedControl)
-    }
-    
-    func configureConstraints() {
+        
         //Views
         segmentView.snp.makeConstraints { (view) in
             view.left.right.equalToSuperview()
@@ -110,7 +133,7 @@ class TimeView: WidgetView {
     func setTimeFormat() {
         let militaryTimeRef = databaseReference.child("time/militaryTime")
         
-        militaryTimeRef.setValue(time?.militaryTime) {(error, reference) in
+        militaryTimeRef.setValue(timeWidget?.militaryTime) {(error, reference) in
             if let error = error {
                 print(error)
             }
@@ -158,6 +181,19 @@ class TimeView: WidgetView {
     }
     
     //MARK: - Lazy Inits
+    //WidgetImageViews
+    lazy var dockImageView: UIImageView = {
+        let view = UIImageView()
+        view.image = #imageLiteral(resourceName: "clock")
+        return view
+    }()
+    
+    lazy var mirrorImageView: UIImageView = {
+        let view = UIImageView()
+        view.image = #imageLiteral(resourceName: "Flash_Logo_01")
+        return view
+    }()
+    
     //Labels
     lazy var timeLabel: UILabel = {
         let label: UILabel = UILabel()
@@ -182,7 +218,6 @@ class TimeView: WidgetView {
     //ImageViews
     lazy var clockImageView: UIImageView = {
         let imageView: UIImageView = UIImageView()
-        //    imageView.image = #imageLiteral(resourceName: "Clock")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -217,7 +252,7 @@ extension TimeView: TwicketSegmentedControlDelegate {
         switch segmentIndex {
         case 0:
             timeLabel.text = dateFormatter.string(from: currentDateTime)
-            time?.militaryTime = false
+            timeWidget?.militaryTime = false
             userDefault.setValue(true, forKey: "timeBool")
             
         case 1:
@@ -229,7 +264,7 @@ extension TimeView: TwicketSegmentedControlDelegate {
                 break
             }
             timeLabel.text = ("\(hour):\(minutes) ")
-            time?.militaryTime = true
+            timeWidget?.militaryTime = true
             userDefault.setValue(false, forKey: "timeBool")
         default:
             print("Blah")

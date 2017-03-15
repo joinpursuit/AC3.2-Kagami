@@ -15,22 +15,23 @@ protocol WidgetViewable: class {
     var propertyAnimator: UIViewPropertyAnimator? { get set }
     var userDefaults: UserDefaults? { get set }
     
-    func setupAnimationConstraint()
     
-    func setPanGestureRecognizer() -> UIPanGestureRecognizer
-    func setTapRecognizer() -> UITapGestureRecognizer
-    func wasTapped(_ gesture: UITapGestureRecognizer)
-    func wasDragged(_ gesture: UIPanGestureRecognizer)
+//    func setupAnimationConstraint()
+//    
+//    func setPanGestureRecognizer() -> UIPanGestureRecognizer
+//    func setTapRecognizer() -> UITapGestureRecognizer
+//    func wasTapped(_ gesture: UITapGestureRecognizer)
+//    func wasDragged(_ gesture: UIPanGestureRecognizer)
     
-    var mirrorIcon: UIImage
-    var dockIcon: UIImage
+    var mirrorIcon: UIImage { get set }
+    var dockIcon: UIImage { get set }
 }
 
 extension WidgetViewable {
     
 }
 
-class WidgetView: UIView, WidgetViewable {
+class WidgetView: UIView {
     
     // MARK: - Properties
     internal var userDefaults: UserDefaults?
@@ -38,15 +39,25 @@ class WidgetView: UIView, WidgetViewable {
     internal var tapRecognizer = UITapGestureRecognizer()
     internal var panRecognizer = UIPanGestureRecognizer()
 
-    var widget: Widgetable?
+    var widget: Widgetable
     var mirrorView = UIImageView()
     var dockView = UIImageView()
-    
-    weak var delegate: WidgetViewable?
     
     var ref: FIRDatabaseReference!
     let kagami = KagamiViewController()
     
+    init(widget: Widgetable) {
+        self.widget = widget
+        super.init(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+    }
+    
+    // below init is for storyboard, however this will cause no widget init. 
+    // user programmatic only
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Settings Animations
     func setupAnimationConstraint() {
         self.snp.remakeConstraints({ (make) in
             make.height.width.equalToSuperview().multipliedBy(0.8)
@@ -58,6 +69,7 @@ class WidgetView: UIView, WidgetViewable {
         self.layoutIfNeeded()
     }
     
+    // MARK: - Drag and Drop
     func setPanGestureRecognizer() -> UIPanGestureRecognizer {
         panRecognizer = UIPanGestureRecognizer (target: self, action: #selector(wasDragged(_:)))
         panRecognizer.minimumNumberOfTouches = 1
@@ -81,8 +93,6 @@ class WidgetView: UIView, WidgetViewable {
         
         if gesture.state == .ended {
             
-            
-            
             propertyAnimator?.addAnimations ({
                 self.setupAnimationConstraint()
             })
@@ -97,8 +107,6 @@ class WidgetView: UIView, WidgetViewable {
         
         self.center = CGPoint(x: self.center.x + translation.x , y: self.center.y + translation.y)
         gesture.setTranslation(CGPoint.zero, in: self)
-        
-        //TODO: - MATH -- min > kagami.min && max < kagami.max
         
         if gesture.state == .began {
             dump("Parent View \(self.subviews.count)")
@@ -128,9 +136,9 @@ class WidgetView: UIView, WidgetViewable {
                     make.height.width.equalTo(50.0)
                 })
                 kagamiView.layoutSubviews()
-                userDefaults?.set(["onMirror" : true, "x" : self.frame.minX, "y" : self.frame.minY], forKey: self.accessibilityIdentifier!)
+                userDefaults?.set(["onMirror" : true, "x" : self.frame.midX, "y" : self.frame.midY], forKey: self.accessibilityIdentifier!)
                 
-                let widgetNode = ref.child((self.widget?.description)!)
+                let widgetNode = ref.child((self.widget.description))
                 widgetNode.updateChildValues(["x" : (self.frame.minX / kagamiView.frame.maxX) , "y" : (self.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
             }
             else {
@@ -139,8 +147,8 @@ class WidgetView: UIView, WidgetViewable {
                     make.width.height.equalTo(50.0)
                     make.leading.equalToSuperview().offset((self.tag * 50) + (8 * self.tag) + 8)
                 }
-                userDefaults?.set(["onMirror" : false, "x" : self.frame.midX, "y" : self.frame.midY], forKey: self.accessibilityIdentifier!)
-                ref.child(self.accessibilityIdentifier!).updateChildValues(["onMirror" : false])
+                userDefaults?.set(["onMirror" : false, "x" : self.frame.midX, "y" : self.frame.midY], forKey: self.widget.description)
+                ref.child(self.widget.description).updateChildValues(["onMirror" : false])
             }
         }
     }
