@@ -98,19 +98,19 @@ class ToDoView: UIView, UITextFieldDelegate {
         // checkboxes
         checkBoxOne.snp.makeConstraints { (make) in
             make.right.equalTo(textFieldOne.snp.left)
-            make.left.equalTo(self.snp.left).inset(5)
+            make.left.equalTo(self.snp.left)
             make.top.equalTo(textFieldOne.snp.top)
             make.bottom.equalTo(textFieldOne.snp.bottom)
         }
         checkBoxTwo.snp.makeConstraints { (make) in
             make.right.equalTo(textFieldTwo.snp.left)
-            make.left.equalTo(self.snp.left).inset(5)
+            make.left.equalTo(self.snp.left)
             make.top.equalTo(textFieldTwo.snp.top)
             make.bottom.equalTo(textFieldTwo.snp.bottom)
         }
         checkBoxThree.snp.makeConstraints { (make) in
             make.right.equalTo(textFieldThree.snp.left)
-            make.left.equalTo(self.snp.left).inset(5)
+            make.left.equalTo(self.snp.left)
             make.top.equalTo(textFieldThree.snp.top)
             make.bottom.equalTo(textFieldThree.snp.bottom)
         }

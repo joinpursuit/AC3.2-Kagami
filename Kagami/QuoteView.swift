@@ -86,7 +86,9 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
                 self.quote = quoteObject
                 dump(self.quote)
                 self.quoteLabel.text = self.quote?.quote
+                self.database.child("fullQuote").setValue(self.quote?.quote)
                 self.authorLabel.text = self.quote?.author
+                self.database.child("author").setValue(self.quote?.author)
             }
         }
     }
@@ -121,7 +123,9 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
                 DispatchQueue.main.async {
                     self.quote = quoteObject
                     self.quoteLabel.text = self.quote?.quote
+                    self.database.child("fullQuote").setValue(self.quote?.quote)
                     self.authorLabel.text = self.quote?.author
+                    self.database.child("author").setValue(self.quote?.author)
                 }
             }
         })
