@@ -9,6 +9,7 @@
 import UIKit
 import SnapKit
 import FirebaseDatabase
+import TwicketSegmentedControl
 
 class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
@@ -28,10 +29,10 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
         configureConstraints()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.rowHeight = 80
+        tableView.rowHeight = 60
         tableView.register(ForecastTableViewCell.self, forCellReuseIdentifier: ForecastTableViewCell.identifier)
-        getAPIResults()
         searchBar.delegate = self
+        loadUserDefaults()
         
     }
     
@@ -43,10 +44,13 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     
     func setupHierarchy() {
         self.addSubview(tableView)
-        self.addSubview(doneButton)
-        self.addSubview(cancelButton)
         self.addSubview(searchBar)
         self.addSubview(cityLabel)
+        self.addSubview(segmentView)
+        self.addSubview(doneButton)
+        self.addSubview(cancelButton)
+        self.addSubview(headerImage)
+        segmentView.addSubview(customSegmentControl)
         doneButton.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
     }
@@ -56,14 +60,18 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
             view.top.left.right.equalToSuperview()
             view.height.equalTo(50)
         }
-        cityLabel.snp.makeConstraints { (view) in
+        headerImage.snp.makeConstraints { (view) in
             view.centerX.equalToSuperview()
             view.top.equalTo(searchBar.snp.bottom)
         }
+        cityLabel.snp.makeConstraints { (view) in
+            view.centerX.equalToSuperview()
+            view.top.equalTo(headerImage.snp.bottom).offset(20)
+        }
         tableView.snp.makeConstraints { (view) in
-            view.top.equalTo(cityLabel.snp.bottom)
+            view.top.equalTo(cityLabel.snp.bottom).offset(10)
             view.left.right.equalToSuperview()
-            view.bottom.equalTo(self.snp.bottom).inset(25)
+            view.bottom.equalTo(segmentView.snp.top)
         }
         doneButton.snp.makeConstraints { (view) in
             view.right.equalTo(self.snp.right).inset(8)
@@ -72,6 +80,17 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
         cancelButton.snp.makeConstraints { (view) in
             view.left.equalTo(self.snp.left).inset(8)
             view.bottom.equalTo(self.snp.bottom).inset(8)
+        }
+        segmentView.snp.makeConstraints { (view) in
+            view.centerX.equalToSuperview()
+            view.bottom.equalTo(self.snp.bottom).inset(10)
+            view.height.equalTo(40)
+            view.width.equalTo(330)
+        }
+        customSegmentControl.snp.makeConstraints { (control) in
+            control.top.bottom.equalToSuperview()
+            control.left.equalToSuperview().offset(140.0)
+            control.right.equalToSuperview().inset(140.0)
         }
     }
     
@@ -83,18 +102,6 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     
     func cancelTapped() {
         print("return to home page")
-    }
-    
-    func getAPIResults() {
-        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/forecast/daily?zip=11101&appid=93163a043d0bde0df1a79f0fdebc744f&cnt=5&units=imperial") { (data: Data?) in
-            guard let validData = data else { return }
-            if let forecastObject = Forecast.parseForecast(from: validData) {
-                self.forecast = forecastObject
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            }
-        }
     }
     
     func getAPIResultsForFahrenheit() {
@@ -119,6 +126,31 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
                     self.tableView.reloadData()
                 }
                 dump(self.forecast)
+            }
+        }
+    }
+    
+    func loadUserDefaults() {
+        if userDefault.object(forKey: "fahrenheit") != nil {
+            let isFahrenheit = userDefault.object(forKey: "fahrenheit") as! Bool
+            if isFahrenheit {
+                customSegmentControl.move(to: 0)
+            } else {
+                customSegmentControl.move(to: 1)
+            }
+        }
+        if userDefault.object(forKey: "location") != nil {
+            let zipcode = userDefault.object(forKey: "location") as? String ?? ""
+            
+            APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/forecast/daily?zip=\(zipcode)&appid=93163a043d0bde0df1a79f0fdebc744f&cnt=5&units=imperial") { (data: Data?) in
+                guard let validData = data else { return }
+                if let forecastObject = Forecast.parseForecast(from: validData) {
+                    self.forecast = forecastObject
+                    dump(self.forecast)
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                }
             }
         }
     }
@@ -175,6 +207,7 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
         print("searching")
         guard searchBar.text != nil else { return }
         database.child("location").setValue(searchBar.text)
+        userDefault.setValue(searchBar.text, forKey: "location")
         getAPIResultsForFahrenheit()
         self.endEditing(true)
     }
@@ -203,11 +236,12 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     
     lazy var searchBar: UISearchBar = {
         let bar = UISearchBar()
-        bar.placeholder = "ENTER ZIPCODE"
+        bar.placeholder = "SEARCH BY ZIPCODE"
         bar.tintColor = ColorPalette.whiteColor
         bar.barTintColor = ColorPalette.whiteColor
+        bar.layer.borderWidth = 1
+        bar.layer.borderColor = UIColor.white.cgColor
         bar.searchBarStyle = UISearchBarStyle.default
-        //        bar.clipsToBounds = true
         return bar
     }()
     
@@ -218,4 +252,47 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
         label.textColor = ColorPalette.blackColor
         return label
     }()
+    
+    lazy var customSegmentControl: TwicketSegmentedControl = {
+        let segmentedControl = TwicketSegmentedControl()
+        let titles = ["℉", "℃"]
+        segmentedControl.setSegmentItems(titles)
+        segmentedControl.delegate = self
+        segmentedControl.highlightTextColor = ColorPalette.whiteColor
+        segmentedControl.sliderBackgroundColor = ColorPalette.accentColor
+        segmentedControl.isSliderShadowHidden = false
+        return segmentedControl
+    }()
+    
+    lazy var segmentView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    lazy var headerImage: UIImageView = {
+        let imageView = UIImageView()
+        let image = UIImage(named: "forecastheader")
+        imageView.image = image
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+}
+
+extension ForecastView: TwicketSegmentedControlDelegate {
+    func didSelect(_ segmentIndex: Int) {
+        if segmentIndex == 0 {
+            database.child("fahrenheit").setValue(true)
+            userDefault.setValue(true, forKey: "fahrenheit")
+            
+            guard searchBar.text != "" else { return }
+            getAPIResultsForFahrenheit()
+            
+        } else {
+            database.child("fahrenheit").setValue(false)
+            userDefault.setValue(false, forKey: "fahrenheit")
+            
+            guard searchBar.text != "" else { return }
+            getAPIResultsForCelsius()
+        }
+    }
 }

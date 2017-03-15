@@ -131,6 +131,7 @@ class KagamiViewController: UIViewController {
         forecastView.cancelButton.addTarget(self, action: #selector(saveForecast), for: .touchDown)
         
         timeView.doneButton.addTarget(self, action: #selector(saveTime), for: .touchUpInside)
+        timeView.cancelButton.addTarget(self, action: #selector(saveTime), for: .touchUpInside)
         
         toDoView.doneButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
         toDoView.cancelButton.addTarget(self, action: #selector(saveToDo), for: .touchUpInside)
@@ -285,7 +286,8 @@ class KagamiViewController: UIViewController {
             case "weather":
                 propertyAnimator?.addAnimations ({
                     self.weatherView.snp.remakeConstraints({ (make) in
-                        make.height.width.equalToSuperview().multipliedBy(0.8)
+                        make.width.equalToSuperview().multipliedBy(0.8)
+                        make.height.equalToSuperview().multipliedBy(0.65)
                         make.center.equalToSuperview()
                     })
                     
@@ -313,7 +315,8 @@ class KagamiViewController: UIViewController {
             case "time":
                 propertyAnimator?.addAnimations ({
                     self.timeView.snp.remakeConstraints({ (make) in
-                        make.height.width.equalToSuperview().multipliedBy(0.8)
+                        make.width.equalToSuperview().multipliedBy(0.8)
+                        make.height.equalToSuperview().multipliedBy(0.55)
                         make.center.equalToSuperview()
                         
                     })
@@ -328,7 +331,8 @@ class KagamiViewController: UIViewController {
             case "toDos":
                 propertyAnimator?.addAnimations ({
                     self.toDoView.snp.remakeConstraints({ (make) in
-                        make.height.width.equalToSuperview().multipliedBy(0.7)
+                        make.width.equalToSuperview().multipliedBy(0.85)
+                        make.height.equalToSuperview().multipliedBy(0.7)
                         make.center.equalToSuperview()
                     })
                     
@@ -342,7 +346,8 @@ class KagamiViewController: UIViewController {
             case "quote":
                 propertyAnimator?.addAnimations ({
                     self.quoteView.snp.remakeConstraints({ (make) in
-                        make.height.width.equalToSuperview().multipliedBy(0.8)
+                        make.width.equalToSuperview().multipliedBy(0.9)
+                        make.height.equalToSuperview().multipliedBy(0.75)
                         make.center.equalToSuperview()
                     })
                     
