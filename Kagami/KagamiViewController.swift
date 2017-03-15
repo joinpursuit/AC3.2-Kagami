@@ -414,6 +414,7 @@ class KagamiViewController: UIViewController {
                 })
                 self.view.layoutSubviews()
                 userDefault.set(["onMirror" : true, "x" : centerOfWidget.x, "y" : centerOfWidget.y], forKey: widgetView.accessibilityIdentifier!)
+               
             }
             else {
                 widgetView.snp.remakeConstraints  { (make) in
@@ -421,14 +422,17 @@ class KagamiViewController: UIViewController {
                     make.width.height.equalTo(50.0)
                     make.leading.equalTo(iconContainerView.snp.leading).offset((widgetView.tag * 50) + (8 * widgetView.tag) + 8)
                 }
+                dump("Center of \(widgetView.accessibilityIdentifier!) is \(centerOfWidget)")
                 self.view.layoutSubviews()
                 userDefault.set(["onMirror" : false, "x" : centerOfWidget.x, "y" : centerOfWidget.y], forKey: widgetView.accessibilityIdentifier!)
                 ref.child(widgetView.accessibilityIdentifier!).updateChildValues(["onMirror" : false])
             }
             
             for widget in widgetArray {
-                let widgetOrigin = self.kagamiView.convert(widget.widgetView.frame.origin, from: widgetView.superview)
-                if self.kagamiView.bounds.contains(centerOfWidget) {
+                let widgetCenter = self.kagamiView.convert(widget.widgetView.center, from: widgetView.superview)
+                let widgetOrigin = self.kagamiView.convert(CGPoint.init(x: widget.widgetView.frame.minX, y: widget.widgetView.frame.minY), from: widgetView.superview)
+
+                if self.kagamiView.bounds.contains(widgetCenter) {
                     switch widget.category {
                     case .weather:
                         let weatherNode = ref.child("weather")
@@ -443,9 +447,8 @@ class KagamiViewController: UIViewController {
                         toDoNode.updateChildValues(["x" : (widgetOrigin.x / kagamiView.frame.maxX) , "y" : (widgetOrigin.y / kagamiView.bounds.maxY), "onMirror" : true])
                         
                     case .quote:
-                        
-                        let toDoNode = ref.child("quote")
-                        toDoNode.updateChildValues(["x" : (widgetOrigin.x / kagamiView.frame.maxX) , "y" : (widgetOrigin.y / kagamiView.bounds.maxY), "onMirror" : true])
+                        let quoteNode = ref.child("quote")
+                        quoteNode.updateChildValues(["x" : (widgetOrigin.x / kagamiView.frame.maxX) , "y" : (widgetOrigin.y / kagamiView.bounds.maxY), "onMirror" : true])
                         
                     }
                 }
