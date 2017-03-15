@@ -25,7 +25,6 @@ protocol WidgetViewable: class {
 
 extension WidgetViewable {
     
-    
 }
 
 class WidgetView: UIView, WidgetViewable {

@@ -39,7 +39,12 @@ protocol Widgetable: class {
     var description: String { get }
 }
 
-
+// should be for dock if dock/mirror are put into own UIView class - separate from KVC
+protocol KagamiViewControllerDataSource {
+    
+    var widgetables: [Widgetable] { get set }
+    
+}
 
 
 
