@@ -17,6 +17,8 @@ class WeatherView: UIView, UISearchBarDelegate {
     var database: FIRDatabaseReference!
     let userDefault = UserDefaults.standard
     var weather: DailyWeather?
+    var defaultZipcode: String?
+    var unit = "imperial"
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,9 +29,9 @@ class WeatherView: UIView, UISearchBarDelegate {
         self.layer.cornerRadius = 9
         searchBar.delegate = self
         setupHierarchy()
-        //        setupBlurEffect()
         configureConstraints()
         loadUserDefaults()
+        getDefaultAPIResults()
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -128,13 +130,6 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     // MARK: - Methods
     
-    //    func setupBlurEffect() {
-    //        let blur = UIBlurEffect(style: UIBlurEffectStyle.extraLight)
-    //        let blurEffectView = UIVisualEffectView(effect: blur)
-    //        blurEffectView.frame = self.bounds
-    //        backgroundImage.addSubview(blurEffectView)
-    //    }
-    
     func addToMirror() {
         print("adding to mirror")
     }
@@ -144,29 +139,32 @@ class WeatherView: UIView, UISearchBarDelegate {
     }
     
     func loadUserDefaults() {
-        if userDefault.object(forKey: "fahrenheit") != nil {
+        
+        if userDefault.object(forKey: "zipcode") == nil {
+            defaultZipcode = "10014"
+        } else {
+            defaultZipcode = userDefault.object(forKey: "zipcode") as? String
             let isFahrenheit = userDefault.object(forKey: "fahrenheit") as! Bool
             if isFahrenheit {
                 customSegmentControl.move(to: 0)
             } else {
                 customSegmentControl.move(to: 1)
+                self.unit = "metric"
             }
         }
-        if userDefault.object(forKey: "zipcode") != nil {
-            let zipcode = userDefault.object(forKey: "zipcode") as? String ?? ""
-            APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(zipcode),us&units=imperial") { (data: Data?) in
-                guard let validData = data else { return }
-                if let weatherObject = DailyWeather.parseWeather(from: validData) {
-                    self.weather = weatherObject
-                    dump(self.weather)
-                    DispatchQueue.main.async {
-                        self.locationLabel.text = self.weather!.name
-                        self.degreeLabel.text = String(describing: self.weather!.temperature)
-                        self.descriptionLabel.text = self.weather!.weatherDescription
-                        self.lowestTempLabel.text = String(describing: self.weather!.minTemp)
-                        self.highestTempLabel.text = String(describing: self.weather!.maxTemp)
-                        self.layoutIfNeeded()
-                    }
+        
+        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(self.defaultZipcode!),us&units=\(self.unit)") { (data: Data?) in
+            guard let validData = data else { return }
+            if let weatherObject = DailyWeather.parseWeather(from: validData) {
+                self.weather = weatherObject
+                dump(self.weather)
+                DispatchQueue.main.async {
+                    self.locationLabel.text = self.weather!.name
+                    self.degreeLabel.text = String(describing: self.weather!.temperature)
+                    self.descriptionLabel.text = self.weather!.weatherDescription
+                    self.lowestTempLabel.text = String(describing: self.weather!.minTemp)
+                    self.highestTempLabel.text = String(describing: self.weather!.maxTemp)
+                    self.layoutIfNeeded()
                 }
             }
             
@@ -189,9 +187,17 @@ class WeatherView: UIView, UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         print("search")
         guard searchBar.text != nil else { return }
-        database.child("location").setValue(searchBar.text)
-        userDefault.setValue(searchBar.text, forKey: "zipcode")
-        getAPIResultsForFahrenheit()
+        defaultZipcode = searchBar.text!
+        
+        database.child("location").setValue(defaultZipcode)
+        userDefault.setValue(defaultZipcode, forKey: "zipcode")
+        
+        if customSegmentControl.selectedSegmentIndex == 0 {
+            getAPIResultsForFahrenheit()
+        } else {
+            getAPIResultsForCelsius()
+        }
+        
         print("location setting to firebase and user default")
         self.endEditing(true)
     }
@@ -201,9 +207,31 @@ class WeatherView: UIView, UISearchBarDelegate {
         isSearchActive = false
     }
     
-    func getAPIResultsForFahrenheit() {
-        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(searchBar.text!),us&units=imperial") { (data: Data?) in
+    func getDefaultAPIResults() {
+        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(defaultZipcode!),us&units=\(self.unit)") { (data: Data?) in
             guard let validData = data else { return }
+            self.userDefault.setValue(self.defaultZipcode, forKey: "zipcode")
+            
+            if let weatherObject = DailyWeather.parseWeather(from: validData) {
+                self.weather = weatherObject
+                dump(self.weather)
+                DispatchQueue.main.async {
+                    self.locationLabel.text = self.weather!.name
+                    self.degreeLabel.text = String(describing: self.weather!.temperature)
+                    self.descriptionLabel.text = self.weather!.weatherDescription
+                    self.lowestTempLabel.text = String(describing: self.weather!.minTemp)
+                    self.highestTempLabel.text = String(describing: self.weather!.maxTemp)
+                    self.layoutIfNeeded()
+                }
+            }
+        }
+    }
+    
+    func getAPIResultsForFahrenheit() {
+        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(defaultZipcode!),us&units=imperial") { (data: Data?) in
+            guard let validData = data else { return }
+            self.userDefault.setValue(self.defaultZipcode, forKey: "zipcode")
+            
             if let weatherObject = DailyWeather.parseWeather(from: validData) {
                 self.weather = weatherObject
                 dump(self.weather)
@@ -220,8 +248,10 @@ class WeatherView: UIView, UISearchBarDelegate {
     }
     
     func getAPIResultsForCelsius() {
-        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(searchBar.text!),us&units=metric") { (data: Data?) in
+        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(defaultZipcode!),us&units=metric") { (data: Data?) in
             guard let validData = data else { return }
+            self.userDefault.setValue(self.defaultZipcode, forKey: "zipcode")
+            
             if let weatherObject = DailyWeather.parseWeather(from: validData) {
                 self.weather = weatherObject
                 dump(self.weather)
@@ -349,19 +379,17 @@ extension WeatherView: TwicketSegmentedControlDelegate {
         print("Selected index at: \(segmentIndex)!")
         if segmentIndex == 0 {
             database.child("fahrenheit").setValue(true)
-            userDefault.setValue(true, forKey: "fahrenheit")
             print("switch to fahrenheit and setting user default to true")
             
-            guard searchBar.text != "" else { return }
             getAPIResultsForFahrenheit()
+            userDefault.setValue(true, forKey: "fahrenheit")
             
         } else {
             database.child("fahrenheit").setValue(false)
-            userDefault.setValue(false, forKey: "fahrenheit")
             print("Switch to celsius and setting user default to false")
             
-            guard searchBar.text != "" else { return }
             getAPIResultsForCelsius()
+            userDefault.setValue(false, forKey: "fahrenheit")
         }
     }
 }
