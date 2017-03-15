@@ -28,26 +28,43 @@ class Forecast {
         self.city = city
     }
     
-    convenience init?(from dict: [String:Any]) {
-        let list = dict["list"] as? [[String:Any]]
-        let main = list?[0]["main"] as? [String:Any]
-        let temperature = main?["temp"] as? Int ?? 0
-        let minTemp = main?["temp_min"] as? Int ?? 0
-        let maxTemp = main?["temp_max"] as? Int ?? 0
-        let humidity = main?["humidity"] as? Int ?? 0
-        let weather = list?[0]["weather"] as? [[String:Any]]
-        let description = weather?[0]["description"] as? String ?? "None"
-        let city = dict["city"] as? [String:Any]
-        let name = city?["name"] as? String ?? "No city available"
+    static func parseForecast(from data: Data?) -> [Forecast]? {
+        guard let validData = data else { return nil }
+        var forecastObject: [Forecast] = []
         
-        self.init(description: description, temperature: temperature, minTemp: minTemp, maxTemp: maxTemp, humidity: humidity, city: name)
-    }
-    
-    static func parseForecast(from: Data?) -> Forecast? {
-        
-        let data = try? JSONSerialization.jsonObject(with: from!, options: [])
-        guard let validJson = data as? [String: Any] else { return nil }
-        
-        return Forecast(from: validJson)
+        do {
+            if let json = try JSONSerialization.jsonObject(with: validData, options: []) as? [String:Any] {
+                
+                guard let list = json["list"] as? [[String:Any]] else {
+                    print("Error casting at top level")
+                    return nil
+                }
+                
+                let city = json["city"] as? [String:Any]
+                let cityName = city?["name"] as? String ?? "no city name"
+                
+                for each in list {
+                    guard let main = each["main"] as? [String:Any],
+                    let temperature = main["temp"] as? Int,
+                    let minTemp = main["temp_min"] as? Int,
+                    let maxTemp = main["temp_max"] as? Int,
+                    let humidity = main["humidity"] as? Int,
+                    let weather = each["weather"] as? [[String:Any]],
+                    let description = weather[0]["description"] as? String else {
+                        print("Error parsing each list")
+                        return nil
+                    }
+                    
+                let forecastObj = Forecast(description: description, temperature: temperature, minTemp: minTemp, maxTemp: maxTemp, humidity: humidity, city: cityName)
+                forecastObject.append(forecastObj)
+                dump(forecastObject)
+                }
+            }
+        }
+        catch {
+            print("Error parsing json: \(error.localizedDescription)")
+            return nil
+        }
+        return forecastObject
     }
 }
