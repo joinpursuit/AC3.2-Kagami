@@ -8,24 +8,22 @@
 
 import Foundation
 
-//http://api.openweathermap.org/data/2.5/forecast?zip=11101&appid=93163a043d0bde0df1a79f0fdebc744f
+//http://api.openweathermap.org/data/2.5/forecast/daily?zip=11101&appid=93163a043d0bde0df1a79f0fdebc744f&cnt=5&units=imperial
 
 class Forecast {
     
+    var name: String
+    var date: Double
+    var min: Int
+    var max: Int
     var description: String
-    var temperature: Int
-    var minTemp: Int
-    var maxTemp: Int
-    var humidity: Int
-    var city: String
     
-    init(description: String, temperature: Int, minTemp: Int, maxTemp: Int, humidity: Int, city: String) {
+    init(name: String, date: Double, min: Int, max: Int, description: String) {
+        self.name = name
+        self.date = date
+        self.min = min
+        self.max = max
         self.description = description
-        self.temperature = temperature
-        self.minTemp = minTemp
-        self.maxTemp = maxTemp
-        self.humidity = humidity
-        self.city = city
     }
     
     static func parseForecast(from data: Data?) -> [Forecast]? {
@@ -44,20 +42,20 @@ class Forecast {
                 let cityName = city?["name"] as? String ?? "no city name"
                 
                 for each in list {
-                    guard let main = each["main"] as? [String:Any],
-                    let temperature = main["temp"] as? Int,
-                    let minTemp = main["temp_min"] as? Int,
-                    let maxTemp = main["temp_max"] as? Int,
-                    let humidity = main["humidity"] as? Int,
-                    let weather = each["weather"] as? [[String:Any]],
-                    let description = weather[0]["description"] as? String else {
-                        print("Error parsing each list")
-                        return nil
+                    guard
+                        let date = each["dt"] as? Double,
+                        let temp = each["temp"] as? [String:Int],
+                        let min = temp["min"],
+                        let max = temp["max"],
+                        let weather = each["weather"] as? [[String:Any]],
+                        let description = weather[0]["description"] as? String else {
+                            print("Error parsing each list")
+                            return nil
                     }
                     
-                let forecastObj = Forecast(description: description, temperature: temperature, minTemp: minTemp, maxTemp: maxTemp, humidity: humidity, city: cityName)
-                forecastObject.append(forecastObj)
-                dump(forecastObject)
+                    let forecastObj = Forecast(name: cityName, date: date, min: min, max: max, description: description)
+                    forecastObject.append(forecastObj)
+                    dump(forecastObject)
                 }
             }
         }
