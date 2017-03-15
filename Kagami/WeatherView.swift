@@ -13,7 +13,6 @@ import FirebaseDatabase
 
 class WeatherView: UIView, UISearchBarDelegate {
     
-    var isSelected: Bool = true
     var isSearchActive: Bool = false
     var database: FIRDatabaseReference!
     let userDefault = UserDefaults.standard

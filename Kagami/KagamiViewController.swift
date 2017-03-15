@@ -20,11 +20,12 @@ struct Widget {
     }
     
     enum Category : Int {
-        case weather, time, todos, quote
+        case weather, forecast, time, todos, quote
         
         var dockIcon : UIImage {
             switch self {
             case .weather: return UIImage(named: "cloud")!
+            case .forecast: return UIImage(named: "Flash_Logo_01")!
             case .time: return UIImage(named: "clock")!
             case .todos: return UIImage(named: "checklist")!
             case .quote: return UIImage(named: "quote")!
@@ -34,6 +35,7 @@ struct Widget {
         var mirrorIcon : UIImage {
             switch self {
             case .weather: return UIImage(named: "Flash_Logo_01")!
+            case .forecast: return UIImage(named: "Flash_Logo_01")!
             case .time: return UIImage(named: "Flash_Logo_01")!
             case .todos: return UIImage(named: "Flash_Logo_01")!
             case .quote: return UIImage(named: "Flash_Logo_01")!
@@ -43,6 +45,7 @@ struct Widget {
         var description : String {
             switch self {
             case .weather: return "weather"
+            case .forecast: return "forecast"
             case .time: return "time"
             case .todos: return "toDos"
             case .quote: return "quote"
@@ -55,8 +58,6 @@ struct Widget {
     
 }
 
-
-
 class KagamiViewController: UIViewController {
     
     // MARK: - Properties
@@ -67,7 +68,7 @@ class KagamiViewController: UIViewController {
     var panRecognizer = UIPanGestureRecognizer()
     var tapRecognizer = UITapGestureRecognizer()
     
-    var widgetArray = [Widget(category: .weather), Widget(category: .time), Widget(category: .todos), Widget(category: .quote)]
+    var widgetArray = [Widget(category: .weather), Widget(category: .forecast), Widget(category: .time), Widget(category: .todos), Widget(category: .quote)]
     var previousPoint: CGPoint?
     var widgetBeingEdited: UIView?
     
@@ -118,13 +119,16 @@ class KagamiViewController: UIViewController {
         view.addSubview(kagamiView)
         view.addSubview(iconContainerView)
         view.addSubview(weatherView)
+        view.addSubview(forecastView)
         view.addSubview(timeView)
         view.addSubview(toDoView)
         view.addSubview(quoteView)
         
-        
         weatherView.doneButton.addTarget(self, action: #selector(saveWeather), for: .touchDown)
         weatherView.cancelButton.addTarget(self, action: #selector(saveWeather), for: .touchDown)
+        
+        forecastView.doneButton.addTarget(self, action: #selector(saveForecast), for: .touchDown)
+        forecastView.cancelButton.addTarget(self, action: #selector(saveForecast), for: .touchDown)
         
         timeView.doneButton.addTarget(self, action: #selector(saveTime), for: .touchUpInside)
         
@@ -226,20 +230,25 @@ class KagamiViewController: UIViewController {
             make.size.equalTo(0.1)
         }
         
-        timeView.snp.makeConstraints { (make) in
+        forecastView.snp.makeConstraints { (make) in
             make.center.equalTo(widgetArray[1].widgetView)
             make.size.equalTo(0.1)
-
         }
         
-        toDoView.snp.makeConstraints { (make) in
+        timeView.snp.makeConstraints { (make) in
             make.center.equalTo(widgetArray[2].widgetView)
             make.size.equalTo(0.1)
 
         }
         
-        quoteView.snp.makeConstraints { (make) in
+        toDoView.snp.makeConstraints { (make) in
             make.center.equalTo(widgetArray[3].widgetView)
+            make.size.equalTo(0.1)
+
+        }
+        
+        quoteView.snp.makeConstraints { (make) in
+            make.center.equalTo(widgetArray[4].widgetView)
             make.size.equalTo(0.1)
 
         }
@@ -287,6 +296,20 @@ class KagamiViewController: UIViewController {
                 })
                 
                 widgetBeingEdited = widgetArray[0].widgetView
+            case "forecast":
+                propertyAnimator?.addAnimations ({
+                    self.forecastView.snp.remakeConstraints({ (make) in
+                        make.height.width.equalToSuperview().multipliedBy(0.8)
+                        make.center.equalToSuperview()
+                    })
+                    
+                    self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
+                    self.forecastView.layer.opacity = 1.0
+                    self.view.bringSubview(toFront: self.weatherView)
+                    self.view.layoutIfNeeded()
+                })
+                
+                widgetBeingEdited = widgetArray[1].widgetView
             case "time":
                 propertyAnimator?.addAnimations ({
                     self.timeView.snp.remakeConstraints({ (make) in
@@ -301,7 +324,7 @@ class KagamiViewController: UIViewController {
                     self.view.layoutIfNeeded()
                 })
                 
-                widgetBeingEdited = widgetArray[1].widgetView
+                widgetBeingEdited = widgetArray[2].widgetView
             case "toDos":
                 propertyAnimator?.addAnimations ({
                     self.toDoView.snp.remakeConstraints({ (make) in
@@ -315,7 +338,7 @@ class KagamiViewController: UIViewController {
                     self.view.layoutIfNeeded()
                 })
                 
-                widgetBeingEdited = widgetArray[2].widgetView
+                widgetBeingEdited = widgetArray[3].widgetView
             case "quote":
                 propertyAnimator?.addAnimations ({
                     self.quoteView.snp.remakeConstraints({ (make) in
@@ -329,7 +352,7 @@ class KagamiViewController: UIViewController {
                     self.view.layoutIfNeeded()
                 })
                 
-                widgetBeingEdited = widgetArray[3].widgetView
+                widgetBeingEdited = widgetArray[4].widgetView
             default:
                 break
             }
@@ -437,6 +460,9 @@ class KagamiViewController: UIViewController {
                     case .weather:
                         let weatherNode = ref.child("weather")
                         weatherNode.updateChildValues(["x" : (widgetOrigin.x / kagamiView.frame.maxX) , "y" : (widgetOrigin.y / kagamiView.bounds.maxY), "onMirror" : true])
+                    case .forecast:
+                        let weatherNode = ref.child("forecast")
+                        weatherNode.updateChildValues(["x" : (widgetOrigin.x / kagamiView.frame.maxX) , "y" : (widgetOrigin.y / kagamiView.bounds.maxY), "onMirror" : true])
                     case .time:
                         let timeNode = ref.child("time")
                         timeNode.updateChildValues(["x" : (widgetOrigin.x / kagamiView.frame.maxX) , "y" : (widgetOrigin.y / kagamiView.bounds.maxY), "onMirror" : true])
@@ -476,6 +502,24 @@ class KagamiViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
         
+        self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
+        propertyAnimator?.startAnimation()
+    }
+    
+    func saveForecast(_ sender: UIButton) {
+        guard let view = widgetBeingEdited else { return }
+        
+        if sender == forecastView.doneButton {
+            print("forecast done works")
+        }
+        propertyAnimator?.addAnimations {
+            
+            self.forecastView.snp.remakeConstraints({ (make) in
+                make.size.equalTo(0.1)
+                make.center.equalTo(view.snp.center)
+            })
+            self.view.layoutIfNeeded()
+        }
         self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
         propertyAnimator?.startAnimation()
     }
@@ -571,6 +615,13 @@ class KagamiViewController: UIViewController {
   
     lazy var weatherView: WeatherView = {
         let view = WeatherView()
+        view.layer.opacity = 0.0
+        view.clipsToBounds = true
+        return view
+    }()
+    
+    lazy var forecastView: ForecastView = {
+        let view = ForecastView()
         view.layer.opacity = 0.0
         view.clipsToBounds = true
         return view
