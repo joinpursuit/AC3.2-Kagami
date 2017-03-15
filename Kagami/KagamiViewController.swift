@@ -305,7 +305,7 @@ class KagamiViewController: UIViewController {
                     
                     self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
                     self.forecastView.layer.opacity = 1.0
-                    self.view.bringSubview(toFront: self.weatherView)
+                    self.view.bringSubview(toFront: self.forecastView)
                     self.view.layoutIfNeeded()
                 })
                 
@@ -466,9 +466,7 @@ class KagamiViewController: UIViewController {
                     case .time:
                         let timeNode = ref.child("time")
                         timeNode.updateChildValues(["x" : (widgetOrigin.x / kagamiView.frame.maxX) , "y" : (widgetOrigin.y / kagamiView.bounds.maxY), "onMirror" : true])
-                        
                     case .todos:
-                        
                         let toDoNode = ref.child("toDos")
                         toDoNode.updateChildValues(["x" : (widgetOrigin.x / kagamiView.frame.maxX) , "y" : (widgetOrigin.y / kagamiView.bounds.maxY), "onMirror" : true])
                         

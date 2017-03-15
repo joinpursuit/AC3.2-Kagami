@@ -30,32 +30,58 @@ class ForecastTableViewCell: UITableViewCell {
     }
     
     private func setupView() {
-        self.addSubview(degreeLabel)
+        self.addSubview(dayLabel)
+        self.addSubview(minLabel)
+        self.addSubview(maxLabel)
         self.addSubview(descriptionLabel)
-        descriptionLabel.snp.makeConstraints { (label) in
+        dayLabel.snp.makeConstraints { (label) in
             label.top.equalTo(self.snp.top).inset(8)
-            label.left.equalTo(self.snp.left).inset(8)
-            label.right.equalToSuperview()
+            label.centerX.equalToSuperview()
         }
-        degreeLabel.snp.makeConstraints { (label) in
+
+        descriptionLabel.snp.makeConstraints { (label) in
+            label.top.equalTo(dayLabel.snp.bottom)
+            label.centerX.equalToSuperview()
+        }
+        minLabel.snp.makeConstraints { (label) in
             label.top.equalTo(descriptionLabel.snp.bottom)
-            label.left.right.equalToSuperview()
+            label.centerX.equalToSuperview()
+        }
+        maxLabel.snp.makeConstraints { (label) in
+            label.top.equalTo(minLabel.snp.bottom)
+            label.centerX.equalToSuperview()
         }
     }
     
-    lazy var degreeLabel: UILabel = {
+    lazy var minLabel: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.font = UIFont(name: "Code-Pro-Demo", size: 20)
+        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
         label.textColor = ColorPalette.accentColor
+        return label
+    }()
+    
+    lazy var maxLabel: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
+        label.textColor = ColorPalette.accentColor
+        return label
+    }()
+    
+    lazy var dayLabel: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.font = UIFont(name: "Code-Pro-Demo", size: 22)
+        label.textColor = ColorPalette.blackColor
         return label
     }()
     
     lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.font = UIFont(name: "Code-Pro-Demo", size: 24)
-        label.textColor = ColorPalette.blackColor
+        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
+        label.textColor = ColorPalette.grayColor
         return label
     }()
     
