@@ -39,7 +39,7 @@ class MyKagamiViewController: KagamiViewController, KagamiViewControllerDataSour
     func setupViewHierarchy() {
         
         for widgetView in widgetViews {
-            self.iconContainerView.addSubview(widgetView)
+            self.view.addSubview(widgetView)
             widgetView.backgroundColor = .clear
         }
     }

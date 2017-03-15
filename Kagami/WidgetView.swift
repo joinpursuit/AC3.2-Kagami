@@ -48,6 +48,7 @@ class WidgetView: UIView {
     
     init(widget: Widgetable) {
         self.widget = widget
+        ref = FIRDatabase.database().reference()
         super.init(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     }
     
@@ -90,7 +91,7 @@ class WidgetView: UIView {
     func wasTapped(_ gesture: UITapGestureRecognizer) {
         
         let view = gesture.view!
-        
+        print("dsafasd")
         if gesture.state == .ended {
             
             propertyAnimator?.addAnimations ({
