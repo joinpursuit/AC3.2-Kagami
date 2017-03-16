@@ -27,8 +27,8 @@ protocol WidgetViewable: class {
     var dockIcon: UIImage { get set }
 }
 
-extension WidgetViewable {
-    
+protocol WidgetViewProtocol: class {
+    func layoutWidgetView(widgetView: WidgetView)
 }
 
 class WidgetView: UIView {
@@ -42,9 +42,9 @@ class WidgetView: UIView {
     var widget: Widgetable
     var mirrorView = UIImageView()
     var dockView = UIImageView()
+    weak var viewDelegate: WidgetViewProtocol?
     
     var ref: FIRDatabaseReference!
-    let kagami = KagamiViewController()
     
     init(widget: Widgetable) {
         self.widget = widget
@@ -118,39 +118,7 @@ class WidgetView: UIView {
         }
         
         if gesture.state == .ended {
-            let kagamiView = kagami.kagamiView
-            
-            let center = self.convert(self.center, from: self.superview)
-            let topLeft = self.convert(CGPoint(x: self.bounds.minX, y: self.bounds.minY), from: kagamiView)
-            let topRight = self.convert(CGPoint(x: self.bounds.maxX, y: self.bounds.minY), from: kagamiView)
-            let bottomRight = self.convert(CGPoint(x: self.bounds.maxX, y: self.bounds.maxY), from: kagamiView)
-            let bottomLeft = self.convert(CGPoint(x: self.bounds.minX, y: self.bounds.maxY), from: kagamiView)
-            
-            
-            if kagamiView.bounds.contains(topLeft),
-                kagamiView.bounds.contains(topRight),
-                kagamiView.bounds.contains(bottomRight),
-                kagamiView.bounds.contains(bottomLeft) {
-                kagamiView.addSubview(self)
-                self.snp.remakeConstraints({ (make) in
-                    make.center.equalTo(center)
-                    make.height.width.equalTo(50.0)
-                })
-                kagamiView.layoutSubviews()
-                userDefaults?.set(["onMirror" : true, "x" : self.frame.midX, "y" : self.frame.midY], forKey: self.accessibilityIdentifier!)
-                
-                let widgetNode = ref.child((self.widget.description))
-                widgetNode.updateChildValues(["x" : (self.frame.minX / kagamiView.frame.maxX) , "y" : (self.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
-            }
-            else {
-                self.snp.makeConstraints { (make) in
-                    make.bottom.equalToSuperview().offset(-5.0)
-                    make.width.height.equalTo(50.0)
-                    make.leading.equalToSuperview().offset((self.tag * 50) + (8 * self.tag) + 8)
-                }
-                userDefaults?.set(["onMirror" : false, "x" : self.frame.midX, "y" : self.frame.midY], forKey: self.widget.description)
-                ref.child(self.widget.description).updateChildValues(["onMirror" : false])
-            }
+            self.viewDelegate?.layoutWidgetView(widgetView: self)
         }
     }
     
@@ -168,3 +136,40 @@ class WidgetView: UIView {
 class WeatherWidgetView : WidgetView {
     
 }
+
+// delegate
+/*
+ let kagamiView = kagami.kagamiView
+ 
+ let center = self.convert(self.center, from: self.superview)
+ let topLeft = self.convert(CGPoint(x: self.bounds.minX, y: self.bounds.minY), from: kagamiView)
+ let topRight = self.convert(CGPoint(x: self.bounds.maxX, y: self.bounds.minY), from: kagamiView)
+ let bottomRight = self.convert(CGPoint(x: self.bounds.maxX, y: self.bounds.maxY), from: kagamiView)
+ let bottomLeft = self.convert(CGPoint(x: self.bounds.minX, y: self.bounds.maxY), from: kagamiView)
+ 
+ 
+ if kagamiView.bounds.contains(topLeft),
+ kagamiView.bounds.contains(topRight),
+ kagamiView.bounds.contains(bottomRight),
+ kagamiView.bounds.contains(bottomLeft) {
+ kagamiView.addSubview(self)
+ self.snp.remakeConstraints({ (make) in
+ make.center.equalTo(center)
+ make.height.width.equalTo(50.0)
+ })
+ kagamiView.layoutSubviews()
+ userDefaults?.set(["onMirror" : true, "x" : self.frame.midX, "y" : self.frame.midY], forKey: self.accessibilityIdentifier!)
+ 
+ let widgetNode = ref.child((self.widget.description))
+ widgetNode.updateChildValues(["x" : (self.frame.minX / kagamiView.frame.maxX) , "y" : (self.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
+ }
+ else {
+ self.snp.makeConstraints { (make) in
+ make.bottom.equalToSuperview().offset(-5.0)
+ make.width.height.equalTo(50.0)
+ make.leading.equalToSuperview().offset((self.tag * 50) + (8 * self.tag) + 8)
+ }
+ userDefaults?.set(["onMirror" : false, "x" : self.frame.midX, "y" : self.frame.midY], forKey: self.widget.description)
+ ref.child(self.widget.description).updateChildValues(["onMirror" : false])
+ }
+ */

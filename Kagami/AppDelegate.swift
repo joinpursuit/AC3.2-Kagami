@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         view.clipsToBounds = true
         
         let widgetViews = [view]
-        window?.rootViewController = MyKagamiViewController(widgetViews: widgetViews)
+        window?.rootViewController = KagamiViewController(widgetViews: widgetViews)
         window?.makeKeyAndVisible()
         
         return true

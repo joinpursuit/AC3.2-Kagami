@@ -9,28 +9,28 @@
 import Foundation
 import UIKit
 
-class Router {
-    
-    let window : UIWindow
-    var weatherVC : UIViewController?
-    
-    
-    init(window: UIWindow) {
-        self.window = window
-        
-        window.rootViewController = KagamiViewController()
-        window.makeKeyAndVisible()
-        
-    }
-    
-    func showWeather() {
-        weatherVC = UIViewController()
-//        navController?.pushViewController(weatherVC!, animated: true)
-//        weatherVC.didTapCancel = hideWeather
-    }
-    
-    func hideWeather() {
-//        navController?.popViewController(animated: true)
-    }
-    
-}
+//class Router {
+//    
+//    let window : UIWindow
+//    var weatherVC : UIViewController?
+//    
+//    
+//    init(window: UIWindow) {
+//        self.window = window
+//        
+//        window.rootViewController = KagamiViewController()
+//        window.makeKeyAndVisible()
+//        
+//    }
+//    
+//    func showWeather() {
+//        weatherVC = UIViewController()
+////        navController?.pushViewController(weatherVC!, animated: true)
+////        weatherVC.didTapCancel = hideWeather
+//    }
+//    
+//    func hideWeather() {
+////        navController?.popViewController(animated: true)
+//    }
+//    
+//}

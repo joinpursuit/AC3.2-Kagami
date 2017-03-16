@@ -55,7 +55,6 @@ struct Widget {
     let widgetView = UIView()
     let dockView = UIImageView()
     let mirrorView = UIImageView()
-    
 }
 
 // should be for dock if dock/mirror are put into own UIView class - separate from KVC
@@ -63,11 +62,11 @@ protocol KagamiViewControllerDataSource : class {
     var widgetViews: [WidgetView] { get set }
 }
 
-class KagamiViewController: UIViewController {
+class KagamiViewController: UIViewController, WidgetViewProtocol {
     
     // MARK: - Properties
     var ref: FIRDatabaseReference!
-    let userDefault = UserDefaults.standard
+    let userDefaults = UserDefaults.standard
     var propertyAnimator: UIViewPropertyAnimator?
     
     var panRecognizer = UIPanGestureRecognizer()
@@ -77,10 +76,20 @@ class KagamiViewController: UIViewController {
 //    var widgetArray = [Widget(category: .weather), Widget(category: .forecast), Widget(category: .time), Widget(category: .todos), Widget(category: .quote)]
     var previousPoint: CGPoint?
     var widgetBeingEdited: UIView?
-    
+    internal var widgetViews: [WidgetView]
+
     var didTapWidget: () -> () = { }
     
     // MARK: - View Lifecycle
+    init(widgetViews: [WidgetView]) {
+        self.widgetViews = widgetViews
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
       
@@ -88,6 +97,10 @@ class KagamiViewController: UIViewController {
         mirrorAnimationView.play()
         propertyAnimator = UIViewPropertyAnimator(duration: 0.75, dampingRatio: 0.77, animations: nil)
       
+        for widgetView in widgetViews {
+            widgetView.viewDelegate = self
+        }
+        
         setupViewHierarchy()
         
         ref = FIRDatabase.database().reference()
@@ -97,10 +110,6 @@ class KagamiViewController: UIViewController {
         super.viewWillAppear(animated)
         
         UIApplication.shared.statusBarStyle = .default
-        
-        self.navigationController?.isNavigationBarHidden = true
-        self.navigationController?.navigationBar.barTintColor = .black
-        self.navigationController?.navigationBar.tintColor = UIColor.black
         
         configureConstraints()
     }
@@ -123,11 +132,11 @@ class KagamiViewController: UIViewController {
         view.addSubview(mirrorAnimationView)
         view.addSubview(kagamiView)
         view.addSubview(iconContainerView)
-//        view.addSubview(weatherView)
-//        view.addSubview(forecastView)
-//        view.addSubview(timeView)
-//        view.addSubview(toDoView)
-//        view.addSubview(quoteView)
+
+        for widgetView in widgetViews {
+            self.view.addSubview(widgetView)
+            widgetView.backgroundColor = .red
+        }
     }
     
     private func configureConstraints() {
@@ -157,6 +166,17 @@ class KagamiViewController: UIViewController {
         // instantiate Widgets
         
         guard let widgetViews = self.delegate?.widgetViews else { return }
+        
+        for widgetView in widgetViews {
+            var count = 0
+            widgetView.snp.remakeConstraints({ (make) in
+                make.height.equalTo(50.0)
+                make.width.equalToSuperview().multipliedBy(0.125)
+                make.leading.equalToSuperview().offset((50 * count) + 16)
+                make.center.equalToSuperview()
+            })
+            count += 1
+        }
         
 //        for widgetView in widgetViews {
 //            
@@ -196,6 +216,41 @@ class KagamiViewController: UIViewController {
 //                }
 //            }
 //        }
+    }
+    
+    // MARK: - WidgetView Delegate methods
+    func layoutWidgetView(widgetView: WidgetView) {
+        
+        let center = widgetView.convert(widgetView.center, from: widgetView.superview)
+        let topLeft = widgetView.convert(CGPoint(x: widgetView.bounds.minX, y: widgetView.bounds.minY), from: kagamiView)
+        let topRight = widgetView.convert(CGPoint(x: widgetView.bounds.maxX, y: widgetView.bounds.minY), from: kagamiView)
+        let bottomRight = widgetView.convert(CGPoint(x: widgetView.bounds.maxX, y: widgetView.bounds.maxY), from: kagamiView)
+        let bottomLeft = widgetView.convert(CGPoint(x: widgetView.bounds.minX, y: widgetView.bounds.maxY), from: kagamiView)
+        
+        if kagamiView.bounds.contains(topLeft),
+            kagamiView.bounds.contains(topRight),
+            kagamiView.bounds.contains(bottomRight),
+            kagamiView.bounds.contains(bottomLeft) {
+            kagamiView.addSubview(widgetView)
+            widgetView.snp.remakeConstraints({ (make) in
+                make.center.equalTo(center)
+                make.height.width.equalTo(50.0)
+            })
+            kagamiView.layoutSubviews()
+            userDefaults.set(["onMirror" : true, "x" : widgetView.frame.midX, "y" : widgetView.frame.midY], forKey: widgetView.description)
+            
+            let widgetNode = ref.child((widgetView.widget.description))
+            widgetNode.updateChildValues(["x" : (widgetView.frame.minX / kagamiView.frame.maxX) , "y" : (widgetView.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
+        }
+        else {
+            widgetView.snp.makeConstraints { (make) in
+                make.bottom.equalToSuperview().offset(-5.0)
+                make.width.height.equalTo(50.0)
+                make.leading.equalToSuperview().offset((widgetView.tag * 50) + (8 * widgetView.tag) + 8)
+            }
+            userDefaults.set(["onMirror" : false, "x" : widgetView.frame.midX, "y" : widgetView.frame.midY], forKey: widgetView.widget.description)
+            ref.child(widgetView.widget.description).updateChildValues(["onMirror" : false])
+        }
     }
     
     // MARK: - Save custom settings
