@@ -13,18 +13,12 @@ protocol WidgetViewable: class {
     var panRecognizer: UIPanGestureRecognizer { get set }
     var tapRecognizer: UITapGestureRecognizer { get set }
     var propertyAnimator: UIViewPropertyAnimator? { get set }
-    var userDefaults: UserDefaults? { get set }
-    
-    
-//    func setupAnimationConstraint()
-//    
-//    func setPanGestureRecognizer() -> UIPanGestureRecognizer
-//    func setTapRecognizer() -> UITapGestureRecognizer
-//    func wasTapped(_ gesture: UITapGestureRecognizer)
-//    func wasDragged(_ gesture: UIPanGestureRecognizer)
+    var userDefaults: UserDefaults { get set }
     
     var mirrorIcon: UIImage { get set }
     var dockIcon: UIImage { get set }
+    
+    func addSettings()
 }
 
 protocol WidgetViewProtocol: class {
@@ -34,21 +28,22 @@ protocol WidgetViewProtocol: class {
 class WidgetView: UIView {
     
     // MARK: - Properties
-    internal var userDefaults: UserDefaults?
+    internal var userDefaults = UserDefaults.standard
     internal var propertyAnimator: UIViewPropertyAnimator?
     internal var tapRecognizer = UITapGestureRecognizer()
     internal var panRecognizer = UIPanGestureRecognizer()
+    var ref: FIRDatabaseReference!
 
     var widget: Widgetable
     var mirrorView = UIImageView()
     var dockView = UIImageView()
     weak var viewDelegate: WidgetViewProtocol?
     
-    var ref: FIRDatabaseReference!
     
     init(widget: Widgetable) {
         self.widget = widget
         ref = FIRDatabase.database().reference()
+        propertyAnimator = UIViewPropertyAnimator(duration: 0.75, dampingRatio: 0.77, animations: nil)
         super.init(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     }
     
@@ -90,8 +85,9 @@ class WidgetView: UIView {
 
     func wasTapped(_ gesture: UITapGestureRecognizer) {
         
-        let view = gesture.view!
-        print("dsafasd")
+        let widgetView = gesture.view as! WidgetViewable
+
+        widgetView.addSettings()
         if gesture.state == .ended {
             
             propertyAnimator?.addAnimations ({
@@ -121,55 +117,5 @@ class WidgetView: UIView {
             self.viewDelegate?.layoutWidgetView(widgetView: self)
         }
     }
-    
-    
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
 
 }
-
-class WeatherWidgetView : WidgetView {
-    
-}
-
-// delegate
-/*
- let kagamiView = kagami.kagamiView
- 
- let center = self.convert(self.center, from: self.superview)
- let topLeft = self.convert(CGPoint(x: self.bounds.minX, y: self.bounds.minY), from: kagamiView)
- let topRight = self.convert(CGPoint(x: self.bounds.maxX, y: self.bounds.minY), from: kagamiView)
- let bottomRight = self.convert(CGPoint(x: self.bounds.maxX, y: self.bounds.maxY), from: kagamiView)
- let bottomLeft = self.convert(CGPoint(x: self.bounds.minX, y: self.bounds.maxY), from: kagamiView)
- 
- 
- if kagamiView.bounds.contains(topLeft),
- kagamiView.bounds.contains(topRight),
- kagamiView.bounds.contains(bottomRight),
- kagamiView.bounds.contains(bottomLeft) {
- kagamiView.addSubview(self)
- self.snp.remakeConstraints({ (make) in
- make.center.equalTo(center)
- make.height.width.equalTo(50.0)
- })
- kagamiView.layoutSubviews()
- userDefaults?.set(["onMirror" : true, "x" : self.frame.midX, "y" : self.frame.midY], forKey: self.accessibilityIdentifier!)
- 
- let widgetNode = ref.child((self.widget.description))
- widgetNode.updateChildValues(["x" : (self.frame.minX / kagamiView.frame.maxX) , "y" : (self.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
- }
- else {
- self.snp.makeConstraints { (make) in
- make.bottom.equalToSuperview().offset(-5.0)
- make.width.height.equalTo(50.0)
- make.leading.equalToSuperview().offset((self.tag * 50) + (8 * self.tag) + 8)
- }
- userDefaults?.set(["onMirror" : false, "x" : self.frame.midX, "y" : self.frame.midY], forKey: self.widget.description)
- ref.child(self.widget.description).updateChildValues(["onMirror" : false])
- }
- */

@@ -11,52 +11,6 @@ import Lottie
 import SnapKit
 import FirebaseDatabase
 
-struct Widget {
-    
-    var category : Category
-    
-    init(category: Category) {
-        self.category = category
-    }
-    
-    enum Category : Int {
-        case weather, forecast, time, todos, quote
-        
-        var dockIcon : UIImage {
-            switch self {
-            case .weather: return UIImage(named: "cloud")!
-            case .forecast: return UIImage(named: "Flash_Logo_01")!
-            case .time: return UIImage(named: "clock")!
-            case .todos: return UIImage(named: "checklist")!
-            case .quote: return UIImage(named: "quote")!
-            }
-        }
-        
-        var mirrorIcon : UIImage {
-            switch self {
-            case .weather: return UIImage(named: "Flash_Logo_01")!
-            case .forecast: return UIImage(named: "Flash_Logo_01")!
-            case .time: return UIImage(named: "Flash_Logo_01")!
-            case .todos: return UIImage(named: "Flash_Logo_01")!
-            case .quote: return UIImage(named: "Flash_Logo_01")!
-            }
-        }
-        
-        var description : String {
-            switch self {
-            case .weather: return "weather"
-            case .forecast: return "forecast"
-            case .time: return "time"
-            case .todos: return "toDos"
-            case .quote: return "quote"
-            }
-        }
-    }
-    let widgetView = UIView()
-    let dockView = UIImageView()
-    let mirrorView = UIImageView()
-}
-
 // should be for dock if dock/mirror are put into own UIView class - separate from KVC
 protocol KagamiViewControllerDataSource : class {
     var widgetViews: [WidgetView] { get set }
@@ -73,12 +27,8 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
     var tapRecognizer = UITapGestureRecognizer()
     weak var delegate : KagamiViewControllerDataSource?
     
-//    var widgetArray = [Widget(category: .weather), Widget(category: .forecast), Widget(category: .time), Widget(category: .todos), Widget(category: .quote)]
-    var previousPoint: CGPoint?
     var widgetBeingEdited: UIView?
     internal var widgetViews: [WidgetView]
-
-    var didTapWidget: () -> () = { }
     
     // MARK: - View Lifecycle
     init(widgetViews: [WidgetView]) {
@@ -92,11 +42,11 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-      
+        
         self.title = "鏡"
         mirrorAnimationView.play()
         propertyAnimator = UIViewPropertyAnimator(duration: 0.75, dampingRatio: 0.77, animations: nil)
-      
+        
         for widgetView in widgetViews {
             widgetView.viewDelegate = self
         }
@@ -123,7 +73,7 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
         
         propertyAnimator = nil
     }
-
+    
     // MARK: - Setup View Hierarchy & Constraints
     private func setupViewHierarchy() {
         
@@ -132,10 +82,9 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
         view.addSubview(mirrorAnimationView)
         view.addSubview(kagamiView)
         view.addSubview(iconContainerView)
-
+        
         for widgetView in widgetViews {
-            self.view.addSubview(widgetView)
-            widgetView.backgroundColor = .red
+            view.addSubview(widgetView)
         }
     }
     
@@ -150,11 +99,11 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
             make.top.left.right.equalToSuperview()
             make.bottom.equalTo(iconContainerView.snp.top)
         })
-      
+        
         mirrorAnimationView.snp.makeConstraints { (make) in
-          make.top.left.right.equalToSuperview()
-          make.bottom.equalTo(iconContainerView.snp.top)
-      }
+            make.top.left.right.equalToSuperview()
+            make.bottom.equalTo(iconContainerView.snp.top)
+        }
         
         // widget dock
         iconContainerView.snp.makeConstraints { (make) in
@@ -165,57 +114,54 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
         
         // instantiate Widgets
         
-        guard let widgetViews = self.delegate?.widgetViews else { return }
-        
         for widgetView in widgetViews {
             var count = 0
             widgetView.snp.remakeConstraints({ (make) in
-                make.height.equalTo(50.0)
-                make.width.equalToSuperview().multipliedBy(0.125)
-                make.leading.equalToSuperview().offset((50 * count) + 16)
-                make.center.equalToSuperview()
+                make.size.equalTo(50.0)
+                make.leading.equalToSuperview().offset((50 * count) + 8)
+                make.bottom.equalToSuperview().inset(4.0)
             })
             count += 1
         }
         
-//        for widgetView in widgetViews {
-//            
-//            widgetView.isUserInteractionEnabled = true
-//            self.view.addSubview(widgetView)
-//            
-//            let widgetDict = userDefault.dictionary(forKey: widgetView.accessibilityIdentifier!)
-//            
-//            if widgetDict != nil {
-//                
-//                if widgetDict?["onMirror"] as! Bool == true {
-//                    let x = widgetDict?["x"] as! CGFloat
-//                    let y = widgetDict?["y"] as! CGFloat
-//                    widgetView.subviews[0].alpha = 0.0
-//                    widgetView.subviews[1].alpha = 1.0
-//                    widgetView.snp.makeConstraints({ (make) in
-//                        make.center.equalTo(CGPoint(x: x, y: y))
-//                        make.height.width.equalTo(50.0)
-//                    })
-//                }
-//                else {
-//                    if widgetDict?["onMirror"] as! Bool == false {
-//                        widgetView.snp.makeConstraints({ (make) in
-//                            make.bottom.equalTo(iconContainerView.snp.bottom).offset(-5.0)
-//                            make.width.height.equalTo(50.0)
-//                            make.leading.equalTo(iconContainerView.snp.leading).offset((widgetView.tag * 50) + (8 * widgetView.tag) + 8)
-//                        })
-//                        
-//                    }
-//                }
-//            }
-//            else {
-//                widgetView.snp.makeConstraints { (make) in
-//                    make.bottom.equalTo(iconContainerView.snp.bottom).offset(-5.0)
-//                    make.width.height.equalTo(50.0)
-//                    make.leading.equalTo(iconContainerView.snp.leading).offset((widgetView.tag * 50) + (8 * widgetView.tag) + 8)
-//                }
-//            }
-//        }
+        //        for widgetView in widgetViews {
+        //
+        //            widgetView.isUserInteractionEnabled = true
+        //            self.view.addSubview(widgetView)
+        //
+        //            let widgetDict = userDefault.dictionary(forKey: widgetView.accessibilityIdentifier!)
+        //
+        //            if widgetDict != nil {
+        //
+        //                if widgetDict?["onMirror"] as! Bool == true {
+        //                    let x = widgetDict?["x"] as! CGFloat
+        //                    let y = widgetDict?["y"] as! CGFloat
+        //                    widgetView.subviews[0].alpha = 0.0
+        //                    widgetView.subviews[1].alpha = 1.0
+        //                    widgetView.snp.makeConstraints({ (make) in
+        //                        make.center.equalTo(CGPoint(x: x, y: y))
+        //                        make.height.width.equalTo(50.0)
+        //                    })
+        //                }
+        //                else {
+        //                    if widgetDict?["onMirror"] as! Bool == false {
+        //                        widgetView.snp.makeConstraints({ (make) in
+        //                            make.bottom.equalTo(iconContainerView.snp.bottom).offset(-5.0)
+        //                            make.width.height.equalTo(50.0)
+        //                            make.leading.equalTo(iconContainerView.snp.leading).offset((widgetView.tag * 50) + (8 * widgetView.tag) + 8)
+        //                        })
+        //
+        //                    }
+        //                }
+        //            }
+        //            else {
+        //                widgetView.snp.makeConstraints { (make) in
+        //                    make.bottom.equalTo(iconContainerView.snp.bottom).offset(-5.0)
+        //                    make.width.height.equalTo(50.0)
+        //                    make.leading.equalTo(iconContainerView.snp.leading).offset((widgetView.tag * 50) + (8 * widgetView.tag) + 8)
+        //                }
+        //            }
+        //        }
     }
     
     // MARK: - WidgetView Delegate methods
@@ -234,7 +180,7 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
             kagamiView.addSubview(widgetView)
             widgetView.snp.remakeConstraints({ (make) in
                 make.center.equalTo(center)
-                make.height.width.equalTo(50.0)
+                make.height.width.equalToSuperview().multipliedBy(0.8)
             })
             kagamiView.layoutSubviews()
             userDefaults.set(["onMirror" : true, "x" : widgetView.frame.midX, "y" : widgetView.frame.midY], forKey: widgetView.description)
@@ -383,7 +329,7 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
         view.layer.shouldRasterize = true
         return view
     }()
-  
+    
     lazy var weatherView: WeatherView = {
         let view = WeatherView()
         view.layer.opacity = 0.0
@@ -420,32 +366,12 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
         view.clipsToBounds = true
         return view
     }()
-  
+    
     lazy var mirrorAnimationView: LOTAnimationView = {
-      var view: LOTAnimationView = LOTAnimationView(name: "KagamiMirrorAnimation")
-      view.contentMode = .scaleAspectFill
-    
-      return view
+        var view: LOTAnimationView = LOTAnimationView(name: "KagamiMirrorAnimation")
+        view.contentMode = .scaleAspectFill
+        return view
     }()
-}
-
-// Ignore for now
-class CollidingViewBehavior: UIDynamicBehavior  {
-    
-    override init() {}
-    
-    convenience init(items: [UIDynamicItem]) {
-        self.init()
-        
-        let collisionBehavior = UICollisionBehavior(items: items)
-        collisionBehavior.translatesReferenceBoundsIntoBoundary = true
-        self.addChildBehavior(collisionBehavior)
-        
-        let elasticBehavior = UIDynamicItemBehavior(items: items)
-        elasticBehavior.elasticity = 0.0
-        self.addChildBehavior(elasticBehavior)
-        
-    }
 }
 
 

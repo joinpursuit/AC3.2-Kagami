@@ -181,7 +181,7 @@ class TimeView: WidgetView, WidgetViewable {
     }
     
     //MARK: - Lazy Inits
-    //WidgetImageViews
+    //TODO: - REMOVE IMAGE VIEWS
     lazy var dockImageView: UIImageView = {
         let view = UIImageView()
         view.image = #imageLiteral(resourceName: "clock")
@@ -209,6 +209,7 @@ class TimeView: WidgetView, WidgetViewable {
         view.backgroundColor = .clear
         return view
     }()
+    
     lazy var segmentView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
