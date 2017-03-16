@@ -33,8 +33,8 @@ class QuoteCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .white
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
-
+    
 }

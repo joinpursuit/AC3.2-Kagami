@@ -7,114 +7,94 @@
 //
 
 import UIKit
+import SnapKit
 
 class ForecastTableViewCell: UITableViewCell {
     
     static let identifier: String = "forecast"
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-
-        //        self.addSubview(degreeLabel)
-        //        self.addSubview(locationLabel)
-        //        self.addSubview(descriptionLabel)
-        //        self.addSubview(lowestTempLabel)
-        //        self.addSubview(minMaxDegreeLabel)
-        //        self.addSubview(highestTempLabel)
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        self.backgroundColor = .clear
+        setupView()
     }
-
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
-
-    //        degreeLabel.snp.makeConstraints { (label) in
-    //            label.centerX.equalToSuperview()
-    //            label.top.equalTo(searchBar.snp.bottom).offset(20)
-    //        }
-    //
-    //        locationLabel.snp.makeConstraints { (label) in
-    //            label.centerX.equalToSuperview()
-    //            label.top.equalTo(degreeLabel.snp.bottom).offset(10)
-    //        }
-    //
-    //        descriptionLabel.snp.makeConstraints { (label) in
-    //            label.centerX.equalToSuperview()
-    //            label.top.equalTo(locationLabel.snp.bottom).offset(10)
-    //        }
-    //
-    //        minMaxDegreeLabel.snp.makeConstraints { (label) in
-    //            label.centerX.equalToSuperview()
-    //            label.top.equalTo(descriptionLabel.snp.bottom).offset(10)
-    //        }
-    //
-    //        lowestTempLabel.snp.makeConstraints { (label) in
-    //            label.right.equalTo(minMaxDegreeLabel.snp.left)
-    //            label.centerY.equalTo(minMaxDegreeLabel)
-    //        }
-    //
-    //        highestTempLabel.snp.makeConstraints { (label) in
-    //            label.left.equalTo(minMaxDegreeLabel.snp.right)
-    //            label.centerY.equalTo(minMaxDegreeLabel)
-    //        }
     
+    private func setupView() {
+        self.addSubview(dayLabel)
+        self.addSubview(minLabel)
+        self.addSubview(maxLabel)
+        self.addSubview(minMaxSepLabel)
+        self.addSubview(descriptionLabel)
+        dayLabel.snp.makeConstraints { (label) in
+            label.top.equalTo(self.snp.top).inset(8)
+            label.centerX.equalToSuperview()
+        }
+        descriptionLabel.snp.makeConstraints { (label) in
+            label.top.equalTo(dayLabel.snp.bottom)
+            label.centerX.equalToSuperview()
+        }
+        minMaxSepLabel.snp.makeConstraints { (label) in
+            label.top.equalTo(descriptionLabel.snp.bottom)
+            label.centerX.equalToSuperview()
+        }
+        minLabel.snp.makeConstraints { (label) in
+            label.top.equalTo(descriptionLabel.snp.bottom)
+            label.right.equalTo(minMaxSepLabel.snp.left)
+        }
+        maxLabel.snp.makeConstraints { (label) in
+            label.top.equalTo(descriptionLabel.snp.bottom)
+            label.left.equalTo(minMaxSepLabel.snp.right)
+        }
+    }
     
-    lazy var locationLabel: UILabel = {
+    lazy var minLabel: UILabel = {
         let label = UILabel()
-        label.text = "Entering a Zipcode above"
-        label.font = UIFont(name: "Code-Pro-Demo", size: 20)
-        label.textColor = .darkGray
+        label.text = ""
+        label.font = UIFont(name: "Code-Pro-Demo", size: 16)
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
     
-    lazy var degreeLabel: UILabel = {
+    lazy var maxLabel: UILabel = {
         let label = UILabel()
-        label.text = "69"
-        label.font = UIFont(name: "Code-Pro-Demo", size: 70)
-        label.textColor = ColorPalette.blackColor
+        label.text = ""
+        label.font = UIFont(name: "Code-Pro-Demo", size: 16)
+        label.textColor = ColorPalette.whiteColor
+        return label
+    }()
+    
+    lazy var minMaxSepLabel: UILabel = {
+        let label = UILabel()
+        label.text = "/"
+        label.font = UIFont(name: "Code-Pro-Demo", size: 16)
+        label.textColor = ColorPalette.whiteColor
+        return label
+    }()
+    
+    lazy var dayLabel: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
     
     lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
-        label.textColor = ColorPalette.accentColor
+        label.font = UIFont(name: "Code-Pro-Demo", size: 16)
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
-    
-    lazy var lowestTempLabel: UILabel = {
-        let label = UILabel()
-        label.text = ""
-        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
-        label.textColor = ColorPalette.grayColor
-        return label
-    }()
-    
-    lazy var minMaxDegreeLabel: UILabel = {
-        let label = UILabel()
-        label.text = "/"
-        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
-        label.textColor = ColorPalette.grayColor
-        return label
-    }()
-    
-    lazy var highestTempLabel: UILabel = {
-        let label = UILabel()
-        label.text = ""
-        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
-        label.textColor = ColorPalette.grayColor
-        return label
-    }()
-    
-    lazy var humidityLabel: UILabel = {
-        let label = UILabel()
-        label.text = ""
-        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
-        label.textColor = ColorPalette.grayColor
-        return label
-    }()
-    
-
 }

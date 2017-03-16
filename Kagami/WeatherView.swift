@@ -17,19 +17,21 @@ class WeatherView: UIView, UISearchBarDelegate {
     var database: FIRDatabaseReference!
     let userDefault = UserDefaults.standard
     var weather: DailyWeather?
+    var defaultZipcode: String?
+    var unit = "imperial"
+    var gradientLayer: CAGradientLayer!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         self.database = FIRDatabase.database().reference().child("weather")
-        self.backgroundColor = ColorPalette.whiteColor
-        self.alpha = 0.8
+        createGradientLayer()
         self.layer.cornerRadius = 9
         searchBar.delegate = self
         setupHierarchy()
-        //        setupBlurEffect()
         configureConstraints()
         loadUserDefaults()
+        getDefaultAPIResults()
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -43,13 +45,14 @@ class WeatherView: UIView, UISearchBarDelegate {
         self.addSubview(degreeLabel)
         self.addSubview(locationLabel)
         self.addSubview(weatherIcon)
-        self.addSubview(segmentView)
         self.addSubview(doneButton)
         self.addSubview(cancelButton)
         self.addSubview(descriptionLabel)
         self.addSubview(lowestTempLabel)
         self.addSubview(minMaxDegreeLabel)
         self.addSubview(highestTempLabel)
+        self.addSubview(headerImage)
+        self.addSubview(segmentView)
         segmentView.addSubview(customSegmentControl)
         doneButton.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
@@ -57,15 +60,18 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     func configureConstraints() {
         searchBar.snp.makeConstraints { (view) in
+            view.top.left.right.equalToSuperview()
+            view.height.equalTo(50)
+        }
+        
+        headerImage.snp.makeConstraints { (view) in
             view.centerX.equalToSuperview()
-            view.top.equalToSuperview().offset(50)
-            view.width.equalToSuperview().multipliedBy(0.60)
-            view.height.equalTo(40)
+            view.top.equalTo(searchBar.snp.bottom).offset(10)
         }
         
         degreeLabel.snp.makeConstraints { (label) in
             label.centerX.equalToSuperview()
-            label.top.equalTo(searchBar.snp.bottom).offset(20)
+            label.top.equalTo(headerImage.snp.bottom).offset(20)
         }
         
         locationLabel.snp.makeConstraints { (label) in
@@ -79,7 +85,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         }
         
         weatherIcon.snp.makeConstraints { (view) in
-            view.top.equalTo(descriptionLabel.snp.bottom).offset(20)
+            view.top.equalTo(descriptionLabel.snp.bottom).offset(10)
             view.centerX.equalToSuperview()
         }
         
@@ -99,16 +105,15 @@ class WeatherView: UIView, UISearchBarDelegate {
         }
         
         segmentView.snp.makeConstraints { (view) in
-            view.centerX.equalToSuperview()
-            view.top.equalTo(minMaxDegreeLabel.snp.bottom).offset(20)
+            view.left.right.equalToSuperview()
+            view.top.equalTo(minMaxDegreeLabel.snp.bottom).offset(10)
             view.height.equalTo(40)
-            view.width.equalTo(330)
         }
         
         customSegmentControl.snp.makeConstraints { (control) in
-            control.top.bottom.equalToSuperview()
-            control.left.equalToSuperview().offset(140.0)
-            control.right.equalToSuperview().inset(140.0)
+            control.top.bottom.equalTo(segmentView)
+            control.left.equalToSuperview().offset(125.0)
+            control.right.equalToSuperview().inset(125.0)
         }
         
         doneButton.snp.makeConstraints { (view) in
@@ -124,13 +129,6 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     // MARK: - Methods
     
-    //    func setupBlurEffect() {
-    //        let blur = UIBlurEffect(style: UIBlurEffectStyle.extraLight)
-    //        let blurEffectView = UIVisualEffectView(effect: blur)
-    //        blurEffectView.frame = self.bounds
-    //        backgroundImage.addSubview(blurEffectView)
-    //    }
-    
     func addToMirror() {
         print("adding to mirror")
     }
@@ -140,32 +138,35 @@ class WeatherView: UIView, UISearchBarDelegate {
     }
     
     func loadUserDefaults() {
-        if userDefault.object(forKey: "fahrenheit") != nil {
+        
+        if userDefault.object(forKey: "zipcode") == nil {
+            defaultZipcode = "10014"
+        } else {
+            defaultZipcode = userDefault.object(forKey: "zipcode") as? String
             let isFahrenheit = userDefault.object(forKey: "fahrenheit") as! Bool
             if isFahrenheit {
                 customSegmentControl.move(to: 0)
             } else {
                 customSegmentControl.move(to: 1)
+                self.unit = "metric"
             }
         }
-        if userDefault.object(forKey: "zipcode") != nil {
-            let zipcode = userDefault.object(forKey: "zipcode") as? String ?? ""
-            APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(zipcode),us&units=imperial") { (data: Data?) in
-                guard let validData = data else { return }
-                if let weatherObject = DailyWeather.parseWeather(from: validData) {
-                    self.weather = weatherObject
-                    dump(self.weather)
-                    DispatchQueue.main.async {
-                        self.locationLabel.text = self.weather!.name
-                        self.degreeLabel.text = String(describing: self.weather!.temperature)
-                        self.descriptionLabel.text = self.weather!.weatherDescription
-                        self.lowestTempLabel.text = String(describing: self.weather!.minTemp)
-                        self.highestTempLabel.text = String(describing: self.weather!.maxTemp)
-                        self.layoutIfNeeded()
-                    }
+        
+        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(self.defaultZipcode!),us&units=\(self.unit)") { (data: Data?) in
+            guard let validData = data else { return }
+            if let weatherObject = DailyWeather.parseWeather(from: validData) {
+                self.weather = weatherObject
+                dump(self.weather)
+                DispatchQueue.main.async {
+                    self.locationLabel.text = self.weather!.name
+                    self.degreeLabel.text = String(describing: self.weather!.temperature)
+                    self.descriptionLabel.text = self.weather!.weatherDescription
+                    self.lowestTempLabel.text = String(describing: self.weather!.minTemp)
+                    self.highestTempLabel.text = String(describing: self.weather!.maxTemp)
+                    self.layoutIfNeeded()
                 }
             }
-
+            
         }
     }
     
@@ -185,9 +186,17 @@ class WeatherView: UIView, UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         print("search")
         guard searchBar.text != nil else { return }
-        database.child("location").setValue(searchBar.text)
-        userDefault.setValue(searchBar.text, forKey: "zipcode")
-        getAPIResultsForFahrenheit()
+        defaultZipcode = searchBar.text!
+        
+        database.child("location").setValue(defaultZipcode)
+        userDefault.setValue(defaultZipcode, forKey: "zipcode")
+        
+        if customSegmentControl.selectedSegmentIndex == 0 {
+            getAPIResultsForFahrenheit()
+        } else {
+            getAPIResultsForCelsius()
+        }
+        
         print("location setting to firebase and user default")
         self.endEditing(true)
     }
@@ -197,9 +206,31 @@ class WeatherView: UIView, UISearchBarDelegate {
         isSearchActive = false
     }
     
-    func getAPIResultsForFahrenheit() {
-        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(searchBar.text!),us&units=imperial") { (data: Data?) in
+    func getDefaultAPIResults() {
+        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(defaultZipcode!),us&units=\(self.unit)") { (data: Data?) in
             guard let validData = data else { return }
+            self.userDefault.setValue(self.defaultZipcode, forKey: "zipcode")
+            
+            if let weatherObject = DailyWeather.parseWeather(from: validData) {
+                self.weather = weatherObject
+                dump(self.weather)
+                DispatchQueue.main.async {
+                    self.locationLabel.text = self.weather!.name
+                    self.degreeLabel.text = String(describing: self.weather!.temperature)
+                    self.descriptionLabel.text = self.weather!.weatherDescription
+                    self.lowestTempLabel.text = String(describing: self.weather!.minTemp)
+                    self.highestTempLabel.text = String(describing: self.weather!.maxTemp)
+                    self.layoutIfNeeded()
+                }
+            }
+        }
+    }
+    
+    func getAPIResultsForFahrenheit() {
+        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(defaultZipcode!),us&units=imperial") { (data: Data?) in
+            guard let validData = data else { return }
+            self.userDefault.setValue(self.defaultZipcode, forKey: "zipcode")
+            
             if let weatherObject = DailyWeather.parseWeather(from: validData) {
                 self.weather = weatherObject
                 dump(self.weather)
@@ -216,8 +247,10 @@ class WeatherView: UIView, UISearchBarDelegate {
     }
     
     func getAPIResultsForCelsius() {
-        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(searchBar.text!),us&units=metric") { (data: Data?) in
+        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(defaultZipcode!),us&units=metric") { (data: Data?) in
             guard let validData = data else { return }
+            self.userDefault.setValue(self.defaultZipcode, forKey: "zipcode")
+            
             if let weatherObject = DailyWeather.parseWeather(from: validData) {
                 self.weather = weatherObject
                 dump(self.weather)
@@ -233,10 +266,19 @@ class WeatherView: UIView, UISearchBarDelegate {
         }
     }
     
+    func createGradientLayer() {
+        gradientLayer = CAGradientLayer()
+        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 650))
+        gradientLayer.frame = view.bounds
+        gradientLayer.colors = [UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor, UIColor(red:0.93, green:0.95, blue:0.95, alpha:1.0).cgColor]
+        gradientLayer.locations = [0.0 , 1.0]
+        self.layer.addSublayer(gradientLayer)
+    }
+    
     // MARK: - Lazy Instances
     
     lazy var weatherIcon: UIImageView = {
-        let image = UIImage(named: "Partly Cloudy Day-100")
+        let image = UIImage(named: "Partly-Cloudy-Day-white")
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleToFill
         return imageView
@@ -244,17 +286,17 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     lazy var locationLabel: UILabel = {
         let label = UILabel()
-        label.text = "Entering a Zipcode above"
+        label.text = ""
         label.font = UIFont(name: "Code-Pro-Demo", size: 20)
-        label.textColor = .darkGray
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
     
     lazy var degreeLabel: UILabel = {
         let label = UILabel()
-        label.text = "69"
+        label.text = "0"
         label.font = UIFont(name: "Code-Pro-Demo", size: 70)
-        label.textColor = ColorPalette.blackColor
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
     
@@ -262,7 +304,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         let label = UILabel()
         label.text = ""
         label.font = UIFont(name: "Code-Pro-Demo", size: 18)
-        label.textColor = ColorPalette.accentColor
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
     
@@ -270,7 +312,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         let label = UILabel()
         label.text = ""
         label.font = UIFont(name: "Code-Pro-Demo", size: 18)
-        label.textColor = ColorPalette.grayColor
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
     
@@ -278,7 +320,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         let label = UILabel()
         label.text = "/"
         label.font = UIFont(name: "Code-Pro-Demo", size: 18)
-        label.textColor = ColorPalette.grayColor
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
     
@@ -286,21 +328,18 @@ class WeatherView: UIView, UISearchBarDelegate {
         let label = UILabel()
         label.text = ""
         label.font = UIFont(name: "Code-Pro-Demo", size: 18)
-        label.textColor = ColorPalette.grayColor
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
     
     lazy var searchBar: UISearchBar = {
         let bar = UISearchBar()
-        bar.placeholder = "ENTER ZIPCODE"
-        bar.tintColor = UIColor.white
-        bar.barTintColor = ColorPalette.whiteColor
-        bar.backgroundColor = UIColor.clear
-        bar.searchBarStyle = UISearchBarStyle.default
-        bar.layer.cornerRadius = 20
+        bar.placeholder = "SEARCH BY ZIPCODE"
+        bar.tintColor = UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0)
+        bar.barTintColor = UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0)
         bar.layer.borderWidth = 1
-        bar.layer.borderColor = ColorPalette.grayColor.cgColor
-        bar.clipsToBounds = true
+        bar.layer.borderColor = UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor
+        bar.searchBarStyle = UISearchBarStyle.default
         return bar
     }()
     
@@ -309,9 +348,11 @@ class WeatherView: UIView, UISearchBarDelegate {
         let titles = ["℉", "℃"]
         segmentedControl.setSegmentItems(titles)
         segmentedControl.delegate = self
-        segmentedControl.highlightTextColor = ColorPalette.whiteColor
-        segmentedControl.sliderBackgroundColor = ColorPalette.accentColor
+        segmentedControl.highlightTextColor = ColorPalette.accentColor
+        segmentedControl.sliderBackgroundColor = ColorPalette.whiteColor
+        segmentedControl.segmentsBackgroundColor = ColorPalette.grayColor
         segmentedControl.isSliderShadowHidden = false
+        segmentedControl.backgroundColor = .clear
         return segmentedControl
     }()
     
@@ -322,16 +363,24 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     lazy var doneButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(named: "Ok-104")
+        let image = UIImage(named: "Ok-50")
         button.setImage(image, for: .normal)
         return button
     }()
     
     lazy var cancelButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(named: "Cancel-104")
+        let image = UIImage(named: "Cancel-50")
         button.setImage(image, for: .normal)
         return button
+    }()
+    
+    lazy var headerImage: UIImageView = {
+        let imageView = UIImageView()
+        let image = UIImage(named: "weatherheader")
+        imageView.image = image
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }()
 }
 
@@ -340,19 +389,17 @@ extension WeatherView: TwicketSegmentedControlDelegate {
         print("Selected index at: \(segmentIndex)!")
         if segmentIndex == 0 {
             database.child("fahrenheit").setValue(true)
-            userDefault.setValue(true, forKey: "fahrenheit")
             print("switch to fahrenheit and setting user default to true")
             
-            guard searchBar.text != "" else { return }
             getAPIResultsForFahrenheit()
+            userDefault.setValue(true, forKey: "fahrenheit")
             
         } else {
             database.child("fahrenheit").setValue(false)
-            userDefault.setValue(false, forKey: "fahrenheit")
             print("Switch to celsius and setting user default to false")
             
-            guard searchBar.text != "" else { return }
             getAPIResultsForCelsius()
+            userDefault.setValue(false, forKey: "fahrenheit")
         }
     }
 }

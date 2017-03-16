@@ -201,6 +201,25 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
     
     // MARK: - Save custom settings
     //TODO: - Migrate to seperate file
+    func save() {
+        
+        //this is bad but quick solution
+        let widgetView = widgetBeingEdited
+        
+        // save to firebase
+        
+        propertyAnimator?.addAnimations {
+            
+            widgetView?.snp.remakeConstraints({ (make) in
+                make.size.equalTo(0.1)
+                make.center.equalTo(self.view.snp.center)
+            })
+            self.view.layoutIfNeeded()
+        }
+        self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
+        propertyAnimator?.startAnimation()
+    }
+    
     func saveWeather(_ sender: UIButton) {
         guard let view = widgetBeingEdited else { return }
         

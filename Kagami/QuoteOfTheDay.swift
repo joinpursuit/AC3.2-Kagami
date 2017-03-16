@@ -6,22 +6,20 @@
 //  Copyright © 2017 Eric Chang. All rights reserved.
 //
 
+import Foundation
 import UIKit
 
-class QuoteOfTheDay: Widgetable {
+class QuoteOfTheDay {
     
     var quote: String
     var author: String
-    var type: String
+    var category: String
     var backgroundImageURL: String
-    var category: String = "quote"
-    var iconImage: UIImage = #imageLiteral(resourceName: "quote")
-    var description: String = "quote"
     
-    init(quote: String, author: String, type: String, backgroundImageURL: String) {
+    init(quote: String, author: String, category: String, backgroundImageURL: String) {
         self.quote = quote
         self.author = author
-        self.type = type
+        self.category = category
         self.backgroundImageURL = backgroundImageURL
     }
     
@@ -32,10 +30,10 @@ class QuoteOfTheDay: Widgetable {
         
         let quote = quotes?[0]["quote"] as? String ?? "no quote"
         let author = quotes?[0]["author"] as? String ?? "no author"
-        let type = quotes?[0]["category"] as? String ?? "no category"
+        let category = quotes?[0]["category"] as? String ?? "no category"
         let backgroundImageURL = quotes?[0]["background"] as? String ?? "no image"
         
-        self.init(quote: quote, author: author, type: type, backgroundImageURL: backgroundImageURL)
+        self.init(quote: quote, author: author, category: category, backgroundImageURL: backgroundImageURL)
     }
     
     static func parseQuote(from data: Data?) -> QuoteOfTheDay? {

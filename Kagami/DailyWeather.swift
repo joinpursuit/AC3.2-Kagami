@@ -6,7 +6,7 @@
 //  Copyright © 2017 Eric Chang. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 //For temperature in Celsius use units=metric
 
@@ -63,5 +63,4 @@ class DailyWeather {
         
         return DailyWeather(from: validJson)
     }
-    
 }
