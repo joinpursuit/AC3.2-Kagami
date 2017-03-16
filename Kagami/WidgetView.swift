@@ -42,6 +42,9 @@ class WidgetView: UIView {
     var widget: Widgetable
     var mirrorView = UIImageView()
     var dockView = UIImageView()
+    
+    var doneButton = UIButton()
+    var cancelButton = UIButton()
     weak var viewDelegate: WidgetViewProtocol?
     
     var ref: FIRDatabaseReference!
@@ -121,6 +124,7 @@ class WidgetView: UIView {
             self.viewDelegate?.layoutWidgetView(widgetView: self)
         }
     }
+    
     
     
     /*

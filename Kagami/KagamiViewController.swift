@@ -11,57 +11,6 @@ import Lottie
 import SnapKit
 import FirebaseDatabase
 
-struct Widget {
-    
-    var category : Category
-    
-    init(category: Category) {
-        self.category = category
-    }
-    
-    enum Category : Int {
-        case weather, forecast, time, todos, quote
-        
-        var dockIcon : UIImage {
-            switch self {
-            case .weather: return UIImage(named: "cloud")!
-            case .forecast: return UIImage(named: "Flash_Logo_01")!
-            case .time: return UIImage(named: "clock")!
-            case .todos: return UIImage(named: "checklist")!
-            case .quote: return UIImage(named: "quote")!
-            }
-        }
-        
-        var mirrorIcon : UIImage {
-            switch self {
-            case .weather: return UIImage(named: "Flash_Logo_01")!
-            case .forecast: return UIImage(named: "Flash_Logo_01")!
-            case .time: return UIImage(named: "Flash_Logo_01")!
-            case .todos: return UIImage(named: "Flash_Logo_01")!
-            case .quote: return UIImage(named: "Flash_Logo_01")!
-            }
-        }
-        
-        var description : String {
-            switch self {
-            case .weather: return "weather"
-            case .forecast: return "forecast"
-            case .time: return "time"
-            case .todos: return "toDos"
-            case .quote: return "quote"
-            }
-        }
-    }
-    let widgetView = UIView()
-    let dockView = UIImageView()
-    let mirrorView = UIImageView()
-}
-
-// should be for dock if dock/mirror are put into own UIView class - separate from KVC
-protocol KagamiViewControllerDataSource : class {
-    var widgetViews: [WidgetView] { get set }
-}
-
 class KagamiViewController: UIViewController, WidgetViewProtocol {
     
     // MARK: - Properties
@@ -71,12 +20,10 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
     
     var panRecognizer = UIPanGestureRecognizer()
     var tapRecognizer = UITapGestureRecognizer()
-    weak var delegate : KagamiViewControllerDataSource?
     
-//    var widgetArray = [Widget(category: .weather), Widget(category: .forecast), Widget(category: .time), Widget(category: .todos), Widget(category: .quote)]
     var previousPoint: CGPoint?
     var widgetBeingEdited: UIView?
-    internal var widgetViews: [WidgetView]
+    var widgetViews: [WidgetView]
 
     var didTapWidget: () -> () = { }
     
@@ -136,6 +83,9 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
         for widgetView in widgetViews {
             self.view.addSubview(widgetView)
             widgetView.backgroundColor = .red
+            
+            widgetView.doneButton.addTarget(self, action: #selector(save), for: .touchDown)
+            widgetView.cancelButton.addTarget(self, action: #selector(save), for: .touchDown)
         }
     }
     
@@ -164,8 +114,6 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
         }
         
         // instantiate Widgets
-        
-        guard let widgetViews = self.delegate?.widgetViews else { return }
         
         for widgetView in widgetViews {
             var count = 0
@@ -241,6 +189,8 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
             
             let widgetNode = ref.child((widgetView.widget.description))
             widgetNode.updateChildValues(["x" : (widgetView.frame.minX / kagamiView.frame.maxX) , "y" : (widgetView.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
+            
+            widgetBeingEdited = widgetView
         }
         else {
             widgetView.snp.makeConstraints { (make) in
@@ -255,102 +205,19 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
     
     // MARK: - Save custom settings
     //TODO: - Migrate to seperate file
-    func saveWeather(_ sender: UIButton) {
-        guard let view = widgetBeingEdited else { return }
+    func save() {
         
-        if sender == weatherView.doneButton {
-            // save to firebase
-            print("weather done works")
-        }
+        //this is bad but quick solution
+        let widgetView = widgetBeingEdited
         
+        // save to firebase
+
         propertyAnimator?.addAnimations {
             
-            self.weatherView.snp.remakeConstraints({ (make) in
+            widgetView?.snp.remakeConstraints({ (make) in
                 make.size.equalTo(0.1)
-                make.center.equalTo(view.snp.center)
+                make.center.equalTo(self.view.snp.center)
             })
-            
-            self.view.layoutIfNeeded()
-        }
-        
-        self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
-        propertyAnimator?.startAnimation()
-    }
-    
-    func saveForecast(_ sender: UIButton) {
-        guard let view = widgetBeingEdited else { return }
-        
-        if sender == forecastView.doneButton {
-            print("forecast done works")
-        }
-        propertyAnimator?.addAnimations {
-            
-            self.forecastView.snp.remakeConstraints({ (make) in
-                make.size.equalTo(0.1)
-                make.center.equalTo(view.snp.center)
-            })
-            self.view.layoutIfNeeded()
-        }
-        self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
-        propertyAnimator?.startAnimation()
-    }
-    
-    func saveTime(_ sender: UIButton) {
-        guard let view = widgetBeingEdited else { return }
-        
-        if sender == timeView.doneButton {
-            // save to firebase
-            print("time done works")
-        }
-        
-        propertyAnimator?.addAnimations {
-            
-            self.timeView.snp.remakeConstraints({ (make) in
-                make.size.equalTo(0.1)
-                make.center.equalTo(view.snp.center)
-            })
-            
-            self.view.layoutIfNeeded()
-        }
-        //TODO: backgroundColor inside animations will flash black screen for 0.5 seconds
-        self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
-        propertyAnimator?.startAnimation()
-    }
-    
-    func saveToDo(_ sender: UIButton) {
-        guard let view = widgetBeingEdited else { return }
-        
-        if sender == toDoView.doneButton {
-            // save to firebase
-            print("todo done works")
-        }
-        
-        propertyAnimator?.addAnimations {
-            
-            self.toDoView.snp.remakeConstraints({ (make) in
-                make.size.equalTo(0.1)
-                make.center.equalTo(view.snp.center)
-            })
-            
-            self.view.layoutIfNeeded()
-        }
-        self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
-        propertyAnimator?.startAnimation()
-    }
-    func saveQuote(_ sender: UIButton) {
-        guard let view = widgetBeingEdited else { return }
-        
-        if sender == quoteView.doneButton {
-            print("quote done buttonworks")
-        }
-        
-        propertyAnimator?.addAnimations {
-            
-            self.quoteView.snp.remakeConstraints({ (make) in
-                make.size.equalTo(0.1)
-                make.center.equalTo(view.snp.center)
-            })
-            
             self.view.layoutIfNeeded()
         }
         self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)

@@ -45,6 +45,7 @@ class TimeView: WidgetView, WidgetViewable {
         setDateFormatterStyles()
         
         setupViewHierarchy()
+        setupDoneButton()
         configureConstraints()
         
         loadUserDefaults()
@@ -60,6 +61,13 @@ class TimeView: WidgetView, WidgetViewable {
     }
     
     // MARK: Setup
+    
+    private func setupDoneButton () {
+        doneButton.addTarget(self, action: #selector(setTimeFormat), for: .touchUpInside)
+        let image = UIImage(named: "Add Filled-50")
+        doneButton.setImage(image, for: .normal)
+    }
+    
     func setupViewHierarchy () {
         self.addSubview(dockImageView)
         self.addSubview(mirrorImageView)
@@ -234,15 +242,6 @@ class TimeView: WidgetView, WidgetViewable {
         segmentedControl.isSliderShadowHidden = false
         segmentedControl.backgroundColor = .clear
         return segmentedControl
-    }()
-    
-    //Buttons
-    lazy var doneButton: UIButton = {
-        let button = UIButton()
-        button.addTarget(self, action: #selector(setTimeFormat), for: .touchUpInside)
-        let image = UIImage(named: "Add Filled-50")
-        button.setImage(image, for: .normal)
-        return button
     }()
 }
 
