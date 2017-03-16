@@ -1,6 +1,0 @@
-framework module TwicketSegmentedControl {
-  umbrella header "TwicketSegmentedControl-umbrella.h"
-
-  export *
-  module * { export * }
-}
