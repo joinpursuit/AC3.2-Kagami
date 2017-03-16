@@ -17,13 +17,13 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     var database: FIRDatabaseReference!
     let userDefault = UserDefaults.standard
     var forecast: [Forecast] = []
+    var gradientLayer: CAGradientLayer!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         self.database = FIRDatabase.database().reference().child("forecast")
-        self.backgroundColor = ColorPalette.whiteColor
-        self.alpha = 0.8
+        createGradientLayer()
         self.layer.cornerRadius = 9
         setupHierarchy()
         configureConstraints()
@@ -38,6 +38,15 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
+    }
+    
+    func createGradientLayer() {
+        gradientLayer = CAGradientLayer()
+        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 650))
+        gradientLayer.frame = view.bounds
+        gradientLayer.colors = [UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor, UIColor(red:0.93, green:0.95, blue:0.95, alpha:1.0).cgColor]
+        gradientLayer.locations = [0.0 , 1.0]
+        self.layer.addSublayer(gradientLayer)
     }
     
     // MARK: - Set up Hierarchy & Constraints
@@ -216,20 +225,20 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     
     lazy var tableView: UITableView = {
         let view = UITableView()
-        view.backgroundColor = ColorPalette.whiteColor
+        view.backgroundColor = .clear
         return view
     }()
     
     lazy var doneButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(named: "Ok-104")
+        let image = UIImage(named: "Ok-50")
         button.setImage(image, for: .normal)
         return button
     }()
     
     lazy var cancelButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(named: "Cancel-104")
+        let image = UIImage(named: "Cancel-50")
         button.setImage(image, for: .normal)
         return button
     }()
@@ -237,10 +246,10 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     lazy var searchBar: UISearchBar = {
         let bar = UISearchBar()
         bar.placeholder = "SEARCH BY ZIPCODE"
-        bar.tintColor = ColorPalette.whiteColor
-        bar.barTintColor = ColorPalette.whiteColor
+                bar.tintColor = UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0)
+        bar.barTintColor = UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0)
         bar.layer.borderWidth = 1
-        bar.layer.borderColor = UIColor.white.cgColor
+        bar.layer.borderColor = UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor
         bar.searchBarStyle = UISearchBarStyle.default
         return bar
     }()
@@ -249,7 +258,7 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
         let label = UILabel()
         label.text = ""
         label.font = UIFont(name: "Code-Pro-Demo", size: 22)
-        label.textColor = ColorPalette.blackColor
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
     
@@ -258,9 +267,11 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
         let titles = ["℉", "℃"]
         segmentedControl.setSegmentItems(titles)
         segmentedControl.delegate = self
-        segmentedControl.highlightTextColor = ColorPalette.whiteColor
-        segmentedControl.sliderBackgroundColor = ColorPalette.accentColor
+        segmentedControl.highlightTextColor = ColorPalette.accentColor
+        segmentedControl.sliderBackgroundColor = ColorPalette.whiteColor
+        segmentedControl.segmentsBackgroundColor = ColorPalette.grayColor
         segmentedControl.isSliderShadowHidden = false
+        segmentedControl.backgroundColor = .clear
         return segmentedControl
     }()
     
