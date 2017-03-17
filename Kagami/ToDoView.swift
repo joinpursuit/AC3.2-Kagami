@@ -301,7 +301,10 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         print("should return")
-        guard activeTextField == textField, activeTextField?.text != "" else { return false }
+        guard activeTextField == textField, activeTextField?.text != "" else {
+            textField.resignFirstResponder()
+            return false
+        }
         self.endEditing(true)
         return true
     }
