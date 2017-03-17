@@ -16,6 +16,7 @@ class ForecastTableViewCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        self.backgroundColor = .clear
         setupView()
     }
     
@@ -61,7 +62,7 @@ class ForecastTableViewCell: UITableViewCell {
         let label = UILabel()
         label.text = ""
         label.font = UIFont(name: "Code-Pro-Demo", size: 16)
-        label.textColor = ColorPalette.accentColor
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
     
@@ -69,7 +70,7 @@ class ForecastTableViewCell: UITableViewCell {
         let label = UILabel()
         label.text = ""
         label.font = UIFont(name: "Code-Pro-Demo", size: 16)
-        label.textColor = ColorPalette.accentColor
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
     
@@ -77,7 +78,7 @@ class ForecastTableViewCell: UITableViewCell {
         let label = UILabel()
         label.text = "/"
         label.font = UIFont(name: "Code-Pro-Demo", size: 16)
-        label.textColor = ColorPalette.grayColor
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
     
@@ -85,7 +86,7 @@ class ForecastTableViewCell: UITableViewCell {
         let label = UILabel()
         label.text = ""
         label.font = UIFont(name: "Code-Pro-Demo", size: 18)
-        label.textColor = ColorPalette.blackColor
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
     
@@ -93,7 +94,7 @@ class ForecastTableViewCell: UITableViewCell {
         let label = UILabel()
         label.text = ""
         label.font = UIFont(name: "Code-Pro-Demo", size: 16)
-        label.textColor = ColorPalette.grayColor
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
 }

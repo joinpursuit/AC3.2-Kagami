@@ -19,10 +19,13 @@ class ToDoView: UIView, UITextFieldDelegate {
     var activeTextField: UITextField?
     let animator = UIViewPropertyAnimator(duration: 0.5, curve: .linear, animations: nil)
     let userDefault = UserDefaults.standard
+    var gradientLayer: CAGradientLayer!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        createGradientLayer()
+        self.layer.cornerRadius = 9
         self.database = FIRDatabase.database().reference().child("toDos").child("lastest")
         textFieldOne.delegate = self
         textFieldTwo.delegate = self
@@ -30,14 +33,19 @@ class ToDoView: UIView, UITextFieldDelegate {
         setupView()
         setupConstraints()
         loadUserDefaults()
-        
-        self.backgroundColor = UIColor.white
-        self.alpha = 0.8
-        self.layer.cornerRadius = 9
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func createGradientLayer() {
+        gradientLayer = CAGradientLayer()
+        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 650))
+        gradientLayer.frame = view.bounds
+        gradientLayer.colors = [UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor, UIColor(red:0.93, green:0.95, blue:0.95, alpha:1.0).cgColor]
+        gradientLayer.locations = [0.0 , 1.0]
+        self.layer.addSublayer(gradientLayer)
     }
     
     // MARK: - Set up Hierarchy & constraints
@@ -302,21 +310,21 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     lazy var doneButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(named: "Ok-104")
+        let image = UIImage(named: "Ok-50")
         button.setImage(image, for: .normal)
         return button
     }()
     
     lazy var cancelButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(named: "Cancel-104")
+        let image = UIImage(named: "Cancel-50")
         button.setImage(image, for: .normal)
         return button
     }()
     
     lazy var textFieldOne: UITextField = {
         let field = UITextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-        field.backgroundColor = ColorPalette.whiteColor
+        field.backgroundColor = .clear//ColorPalette.whiteColor
         field.autocorrectionType = .yes
         field.keyboardType = .default
         field.returnKeyType = .done
@@ -331,7 +339,7 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     lazy var textFieldTwo: UITextField = {
         let field = UITextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-        field.backgroundColor = ColorPalette.whiteColor
+        field.backgroundColor = .clear//ColorPalette.whiteColor
         field.autocorrectionType = .yes
         field.keyboardType = .default
         field.returnKeyType = .done
@@ -346,7 +354,7 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     lazy var textFieldThree: UITextField = {
         let field = UITextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-        field.backgroundColor = ColorPalette.whiteColor
+        field.backgroundColor = .clear//ColorPalette.whiteColor
         field.autocorrectionType = .yes
         field.keyboardType = .default
         field.returnKeyType = .done

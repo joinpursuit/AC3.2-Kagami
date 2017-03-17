@@ -32,8 +32,8 @@ class QuoteCollectionViewCell: UICollectionViewCell {
     lazy var categoryLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .white
+        label.font = UIFont(name: "Code-Pro-Demo", size: 13)
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
 

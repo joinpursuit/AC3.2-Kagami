@@ -14,20 +14,22 @@ import FirebaseAuth
 import TwicketSegmentedControl
 
 class TimeView: UIView {
+    
     var time: Time?
     let dateFormatter = DateFormatter()
     let currentDateTime = Date()
     let date = NSDate()
     let calendar = NSCalendar.current
     let userDefault = UserDefaults.standard
+    var gradientLayer: CAGradientLayer!
     
     var databaseReference: FIRDatabaseReference!
     var user: FIRUser?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = .white
-        self.alpha = 0.8
+        
+        createGradientLayer()
         self.layer.cornerRadius = 9
         
         databaseReference = FIRDatabase.database().reference()
@@ -48,6 +50,15 @@ class TimeView: UIView {
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
+    }
+    
+    func createGradientLayer() {
+        gradientLayer = CAGradientLayer()
+        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 650))
+        gradientLayer.frame = view.bounds
+        gradientLayer.colors = [UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor, UIColor(red:0.93, green:0.95, blue:0.95, alpha:1.0).cgColor]
+        gradientLayer.locations = [0.0 , 1.0]
+        self.layer.addSublayer(gradientLayer)
     }
     
     // MARK: Setup
@@ -157,11 +168,11 @@ class TimeView: UIView {
             let hour = calendar.component(.hour, from: date as Date)
             let minutes = calendar.component(.minute, from: date as Date)
             
-            guard minutes > 9 else {
+            if minutes < 10 {
                 timeLabel.text = ("\(hour):0\(minutes) ")
-                break
+            } else {
+                timeLabel.text = ("\(hour):\(minutes) ")
             }
-            timeLabel.text = ("\(hour):\(minutes) ")
             
         default:
             print("Blah")
@@ -173,7 +184,7 @@ class TimeView: UIView {
     lazy var timeLabel: UILabel = {
         let label: UILabel = UILabel()
         label.font = UIFont(name: "Code-Pro-Demo", size: 72)
-        label.textColor = ColorPalette.blackColor
+        label.textColor = ColorPalette.whiteColor
         return label
     }()
     
@@ -193,7 +204,6 @@ class TimeView: UIView {
     //ImageViews
     lazy var clockImageView: UIImageView = {
         let imageView: UIImageView = UIImageView()
-        //    imageView.image = #imageLiteral(resourceName: "Clock")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -201,27 +211,29 @@ class TimeView: UIView {
     
     //TwicketSegmentedControl
     lazy var timeFormatSegmentedControl: TwicketSegmentedControl = {
-        let titles = ["12HR", "24HR"]
         let segmentedControl = TwicketSegmentedControl()
+        let titles = ["12HR", "24HR"]
         segmentedControl.setSegmentItems(titles)
         segmentedControl.delegate = self
-        segmentedControl.highlightTextColor = ColorPalette.whiteColor
-        segmentedControl.sliderBackgroundColor = ColorPalette.accentColor
+        segmentedControl.highlightTextColor = ColorPalette.accentColor
+        segmentedControl.sliderBackgroundColor = ColorPalette.whiteColor
+        segmentedControl.segmentsBackgroundColor = ColorPalette.grayColor
         segmentedControl.isSliderShadowHidden = false
+        segmentedControl.backgroundColor = .clear
         return segmentedControl
     }()
     
     //Buttons
     lazy var doneButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(named: "Ok-104")
+        let image = UIImage(named: "Ok-50")
         button.setImage(image, for: .normal)
         return button
     }()
     
     lazy var cancelButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(named: "Cancel-104")
+        let image = UIImage(named: "Cancel-50")
         button.setImage(image, for: .normal)
         return button
     }()
@@ -249,11 +261,11 @@ extension TimeView: TwicketSegmentedControlDelegate {
             let hour = calendar.component(.hour, from: date as Date)
             let minutes = calendar.component(.minute, from: date as Date)
             
-            guard minutes > 10 else {
+            if minutes < 10 {
                 timeLabel.text = ("\(hour):0\(minutes) ")
-                break
+            } else {
+                timeLabel.text = ("\(hour):\(minutes) ")
             }
-            timeLabel.text = ("\(hour):\(minutes) ")
             time?.militaryTime = true
             userDefault.setValue(false, forKey: "timeBool")
         default:
