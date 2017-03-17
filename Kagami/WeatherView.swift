@@ -144,13 +144,14 @@ class WeatherView: UIView, UISearchBarDelegate {
             defaultZipcode = "10014"
         } else {
             defaultZipcode = userDefault.object(forKey: "zipcode") as? String
-            let isFahrenheit = userDefault.object(forKey: "fahrenheit") as! Bool
-            if isFahrenheit {
-                customSegmentControl.move(to: 0)
-            } else {
-                customSegmentControl.move(to: 1)
-                self.unit = "metric"
-            }
+//        
+//            let isFahrenheit = userDefault.object(forKey: "fahrenheit") as! Bool
+//            if isFahrenheit {
+//                customSegmentControl.move(to: 0)
+//            } else {
+//                customSegmentControl.move(to: 1)
+//                self.unit = "metric"
+//            }
         }
         
         APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(self.defaultZipcode!),us&units=\(self.unit)") { (data: Data?) in
@@ -272,7 +273,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     lazy var weatherIcon: UIImageView = {
         let image = UIImage(named: "Partly Cloudy Day-96")
         let imageView = UIImageView(image: image)
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
