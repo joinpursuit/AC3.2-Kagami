@@ -54,6 +54,8 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
         self.addSubview(authorLabel)
         self.addSubview(collectionView)
         self.addSubview(headerImage)
+        doneButton.addTarget(self, action: #selector(saveQuote), for: .touchUpInside)
+        cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
     }
     
     func setupConstraints() {
@@ -88,6 +90,15 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
     
     // MARK: - Methods
     
+    func saveQuote() {
+        database.child("fullQuote").setValue(quote!.quote)
+        database.child("author").setValue(quote!.author)
+    }
+    
+    func cancelTapped() {
+        print("return to home page")
+    }
+    
     func getAPIResults() {
         APIRequestManager.manager.getData(endPoint: "http://quotes.rest/qod.json") { (data: Data?) in
             guard let validData = data else { return }
@@ -95,9 +106,7 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
                 self.quote = quoteObject
                 dump(self.quote)
                 self.quoteLabel.text = self.quote?.quote
-                self.database.child("fullQuote").setValue(self.quote!.quote)
                 self.authorLabel.text = self.quote?.author
-                self.database.child("author").setValue(self.quote?.author)
             }
         }
     }

@@ -168,11 +168,11 @@ class TimeView: UIView {
             let hour = calendar.component(.hour, from: date as Date)
             let minutes = calendar.component(.minute, from: date as Date)
             
-            guard minutes > 9 else {
+            if minutes < 10 {
                 timeLabel.text = ("\(hour):0\(minutes) ")
-                break
+            } else {
+                timeLabel.text = ("\(hour):\(minutes) ")
             }
-            timeLabel.text = ("\(hour):\(minutes) ")
             
         default:
             print("Blah")
@@ -204,7 +204,6 @@ class TimeView: UIView {
     //ImageViews
     lazy var clockImageView: UIImageView = {
         let imageView: UIImageView = UIImageView()
-        //    imageView.image = #imageLiteral(resourceName: "Clock")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -262,11 +261,11 @@ extension TimeView: TwicketSegmentedControlDelegate {
             let hour = calendar.component(.hour, from: date as Date)
             let minutes = calendar.component(.minute, from: date as Date)
             
-            guard minutes > 10 else {
+            if minutes < 10 {
                 timeLabel.text = ("\(hour):0\(minutes) ")
-                break
+            } else {
+                timeLabel.text = ("\(hour):\(minutes) ")
             }
-            timeLabel.text = ("\(hour):\(minutes) ")
             time?.militaryTime = true
             userDefault.setValue(false, forKey: "timeBool")
         default:

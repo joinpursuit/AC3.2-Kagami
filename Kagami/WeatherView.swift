@@ -18,6 +18,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     let userDefault = UserDefaults.standard
     var weather: DailyWeather?
     var defaultZipcode: String?
+    var isFahrenheit: Bool?
     var unit = "imperial"
     var gradientLayer: CAGradientLayer!
     
@@ -130,7 +131,13 @@ class WeatherView: UIView, UISearchBarDelegate {
     // MARK: - Methods
     
     func addToMirror() {
-        print("adding to mirror")
+        if customSegmentControl.selectedSegmentIndex == 0 {
+            database.child("fahrenheit").setValue(true)
+            print("switch to fahrenheit and saving to firebase")
+        } else {
+            database.child("fahrenheit").setValue(false)
+            print("switch to celsius and saving to firebase")
+        }
     }
     
     func cancelTapped() {
@@ -139,12 +146,13 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     func loadUserDefaults() {
         
-        if userDefault.object(forKey: "zipcode") == nil {
+        if userDefault.object(forKey: "zipcode") == nil, userDefault.object(forKey: "fahrenheit") == nil {
             defaultZipcode = "10014"
+            isFahrenheit = true
         } else {
             defaultZipcode = userDefault.object(forKey: "zipcode") as? String
-            let isFahrenheit = userDefault.object(forKey: "fahrenheit") as! Bool
-            if isFahrenheit {
+            isFahrenheit = userDefault.object(forKey: "fahrenheit") as? Bool
+            if isFahrenheit! {
                 customSegmentControl.move(to: 0)
             } else {
                 customSegmentControl.move(to: 1)
@@ -189,14 +197,12 @@ class WeatherView: UIView, UISearchBarDelegate {
         defaultZipcode = searchBar.text!
         
         database.child("location").setValue(defaultZipcode)
-        userDefault.setValue(defaultZipcode, forKey: "zipcode")
         
         if customSegmentControl.selectedSegmentIndex == 0 {
             getAPIResultsForFahrenheit()
         } else {
             getAPIResultsForCelsius()
         }
-        
         print("location setting to firebase and user default")
         self.endEditing(true)
     }
@@ -210,6 +216,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(defaultZipcode!),us&units=\(self.unit)") { (data: Data?) in
             guard let validData = data else { return }
             self.userDefault.setValue(self.defaultZipcode, forKey: "zipcode")
+            self.userDefault.setValue(true, forKey: "fahrenheit")
             
             if let weatherObject = DailyWeather.parseWeather(from: validData) {
                 self.weather = weatherObject
@@ -230,7 +237,8 @@ class WeatherView: UIView, UISearchBarDelegate {
         APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(defaultZipcode!),us&units=imperial") { (data: Data?) in
             guard let validData = data else { return }
             self.userDefault.setValue(self.defaultZipcode, forKey: "zipcode")
-            
+            self.userDefault.setValue(true, forKey: "fahrenheit")
+
             if let weatherObject = DailyWeather.parseWeather(from: validData) {
                 self.weather = weatherObject
                 dump(self.weather)
@@ -250,7 +258,8 @@ class WeatherView: UIView, UISearchBarDelegate {
         APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(defaultZipcode!),us&units=metric") { (data: Data?) in
             guard let validData = data else { return }
             self.userDefault.setValue(self.defaultZipcode, forKey: "zipcode")
-            
+            self.userDefault.setValue(false, forKey: "fahrenheit")
+
             if let weatherObject = DailyWeather.parseWeather(from: validData) {
                 self.weather = weatherObject
                 dump(self.weather)
@@ -388,18 +397,9 @@ extension WeatherView: TwicketSegmentedControlDelegate {
     func didSelect(_ segmentIndex: Int) {
         print("Selected index at: \(segmentIndex)!")
         if segmentIndex == 0 {
-            database.child("fahrenheit").setValue(true)
-            print("switch to fahrenheit and setting user default to true")
-            
             getAPIResultsForFahrenheit()
-            userDefault.setValue(true, forKey: "fahrenheit")
-            
         } else {
-            database.child("fahrenheit").setValue(false)
-            print("Switch to celsius and setting user default to false")
-            
             getAPIResultsForCelsius()
-            userDefault.setValue(false, forKey: "fahrenheit")
         }
     }
 }
