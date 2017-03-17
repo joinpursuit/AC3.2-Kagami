@@ -23,6 +23,7 @@ protocol WidgetViewable: class {
 
 protocol WidgetViewProtocol: class {
     func layoutWidgetView(widgetView: WidgetView)
+    func save()
 }
 
 class WidgetView: UIView {
@@ -42,6 +43,7 @@ class WidgetView: UIView {
     
     init(widget: Widgetable) {
         self.widget = widget
+        
         ref = FIRDatabase.database().reference()
         propertyAnimator = UIViewPropertyAnimator(duration: 0.75, dampingRatio: 0.77, animations: nil)
         super.init(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
@@ -86,12 +88,12 @@ class WidgetView: UIView {
     func wasTapped(_ gesture: UITapGestureRecognizer) {
         
         let widgetView = gesture.view as! WidgetViewable
-
+        
         widgetView.addSettings()
         if gesture.state == .ended {
             
             propertyAnimator?.addAnimations ({
-                self.setupAnimationConstraint()
+                self.viewDelegate?.layoutWidgetView(widgetView: self)
             })
             
             propertyAnimator?.startAnimation()
@@ -114,8 +116,15 @@ class WidgetView: UIView {
         }
         
         if gesture.state == .ended {
-            self.viewDelegate?.layoutWidgetView(widgetView: self)
+           // self.viewDelegate?.layoutWidgetView(widgetView: self)
         }
     }
+    
+    lazy var doneButton: UIButton = {
+        let button = UIButton()
+        let image = UIImage(named: "Ok-50")
+        button.setImage(image, for: .normal)
+        return button
+    }()
 
 }

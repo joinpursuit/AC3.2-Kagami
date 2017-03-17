@@ -61,8 +61,8 @@ class TimeView: WidgetView, WidgetViewable {
     
     // MARK: Setup
     func setupViewHierarchy () {
-        self.addSubview(dockImageView)
-        self.addSubview(mirrorImageView)
+        self.dockView.image = dockIcon
+//        self.addSubview(mirrorImageView)
         
         self.addGestureRecognizer(setTapRecognizer())
         self.addGestureRecognizer(setPanGestureRecognizer())
@@ -70,15 +70,15 @@ class TimeView: WidgetView, WidgetViewable {
     
     func configureConstraints() {
         
-        dockImageView.snp.remakeConstraints { (make) in
-            make.size.equalTo(50.0)
-            make.center.equalToSuperview()
-        }
-        
-        mirrorImageView.snp.remakeConstraints { (make) in
-            make.size.equalTo(0.1)
-            make.center.equalToSuperview()
-        }
+//        dockImageView.snp.remakeConstraints { (make) in
+//            make.size.equalTo(50.0)
+//            make.center.equalToSuperview()
+//        }
+//        
+//        mirrorImageView.snp.remakeConstraints { (make) in
+//            make.size.equalTo(0.1)
+//            make.center.equalToSuperview()
+//        }
     }
     
     func addSettings() {
@@ -194,17 +194,17 @@ class TimeView: WidgetView, WidgetViewable {
     
     //MARK: - Lazy Inits
     //TODO: - REMOVE IMAGE VIEWS
-    lazy var dockImageView: UIImageView = {
-        let view = UIImageView()
-        view.image = #imageLiteral(resourceName: "clock")
-        return view
-    }()
-    
-    lazy var mirrorImageView: UIImageView = {
-        let view = UIImageView()
-        view.image = #imageLiteral(resourceName: "Flash_Logo_01")
-        return view
-    }()
+//    lazy var dockImageView: UIImageView = {
+//        let view = UIImageView()
+//        view.image = #imageLiteral(resourceName: "clock")
+//        return view
+//    }()
+//    
+//    lazy var mirrorImageView: UIImageView = {
+//        let view = UIImageView()
+//        view.image = #imageLiteral(resourceName: "Flash_Logo_01")
+//        return view
+//    }()
     
     //Labels
     lazy var timeLabel: UILabel = {
@@ -259,13 +259,13 @@ class TimeView: WidgetView, WidgetViewable {
     }()
     
     //Buttons
-    lazy var doneButton: UIButton = {
-        let button = UIButton()
-        let image = UIImage(named: "Ok-50")
-        button.setImage(image, for: .normal)
-        return button
-    }()
-    
+//    lazy var doneButton: UIButton = {
+//        let button = UIButton()
+//        let image = UIImage(named: "Ok-50")
+//        button.setImage(image, for: .normal)
+//        return button
+//    }()
+//    
     lazy var cancelButton: UIButton = {
         let button = UIButton()
         let image = UIImage(named: "Cancel-50")

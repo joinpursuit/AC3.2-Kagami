@@ -27,7 +27,8 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
     var tapRecognizer = UITapGestureRecognizer()
     weak var delegate : KagamiViewControllerDataSource?
     
-    var widgetBeingEdited: UIView?
+    var previousPoint: CGPoint?
+    var widgetBeingEdited: WidgetView?
     internal var widgetViews: [WidgetView]
     
     // MARK: - View Lifecycle
@@ -49,6 +50,9 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
         
         for widgetView in widgetViews {
             widgetView.viewDelegate = self
+            widgetView.doneButton.addTarget(self, action: #selector(save), for: .touchUpInside)
+            
+            widgetView.dockView.image = widgetView.widget.iconImage
         }
         
         setupViewHierarchy()
@@ -167,36 +171,39 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
     // MARK: - WidgetView Delegate methods
     func layoutWidgetView(widgetView: WidgetView) {
         
-        let center = widgetView.convert(widgetView.center, from: widgetView.superview)
-        let topLeft = widgetView.convert(CGPoint(x: widgetView.bounds.minX, y: widgetView.bounds.minY), from: kagamiView)
-        let topRight = widgetView.convert(CGPoint(x: widgetView.bounds.maxX, y: widgetView.bounds.minY), from: kagamiView)
-        let bottomRight = widgetView.convert(CGPoint(x: widgetView.bounds.maxX, y: widgetView.bounds.maxY), from: kagamiView)
-        let bottomLeft = widgetView.convert(CGPoint(x: widgetView.bounds.minX, y: widgetView.bounds.maxY), from: kagamiView)
+        widgetBeingEdited = widgetView
         
-        if kagamiView.bounds.contains(topLeft),
-            kagamiView.bounds.contains(topRight),
-            kagamiView.bounds.contains(bottomRight),
-            kagamiView.bounds.contains(bottomLeft) {
-            kagamiView.addSubview(widgetView)
+        let center = kagamiView.convert(widgetView.center, from: widgetView.superview)
+        previousPoint = center
+        widgetView.tapRecognizer.isEnabled = false
+//        let topLeft = widgetView.convert(CGPoint(x: widgetView.bounds.minX, y: widgetView.bounds.minY), from: kagamiView)
+//        let topRight = widgetView.convert(CGPoint(x: widgetView.bounds.maxX, y: widgetView.bounds.minY), from: kagamiView)
+//        let bottomRight = widgetView.convert(CGPoint(x: widgetView.bounds.maxX, y: widgetView.bounds.maxY), from: kagamiView)
+//        let bottomLeft = widgetView.convert(CGPoint(x: widgetView.bounds.minX, y: widgetView.bounds.maxY), from: kagamiView)
+        
+//        if kagamiView.bounds.minX < widgetView.frame.minX,
+//            kagamiView.bounds.minY < widgetView.frame.minY,
+//            kagamiView.bounds.maxX > widgetView.frame.maxX,
+//            kagamiView.bounds.maxY > widgetView.frame.maxY {
+        
             widgetView.snp.remakeConstraints({ (make) in
-                make.center.equalTo(center)
+                make.center.equalTo(self.view)
                 make.height.width.equalToSuperview().multipliedBy(0.8)
             })
-            kagamiView.layoutSubviews()
-            userDefaults.set(["onMirror" : true, "x" : widgetView.frame.midX, "y" : widgetView.frame.midY], forKey: widgetView.description)
+            userDefaults.set(["onMirror" : true, "x" : widgetView.frame.midX, "y" : widgetView.frame.midY], forKey: widgetView.widget.description)
             
             let widgetNode = ref.child((widgetView.widget.description))
             widgetNode.updateChildValues(["x" : (widgetView.frame.minX / kagamiView.frame.maxX) , "y" : (widgetView.frame.minY / kagamiView.bounds.maxY), "onMirror" : true])
-        }
-        else {
-            widgetView.snp.makeConstraints { (make) in
-                make.bottom.equalToSuperview().offset(-5.0)
-                make.width.height.equalTo(50.0)
-                make.leading.equalToSuperview().offset((widgetView.tag * 50) + (8 * widgetView.tag) + 8)
-            }
-            userDefaults.set(["onMirror" : false, "x" : widgetView.frame.midX, "y" : widgetView.frame.midY], forKey: widgetView.widget.description)
-            ref.child(widgetView.widget.description).updateChildValues(["onMirror" : false])
-        }
+//        }
+//        else {
+//            widgetView.snp.makeConstraints { (make) in
+//                make.bottom.equalToSuperview().offset(-5.0)
+//                make.width.height.equalTo(50.0)
+//                make.leading.equalToSuperview().offset((widgetView.tag * 50) + (8 * widgetView.tag) + 8)
+//            }
+//            userDefaults.set(["onMirror" : false, "x" : widgetView.frame.midX, "y" : widgetView.frame.midY], forKey: widgetView.widget.description)
+//            ref.child(widgetView.widget.description).updateChildValues(["onMirror" : false])
+    
     }
     
     // MARK: - Save custom settings
@@ -204,20 +211,32 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
     func save() {
         
         //this is bad but quick solution
-        let widgetView = widgetBeingEdited
+        guard let widgetView = widgetBeingEdited,
+            let previousPoint = previousPoint else { return }
         
-        // save to firebase
+        for subView in (widgetView.subviews) {
+            if subView != widgetView.dockView {
+                subView.removeFromSuperview()
+            }
+        }
         
+        widgetView.layer.sublayers?.forEach { $0.removeFromSuperlayer() }
+
+
+//        widgetView.addSubview(widgetView.dockView)
         propertyAnimator?.addAnimations {
             
-            widgetView?.snp.remakeConstraints({ (make) in
-                make.size.equalTo(0.1)
-                make.center.equalTo(self.view.snp.center)
+            widgetView.snp.remakeConstraints({ (make) in
+                make.size.equalTo(50.0)
+                make.center.equalTo(previousPoint)
             })
-            self.view.layoutIfNeeded()
+            
+//            widgetView.bringSubview(toFront: widgetView.dockView)
+            widgetView.layoutIfNeeded()
         }
         self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
         propertyAnimator?.startAnimation()
+        widgetView.tapRecognizer.isEnabled = true
     }
     
     func saveWeather(_ sender: UIButton) {
@@ -260,27 +279,27 @@ class KagamiViewController: UIViewController, WidgetViewProtocol {
         propertyAnimator?.startAnimation()
     }
     
-    func saveTime(_ sender: UIButton) {
-        guard let view = widgetBeingEdited else { return }
-        
-        if sender == timeView.doneButton {
-            // save to firebase
-            print("time done works")
-        }
-        
-        propertyAnimator?.addAnimations {
-            
-            self.timeView.snp.remakeConstraints({ (make) in
-                make.size.equalTo(0.1)
-                make.center.equalTo(view.snp.center)
-            })
-            
-            self.view.layoutIfNeeded()
-        }
-        //TODO: backgroundColor inside animations will flash black screen for 0.5 seconds
-        self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
-        propertyAnimator?.startAnimation()
-    }
+//    func saveTime(_ sender: UIButton) {
+//        guard let view = widgetBeingEdited else { return }
+//        
+//        if sender == timeView.doneButton {
+//            // save to firebase
+//            print("time done works")
+//        }
+//        
+//        propertyAnimator?.addAnimations {
+//            
+//            self.timeView.snp.remakeConstraints({ (make) in
+//                make.size.equalTo(0.1)
+//                make.center.equalTo(view.snp.center)
+//            })
+//            
+//            self.view.layoutIfNeeded()
+//        }
+//        //TODO: backgroundColor inside animations will flash black screen for 0.5 seconds
+//        self.kagamiView.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
+//        propertyAnimator?.startAnimation()
+//    }
     
     func saveToDo(_ sender: UIButton) {
         guard let view = widgetBeingEdited else { return }
