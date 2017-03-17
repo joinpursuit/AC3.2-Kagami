@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E1C82CE1E7C645600CA47AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3E1C82CD1E7C645600CA47AE /* Assets.xcassets */; };
 		3E91CEDA1E6780C10074AA31 /* DailyWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E91CED91E6780C10074AA31 /* DailyWeather.swift */; };
 		3E91CEDC1E6780CF0074AA31 /* ForecastWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E91CEDB1E6780CF0074AA31 /* ForecastWeather.swift */; };
 		3E91CEDE1E688CE20074AA31 /* WordOfTheDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E91CEDD1E688CE20074AA31 /* WordOfTheDay.swift */; };
 		478B306E1E66181500FD580C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B306D1E66181500FD580C /* AppDelegate.swift */; };
-		478B30751E66181500FD580C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 478B30741E66181500FD580C /* Assets.xcassets */; };
 		478B30781E66181500FD580C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 478B30761E66181500FD580C /* LaunchScreen.storyboard */; };
 		478B30851E66192300FD580C /* APIRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30841E66192300FD580C /* APIRequestManager.swift */; };
 		478B30871E66257300FD580C /* KagamiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30861E66257300FD580C /* KagamiViewController.swift */; };
@@ -41,12 +41,12 @@
 
 /* Begin PBXFileReference section */
 		28B5280557D9DBC696BF6E1A /* Pods-Kagami.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kagami.release.xcconfig"; path = "Pods/Target Support Files/Pods-Kagami/Pods-Kagami.release.xcconfig"; sourceTree = "<group>"; };
+		3E1C82CD1E7C645600CA47AE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3E91CED91E6780C10074AA31 /* DailyWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DailyWeather.swift; sourceTree = "<group>"; };
 		3E91CEDB1E6780CF0074AA31 /* ForecastWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForecastWeather.swift; sourceTree = "<group>"; };
 		3E91CEDD1E688CE20074AA31 /* WordOfTheDay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WordOfTheDay.swift; sourceTree = "<group>"; };
 		478B306A1E66181500FD580C /* Kagami.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kagami.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		478B306D1E66181500FD580C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		478B30741E66181500FD580C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		478B30771E66181500FD580C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		478B30791E66181500FD580C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		478B30841E66192300FD580C /* APIRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIRequestManager.swift; sourceTree = "<group>"; };
@@ -127,7 +127,7 @@
 				9C0411F61E783F97006469DB /* QuoteCollectionViewCell.swift */,
 				478B30A81E6767AD00FD580C /* Utilities.swift */,
 				478B306D1E66181500FD580C /* AppDelegate.swift */,
-				478B30741E66181500FD580C /* Assets.xcassets */,
+				3E1C82CD1E7C645600CA47AE /* Assets.xcassets */,
 				9C49BA901E70A9D7001C4780 /* Code_Pro_Demo.otf */,
 				9C49BA911E70A9D7001C4780 /* Code_Pro_Light_Demo.otf */,
 				CC723BEB1E77F24300A0DB3D /* KagamiMirrorAnimation.json */,
@@ -290,7 +290,7 @@
 				9C49BA921E70A9D7001C4780 /* Code_Pro_Demo.otf in Resources */,
 				478B30781E66181500FD580C /* LaunchScreen.storyboard in Resources */,
 				CC723BEC1E77F24300A0DB3D /* KagamiMirrorAnimation.json in Resources */,
-				478B30751E66181500FD580C /* Assets.xcassets in Resources */,
+				3E1C82CE1E7C645600CA47AE /* Assets.xcassets in Resources */,
 				9C022C981E67381400AA2802 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
