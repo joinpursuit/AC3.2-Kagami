@@ -192,7 +192,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         print("did end")
         isSearchActive = false
-        self.searchBar.showsCancelButton = true
+        self.searchBar.setShowsCancelButton(false, animated: true)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -214,6 +214,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         print("cancel")
         isSearchActive = false
+        self.endEditing(true)
     }
     
     func getDefaultAPIResults() {
@@ -348,11 +349,12 @@ class WeatherView: UIView, UISearchBarDelegate {
     lazy var searchBar: UISearchBar = {
         let bar = UISearchBar()
         bar.placeholder = "SEARCH BY ZIPCODE"
-        bar.tintColor = UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0)
+        bar.tintColor = ColorPalette.whiteColor
         bar.barTintColor = UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0)
         bar.layer.borderWidth = 1
         bar.layer.borderColor = UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor
         bar.searchBarStyle = UISearchBarStyle.default
+        bar.isUserInteractionEnabled = true
         bar.clipsToBounds = true
         return bar
     }()
