@@ -35,7 +35,7 @@ struct Widget {
         var mirrorIcon : UIImage {
             switch self {
             case .weather: return UIImage(named: "Weather")!
-            case .forecast: return UIImage(named: "Forecast")!
+            case .forecast: return UIImage(named: "Forecast-1")!
             case .time: return UIImage(named: "Time")!
             case .todos: return UIImage(named: "To-Dos")!
             case .quote: return UIImage(named: "Quote-1")!
