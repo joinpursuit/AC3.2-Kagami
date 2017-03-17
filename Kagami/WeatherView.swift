@@ -149,7 +149,9 @@ class WeatherView: UIView, UISearchBarDelegate {
         if userDefault.object(forKey: "zipcode") == nil, userDefault.object(forKey: "fahrenheit") == nil {
             defaultZipcode = "10014"
             isFahrenheit = true
-        } else {
+        }
+        
+        else {
             defaultZipcode = userDefault.object(forKey: "zipcode") as? String
 
             isFahrenheit = userDefault.object(forKey: "fahrenheit") as? Bool

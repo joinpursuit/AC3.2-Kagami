@@ -11,7 +11,7 @@ class Time: Widgetable {
     
     var militaryTime: Bool
     var category: String = "time"
-    var iconImage: UIImage = #imageLiteral(resourceName: "clock-icon")
+    var iconImage: UIImage = #imageLiteral(resourceName: "clock")
     var description: String = "time"
     
     init(militaryTime: Bool) {
