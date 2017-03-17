@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3E91CEDA1E6780C10074AA31 /* DailyWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E91CED91E6780C10074AA31 /* DailyWeather.swift */; };
+		4703C7C91E7C81D300910C2C /* TimeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4703C7C81E7C81D300910C2C /* TimeSettingsView.swift */; };
+		4703C7CC1E7C86C900910C2C /* WidgetSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4703C7CB1E7C86C900910C2C /* WidgetSettingsView.swift */; };
 		478B306E1E66181500FD580C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B306D1E66181500FD580C /* AppDelegate.swift */; };
 		478B30751E66181500FD580C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 478B30741E66181500FD580C /* Assets.xcassets */; };
 		478B30781E66181500FD580C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 478B30761E66181500FD580C /* LaunchScreen.storyboard */; };
@@ -38,6 +40,8 @@
 /* Begin PBXFileReference section */
 		28B5280557D9DBC696BF6E1A /* Pods-Kagami.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kagami.release.xcconfig"; path = "Pods/Target Support Files/Pods-Kagami/Pods-Kagami.release.xcconfig"; sourceTree = "<group>"; };
 		3E91CED91E6780C10074AA31 /* DailyWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DailyWeather.swift; sourceTree = "<group>"; };
+		4703C7C81E7C81D300910C2C /* TimeSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeSettingsView.swift; sourceTree = "<group>"; };
+		4703C7CB1E7C86C900910C2C /* WidgetSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WidgetSettingsView.swift; sourceTree = "<group>"; };
 		478B306A1E66181500FD580C /* Kagami.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kagami.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		478B306D1E66181500FD580C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		478B30741E66181500FD580C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -80,6 +84,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4703C7CA1E7C868700910C2C /* Settings Views */ = {
+			isa = PBXGroup;
+			children = (
+				4703C7C81E7C81D300910C2C /* TimeSettingsView.swift */,
+				4703C7CB1E7C86C900910C2C /* WidgetSettingsView.swift */,
+			);
+			name = "Settings Views";
+			sourceTree = "<group>";
+		};
 		478B30611E66181500FD580C = {
 			isa = PBXGroup;
 			children = (
@@ -164,9 +177,10 @@
 				478B30B31E6DF95300FD580C /* WeatherView.swift */,
 				9C0411FA1E78B693006469DB /* ForecastView.swift */,
 				9C49BA7F1E6F02CC001C4780 /* ToDoView.swift */,
-				CC9032DE1E71F59D00014276 /* TimeView.swift */,
 				9C3A5D6B1E74E90900B949AC /* QuoteView.swift */,
 				478B30C81E77362800FD580C /* WidgetView.swift */,
+				CC9032DE1E71F59D00014276 /* TimeView.swift */,
+				4703C7CA1E7C868700910C2C /* Settings Views */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -327,6 +341,7 @@
 				478B30851E66192300FD580C /* APIRequestManager.swift in Sources */,
 				478B30B71E6DFDBE00FD580C /* Weather.swift in Sources */,
 				9C0411FF1E78C117006469DB /* ForecastTableViewCell.swift in Sources */,
+				4703C7CC1E7C86C900910C2C /* WidgetSettingsView.swift in Sources */,
 				478B30B41E6DF95300FD580C /* WeatherView.swift in Sources */,
 				CC9032DF1E71F59D00014276 /* TimeView.swift in Sources */,
 				478B30C91E77362800FD580C /* WidgetView.swift in Sources */,
@@ -338,6 +353,7 @@
 				478B306E1E66181500FD580C /* AppDelegate.swift in Sources */,
 				9C49BA801E6F02CC001C4780 /* ToDoView.swift in Sources */,
 				478B30A91E6767AD00FD580C /* Utilities.swift in Sources */,
+				4703C7C91E7C81D300910C2C /* TimeSettingsView.swift in Sources */,
 				9C0411F71E783F97006469DB /* QuoteCollectionViewCell.swift in Sources */,
 				9C0411FD1E78B952006469DB /* Forecast.swift in Sources */,
 				478B30871E66257300FD580C /* KagamiViewController.swift in Sources */,

@@ -18,7 +18,6 @@ protocol WidgetViewable: class {
     var mirrorIcon: UIImage { get set }
     var dockIcon: UIImage { get set }
     
-    func addSettings()
 }
 
 protocol WidgetViewProtocol: class {
@@ -39,20 +38,48 @@ class WidgetView: UIView {
     var mirrorView = UIImageView()
     var dockView = UIImageView()
     weak var viewDelegate: WidgetViewProtocol?
+    var settingsView : WidgetSettingsView
+
     
-    
-    init(widget: Widgetable) {
+    init(widget: Widgetable, settingsView: WidgetSettingsView) {
         self.widget = widget
+        self.settingsView = settingsView
         
         ref = FIRDatabase.database().reference()
         propertyAnimator = UIViewPropertyAnimator(duration: 0.75, dampingRatio: 0.77, animations: nil)
         super.init(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        
+        setupViewHierarchy()
+        configureConstraints()
     }
     
     // below init is for storyboard, however this will cause no widget init. 
     // user programmatic only
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    private func setupViewHierarchy() {
+        self.addSubview(mirrorView)
+        self.addSubview(dockView)
+//        self.addSubview(settingsView)
+    }
+    
+    private func configureConstraints() {
+        dockView.snp.makeConstraints { (make) in
+            make.left.top.right.bottom.equalToSuperview()
+        }
+
+        mirrorView.snp.makeConstraints { (make) in
+            make.center.equalToSuperview()
+            make.size.equalTo(0.1)
+        }
+//        
+//        settingsView.snp.makeConstraints { (make) in
+//            make.center.equalToSuperview()
+//            make.size.equalTo(0.1)
+//        }
     }
     
     // MARK: - Settings Animations
@@ -89,7 +116,7 @@ class WidgetView: UIView {
         
         let widgetView = gesture.view as! WidgetViewable
         
-        widgetView.addSettings()
+        //TODO: - Link widgetSettingsView to widgetView here in order to expand settings view
         if gesture.state == .ended {
             
             propertyAnimator?.addAnimations ({
@@ -119,12 +146,4 @@ class WidgetView: UIView {
            // self.viewDelegate?.layoutWidgetView(widgetView: self)
         }
     }
-    
-    lazy var doneButton: UIButton = {
-        let button = UIButton()
-        let image = UIImage(named: "Ok-50")
-        button.setImage(image, for: .normal)
-        return button
-    }()
-
-}
+ }
