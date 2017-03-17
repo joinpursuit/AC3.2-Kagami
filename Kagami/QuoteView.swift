@@ -9,23 +9,26 @@
 import Foundation
 import UIKit
 import SnapKit
+import FirebaseDatabase
 
 class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
     
     var quote: QuoteOfTheDay?
+    var database: FIRDatabaseReference!
     let categories = ["inspire","management","sports","life","funny","love","art","students"]
+    var gradientLayer: CAGradientLayer!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.backgroundColor = ColorPalette.whiteColor
-        self.alpha = 0.8
+        createGradientLayer()
         self.layer.cornerRadius = 9
         setupHierarchy()
         setupConstraints()
         getAPIResults()
         collectionView.delegate = self
         collectionView.dataSource = self
+        self.database = FIRDatabase.database().reference().child("quote")
         collectionView.register(QuoteCollectionViewCell.self, forCellWithReuseIdentifier: "categories")
     }
     
@@ -33,18 +36,33 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
         fatalError("init(coder:) has not been implemented")
     }
     
+    func createGradientLayer() {
+        gradientLayer = CAGradientLayer()
+        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 650))
+        gradientLayer.frame = view.bounds
+        gradientLayer.colors = [UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor, UIColor(red:0.93, green:0.95, blue:0.95, alpha:1.0).cgColor]
+        gradientLayer.locations = [0.0 , 1.0]
+        self.layer.addSublayer(gradientLayer)
+    }
+    
     // MARK: - Set up Hierarchy & Constraints
     
     func setupHierarchy() {
-        self.addSubview(backgroundImage)
         self.addSubview(doneButton)
         self.addSubview(cancelButton)
         self.addSubview(quoteLabel)
         self.addSubview(authorLabel)
         self.addSubview(collectionView)
+        self.addSubview(headerImage)
+        doneButton.addTarget(self, action: #selector(saveQuote), for: .touchUpInside)
+        cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
     }
     
     func setupConstraints() {
+        headerImage.snp.makeConstraints { (view) in
+            view.centerX.equalToSuperview()
+            view.top.equalTo(self.snp.top).inset(40)
+        }
         doneButton.snp.makeConstraints { (view) in
             view.right.equalTo(self.snp.right).inset(8)
             view.bottom.equalTo(self.snp.bottom).inset(8)
@@ -54,7 +72,7 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
             view.bottom.equalTo(self.snp.bottom).inset(8)
         }
         quoteLabel.snp.makeConstraints { (label) in
-            label.top.equalTo(self.snp.top).inset(125)
+            label.top.equalTo(collectionView.snp.bottom).offset(15)
             label.left.equalTo(self).inset(8)
             label.right.equalTo(self).inset(8)
         }
@@ -62,11 +80,8 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
             label.top.equalTo(quoteLabel.snp.bottom).offset(10)
             label.right.equalTo(self.snp.right).inset(20)
         }
-        backgroundImage.snp.makeConstraints { (image) in
-            image.top.bottom.right.left.equalToSuperview()
-        }
         collectionView.snp.makeConstraints { (view) in
-            view.top.equalTo(self.snp.top).inset(8)
+            view.top.equalTo(headerImage.snp.bottom).offset(30)
             view.left.equalTo(self.snp.left).inset(8)
             view.right.equalToSuperview()
             view.height.equalTo(40)
@@ -74,6 +89,15 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
     }
     
     // MARK: - Methods
+    
+    func saveQuote() {
+        database.child("fullQuote").setValue(quote!.quote)
+        database.child("author").setValue(quote!.author)
+    }
+    
+    func cancelTapped() {
+        print("return to home page")
+    }
     
     func getAPIResults() {
         APIRequestManager.manager.getData(endPoint: "http://quotes.rest/qod.json") { (data: Data?) in
@@ -83,9 +107,6 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
                 dump(self.quote)
                 self.quoteLabel.text = self.quote?.quote
                 self.authorLabel.text = self.quote?.author
-                if let background = self.quote?.backgroundImageURL {
-                    self.backgroundImage.image = UIImage(named: background)
-                }
             }
         }
     }
@@ -102,41 +123,44 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "categories", for: indexPath) as! QuoteCollectionViewCell
-            cell.backgroundColor = ColorPalette.accentColor
-            cell.layer.borderColor = ColorPalette.whiteColor.cgColor
-            cell.layer.borderWidth = 1.0
-            cell.categoryLabel.text = categories[indexPath.row]
-            return cell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "categories", for: indexPath) as! QuoteCollectionViewCell
+        cell.backgroundColor = ColorPalette.grayColor
+        cell.layer.borderColor = ColorPalette.grayColor.cgColor
+        cell.layer.borderWidth = 1.0
+        cell.categoryLabel.text = categories[indexPath.row]
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let selected = categories[indexPath.item]
-            APIRequestManager.manager.getData(endPoint: "http://quotes.rest/qod.json?category=\(selected)", callback: { (data: Data?) in
-                guard let validData = data else { return }
-                if let quoteObject = QuoteOfTheDay.parseQuote(from: validData) {
-                    DispatchQueue.main.async {
-                        self.quote = quoteObject
-                        self.quoteLabel.text = self.quote?.quote
-                        self.authorLabel.text = self.quote?.author
-                    }
+        database.child("category").setValue(selected)
+        APIRequestManager.manager.getData(endPoint: "http://quotes.rest/qod.json?category=\(selected)", callback: { (data: Data?) in
+            guard let validData = data else { return }
+            if let quoteObject = QuoteOfTheDay.parseQuote(from: validData) {
+                DispatchQueue.main.async {
+                    self.quote = quoteObject
+                    self.quoteLabel.text = self.quote?.quote
+                    self.database.child("fullQuote").setValue(self.quote?.quote)
+                    self.authorLabel.text = self.quote?.author
+                    self.database.child("author").setValue(self.quote?.author)
                 }
-            })
-        }
+            }
+        })
+    }
     
     // MARK: - Lazy Instances
     
     lazy var doneButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(named: "Ok-104")
+        let image = UIImage(named: "Ok-50")
         button.setImage(image, for: .normal)
         return button
     }()
     
     lazy var cancelButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(named: "Cancel-104")
+        let image = UIImage(named: "Cancel-50")
         button.setImage(image, for: .normal)
         return button
     }()
@@ -144,7 +168,7 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
     lazy var quoteLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Code-Pro-Demo", size: 25)
-        label.textColor = ColorPalette.blackColor
+        label.textColor = ColorPalette.whiteColor
         label.text = "Motivational quote here"
         label.lineBreakMode = NSLineBreakMode.byWordWrapping
         label.numberOfLines = 0
@@ -153,19 +177,10 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
     
     lazy var authorLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Code-Pro-Light-Demo", size: 18)
-        label.textColor = ColorPalette.blackColor
+        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
+        label.textColor = ColorPalette.whiteColor
         label.text = "By..."
         return label
-    }()
-    
-    lazy var backgroundImage: UIImageView = {
-        let imageView = UIImageView()
-        let image = UIImage(named: "")
-        imageView.image = image
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        return imageView
     }()
     
     lazy var collectionView: UICollectionView = {
@@ -174,7 +189,15 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
         layout.itemSize = CGSize(width: 100, height: 35)
         let frame: CGRect = CGRect(x: 0, y: 0, width: self.frame.width, height: 40)
         let view: UICollectionView = UICollectionView(frame: frame, collectionViewLayout: layout)
-        view.backgroundColor = ColorPalette.whiteColor
+        view.backgroundColor = .clear
         return view
+    }()
+    
+    lazy var headerImage: UIImageView = {
+        let imageView = UIImageView()
+        let image = UIImage(named: "quoteheader")
+        imageView.image = image
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }()
 }

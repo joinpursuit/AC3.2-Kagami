@@ -19,10 +19,13 @@ class ToDoView: UIView, UITextFieldDelegate {
     var activeTextField: UITextField?
     let animator = UIViewPropertyAnimator(duration: 0.5, curve: .linear, animations: nil)
     let userDefault = UserDefaults.standard
+    var gradientLayer: CAGradientLayer!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        createGradientLayer()
+        self.layer.cornerRadius = 9
         self.database = FIRDatabase.database().reference().child("toDos").child("lastest")
         textFieldOne.delegate = self
         textFieldTwo.delegate = self
@@ -30,14 +33,19 @@ class ToDoView: UIView, UITextFieldDelegate {
         setupView()
         setupConstraints()
         loadUserDefaults()
-        
-        self.backgroundColor = UIColor.white
-        self.alpha = 0.8
-        self.layer.cornerRadius = 9
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func createGradientLayer() {
+        gradientLayer = CAGradientLayer()
+        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 650))
+        gradientLayer.frame = view.bounds
+        gradientLayer.colors = [UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor, UIColor(red:0.93, green:0.95, blue:0.95, alpha:1.0).cgColor]
+        gradientLayer.locations = [0.0 , 1.0]
+        self.layer.addSublayer(gradientLayer)
     }
     
     // MARK: - Set up Hierarchy & constraints
@@ -66,12 +74,10 @@ class ToDoView: UIView, UITextFieldDelegate {
             view.right.equalTo(self.snp.right).inset(8)
             view.bottom.equalTo(self.snp.bottom).inset(8)
         }
-        
         cancelButton.snp.makeConstraints { (view) in
             view.left.equalTo(self.snp.left).inset(8)
             view.bottom.equalTo(self.snp.bottom).inset(8)
         }
-        
         headerImage.snp.makeConstraints { (view) in
             view.centerX.equalToSuperview()
             view.top.equalTo(self.snp.top).inset(50)
@@ -80,44 +86,41 @@ class ToDoView: UIView, UITextFieldDelegate {
         // textfields
         textFieldOne.snp.makeConstraints { (field) in
             field.top.equalTo(headerImage.snp.bottom).offset(40)
-            field.leading.equalTo(self.snp.leading).inset(10)
-            field.height.equalTo(self.snp.height).multipliedBy(0.08)
-            field.width.equalTo(self.snp.width).multipliedBy(0.75)
+            field.right.equalTo(self.snp.right)
+            field.height.equalTo(self.snp.height).multipliedBy(0.1)
+            field.width.equalTo(self.snp.width).multipliedBy(0.8)
         }
         textFieldTwo.snp.makeConstraints { (field) in
-            field.top.equalTo(textFieldOne.snp.bottom).offset(25)
-            field.leading.equalTo(textFieldOne.snp.leading)
-            field.height.equalTo(self.snp.height).multipliedBy(0.08)
-            field.width.equalTo(self.snp.width).multipliedBy(0.75)
+            field.top.equalTo(textFieldOne.snp.bottom).offset(40)
+            field.right.equalTo(self.snp.right)
+            field.height.equalTo(self.snp.height).multipliedBy(0.1)
+            field.width.equalTo(self.snp.width).multipliedBy(0.8)
         }
         textFieldThree.snp.makeConstraints { (field) in
-            field.top.equalTo(textFieldTwo.snp.bottom).offset(25)
-            field.leading.equalTo(textFieldTwo.snp.leading)
-            field.height.equalTo(self.snp.height).multipliedBy(0.08)
-            field.width.equalTo(self.snp.width).multipliedBy(0.75)
+            field.top.equalTo(textFieldTwo.snp.bottom).offset(40)
+            field.right.equalTo(self.snp.right)
+            field.height.equalTo(self.snp.height).multipliedBy(0.1)
+            field.width.equalTo(self.snp.width).multipliedBy(0.8)
         }
         
         // checkboxes
         checkBoxOne.snp.makeConstraints { (make) in
-            make.left.equalTo(textFieldOne.snp.right).offset(8)
-            make.right.equalTo(self).inset(10)
+            make.right.equalTo(textFieldOne.snp.left)
+            make.left.equalTo(self.snp.left)
             make.top.equalTo(textFieldOne.snp.top)
             make.bottom.equalTo(textFieldOne.snp.bottom)
-            make.height.width.equalTo(40)
         }
         checkBoxTwo.snp.makeConstraints { (make) in
-            make.left.equalTo(textFieldTwo.snp.right).offset(8)
-            make.right.equalTo(self).inset(10)
+            make.right.equalTo(textFieldTwo.snp.left)
+            make.left.equalTo(self.snp.left)
             make.top.equalTo(textFieldTwo.snp.top)
             make.bottom.equalTo(textFieldTwo.snp.bottom)
-            make.height.width.equalTo(40)
         }
         checkBoxThree.snp.makeConstraints { (make) in
-            make.left.equalTo(textFieldThree.snp.right).offset(8)
-            make.right.equalTo(self).inset(10)
+            make.right.equalTo(textFieldThree.snp.left)
+            make.left.equalTo(self.snp.left)
             make.top.equalTo(textFieldThree.snp.top)
             make.bottom.equalTo(textFieldThree.snp.bottom)
-            make.height.width.equalTo(40)
         }
     }
     
@@ -132,7 +135,7 @@ class ToDoView: UIView, UITextFieldDelegate {
         itemOneDatabaseRef.setValue(itemDict1)
         userDefault.setValue(textFieldOne.text, forKey: "item one")
         
-        if checkBoxOne.image(for: .normal) == UIImage(named:"checked") {
+        if checkBoxOne.image(for: .normal) == UIImage(named:"Ok-checked") {
             let item = ToDo(title: textFieldOne.text!, completed: true)
             let itemDict = item.asDictionary
             itemOneDatabaseRef.setValue(itemDict)
@@ -151,7 +154,7 @@ class ToDoView: UIView, UITextFieldDelegate {
         itemTwoDatabaseRef.setValue(itemDict2)
         userDefault.setValue(textFieldTwo.text, forKey: "item two")
         
-        if checkBoxTwo.image(for: .normal) == UIImage(named:"checked") {
+        if checkBoxTwo.image(for: .normal) == UIImage(named:"Ok-checked") {
             let item = ToDo(title: textFieldTwo.text!, completed: true)
             let itemDict = item.asDictionary
             itemTwoDatabaseRef.setValue(itemDict)
@@ -170,7 +173,7 @@ class ToDoView: UIView, UITextFieldDelegate {
         itemThreeDatabaseRef.setValue(itemDict3)
         userDefault.setValue(textFieldThree.text, forKey: "item three")
         
-        if checkBoxThree.image(for: .normal) == UIImage(named:"checked") {
+        if checkBoxThree.image(for: .normal) == UIImage(named:"Ok-checked") {
             let item = ToDo(title: textFieldThree.text!, completed: true)
             let itemDict = item.asDictionary
             itemThreeDatabaseRef.setValue(itemDict)
@@ -190,14 +193,14 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     func checkOffItemOne() {
         let itemOneDatabaseRef = self.database.child("1")
-        if checkBoxOne.image(for: .normal) == UIImage(named: "checked") {
-            checkBoxOne.setImage(UIImage(named: "unchecked"), for: .normal)
+        if checkBoxOne.image(for: .normal) == UIImage(named: "Ok-checked") {
+            checkBoxOne.setImage(UIImage(named: "Ok-unchecked"), for: .normal)
             let item = ToDo(title: textFieldOne.text!, completed: false)
             let itemDict = item.asDictionary
             itemOneDatabaseRef.setValue(itemDict)
             userDefault.setValue(false, forKey: "item one completed")
         } else {
-            checkBoxOne.setImage(UIImage(named: "checked"), for: .normal)
+            checkBoxOne.setImage(UIImage(named: "Ok-checked"), for: .normal)
             let item = ToDo(title: textFieldOne.text!, completed: true)
             let itemDict = item.asDictionary
             itemOneDatabaseRef.setValue(itemDict)
@@ -207,14 +210,14 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     func checkOffItemTwo() {
         let itemTwoDatabaseRef = self.database.child("2")
-        if checkBoxTwo.image(for: .normal) == UIImage(named: "checked") {
-            checkBoxTwo.setImage(UIImage(named: "unchecked"), for: .normal)
+        if checkBoxTwo.image(for: .normal) == UIImage(named: "Ok-checked") {
+            checkBoxTwo.setImage(UIImage(named: "Ok-unchecked"), for: .normal)
             let item = ToDo(title: textFieldTwo.text!, completed: false)
             let itemDict = item.asDictionary
             itemTwoDatabaseRef.setValue(itemDict)
             userDefault.setValue(false, forKey: "item two completed")
         } else {
-            checkBoxTwo.setImage(UIImage(named: "checked"), for: .normal)
+            checkBoxTwo.setImage(UIImage(named: "Ok-checked"), for: .normal)
             let item = ToDo(title: textFieldTwo.text!, completed: true)
             let itemDict = item.asDictionary
             itemTwoDatabaseRef.setValue(itemDict)
@@ -224,14 +227,14 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     func checkOffItemThree() {
         let itemThreeDatabaseRef = self.database.child("3")
-        if checkBoxThree.image(for: .normal) == UIImage(named: "checked") {
-            checkBoxThree.setImage(UIImage(named: "unchecked"), for: .normal)
+        if checkBoxThree.image(for: .normal) == UIImage(named: "Ok-checked") {
+            checkBoxThree.setImage(UIImage(named: "Ok-unchecked"), for: .normal)
             let item = ToDo(title: textFieldThree.text!, completed: false)
             let itemDict = item.asDictionary
             itemThreeDatabaseRef.setValue(itemDict)
             userDefault.setValue(false, forKey: "item three completed")
         } else {
-            checkBoxThree.setImage(UIImage(named: "checked"), for: .normal)
+            checkBoxThree.setImage(UIImage(named: "Ok-checked"), for: .normal)
             let item = ToDo(title: textFieldThree.text!, completed: true)
             let itemDict = item.asDictionary
             itemThreeDatabaseRef.setValue(itemDict)
@@ -248,9 +251,9 @@ class ToDoView: UIView, UITextFieldDelegate {
             let isCompleted = userDefault.object(forKey: "item one completed") as! Bool
             dump("user default: \(userDefault.object(forKey: "item one completed") as! Bool)")
             if isCompleted {
-                checkBoxOne.setImage(UIImage(named:"checked"), for: .normal)
+                checkBoxOne.setImage(UIImage(named:"Ok-checked"), for: .normal)
             } else {
-                checkBoxOne.setImage(UIImage(named:"unchecked"), for: .normal)
+                checkBoxOne.setImage(UIImage(named:"Ok-unchecked"), for: .normal)
             }
         }
         
@@ -262,9 +265,9 @@ class ToDoView: UIView, UITextFieldDelegate {
             let isCompleted = userDefault.object(forKey: "item two completed") as! Bool
             dump("user default: \(userDefault.object(forKey: "item two completed") as! Bool)")
             if isCompleted {
-                checkBoxTwo.setImage(UIImage(named:"checked"), for: .normal)
+                checkBoxTwo.setImage(UIImage(named:"Ok-checked"), for: .normal)
             } else {
-                checkBoxTwo.setImage(UIImage(named:"unchecked"), for: .normal)
+                checkBoxTwo.setImage(UIImage(named:"Ok-unchecked"), for: .normal)
             }
         }
         
@@ -277,9 +280,9 @@ class ToDoView: UIView, UITextFieldDelegate {
             let isCompleted = userDefault.object(forKey: "item three completed") as! Bool
             dump("user default: \(userDefault.object(forKey: "item three completed") as! Bool)")
             if isCompleted {
-                checkBoxThree.setImage(UIImage(named:"checked"), for: .normal)
+                checkBoxThree.setImage(UIImage(named:"Ok-checked"), for: .normal)
             } else {
-                checkBoxThree.setImage(UIImage(named:"unchecked"), for: .normal)
+                checkBoxThree.setImage(UIImage(named:"Ok-unchecked"), for: .normal)
             }
         }
     }
@@ -307,21 +310,21 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     lazy var doneButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(named: "Ok-104")
+        let image = UIImage(named: "Ok-50")
         button.setImage(image, for: .normal)
         return button
     }()
     
     lazy var cancelButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(named: "Cancel-104")
+        let image = UIImage(named: "Cancel-50")
         button.setImage(image, for: .normal)
         return button
     }()
     
     lazy var textFieldOne: UITextField = {
         let field = UITextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-        field.backgroundColor = ColorPalette.whiteColor
+        field.backgroundColor = .clear//ColorPalette.whiteColor
         field.autocorrectionType = .yes
         field.keyboardType = .default
         field.returnKeyType = .done
@@ -329,14 +332,14 @@ class ToDoView: UIView, UITextFieldDelegate {
         field.contentVerticalAlignment = .center
         field.layer.cornerRadius = 9
         field.tag = 1
-        field.font = UIFont(name: "Code-Pro-Demo", size: 20)
+        field.font = UIFont(name: "Code-Pro-Demo", size: 22)
         field.placeholder = "To Do"
         return field
     }()
     
     lazy var textFieldTwo: UITextField = {
         let field = UITextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-        field.backgroundColor = ColorPalette.whiteColor
+        field.backgroundColor = .clear//ColorPalette.whiteColor
         field.autocorrectionType = .yes
         field.keyboardType = .default
         field.returnKeyType = .done
@@ -344,14 +347,14 @@ class ToDoView: UIView, UITextFieldDelegate {
         field.contentVerticalAlignment = .center
         field.layer.cornerRadius = 9
         field.tag = 2
-        field.font = UIFont(name: "Code-Pro-Demo", size: 20)
+        field.font = UIFont(name: "Code-Pro-Demo", size: 22)
         field.placeholder = "To Do"
         return field
     }()
     
     lazy var textFieldThree: UITextField = {
         let field = UITextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-        field.backgroundColor = ColorPalette.whiteColor
+        field.backgroundColor = .clear//ColorPalette.whiteColor
         field.autocorrectionType = .yes
         field.keyboardType = .default
         field.returnKeyType = .done
@@ -359,29 +362,26 @@ class ToDoView: UIView, UITextFieldDelegate {
         field.contentVerticalAlignment = .center
         field.layer.cornerRadius = 9
         field.tag = 3
-        field.font = UIFont(name: "Code-Pro-Demo", size: 20)
+        field.font = UIFont(name: "Code-Pro-Demo", size: 22)
         field.placeholder = "To Do"
         return field
     }()
     
     lazy var checkBoxOne: UIButton = {
         let button = UIButton()
-        button.layer.cornerRadius = 5
-        button.setImage(UIImage(named:"unchecked"), for: .normal)
+        button.setImage(UIImage(named:"Ok-unchecked"), for: .normal)
         return button
     }()
     
     lazy var checkBoxTwo: UIButton = {
         let button = UIButton()
-        button.layer.cornerRadius = 5
-        button.setImage(UIImage(named:"unchecked"), for: .normal)
+        button.setImage(UIImage(named:"Ok-unchecked"), for: .normal)
         return button
     }()
     
     lazy var checkBoxThree: UIButton = {
         let button = UIButton()
-        button.layer.cornerRadius = 5
-        button.setImage(UIImage(named:"unchecked"), for: .normal)
+        button.setImage(UIImage(named:"Ok-unchecked"), for: .normal)
         return button
     }()
     
