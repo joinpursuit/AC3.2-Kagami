@@ -192,53 +192,26 @@ class ToDoView: UIView, UITextFieldDelegate {
     }
     
     func checkOffItemOne() {
-        let itemOneDatabaseRef = self.database.child("1")
         if checkBoxOne.image(for: .normal) == UIImage(named: "Ok-checked") {
             checkBoxOne.setImage(UIImage(named: "Ok-unchecked"), for: .normal)
-            let item = ToDo(title: textFieldOne.text!, completed: false)
-            let itemDict = item.asDictionary
-            itemOneDatabaseRef.setValue(itemDict)
-            userDefault.setValue(false, forKey: "item one completed")
         } else {
             checkBoxOne.setImage(UIImage(named: "Ok-checked"), for: .normal)
-            let item = ToDo(title: textFieldOne.text!, completed: true)
-            let itemDict = item.asDictionary
-            itemOneDatabaseRef.setValue(itemDict)
-            userDefault.setValue(true, forKey: "item one completed")
         }
     }
     
     func checkOffItemTwo() {
-        let itemTwoDatabaseRef = self.database.child("2")
         if checkBoxTwo.image(for: .normal) == UIImage(named: "Ok-checked") {
             checkBoxTwo.setImage(UIImage(named: "Ok-unchecked"), for: .normal)
-            let item = ToDo(title: textFieldTwo.text!, completed: false)
-            let itemDict = item.asDictionary
-            itemTwoDatabaseRef.setValue(itemDict)
-            userDefault.setValue(false, forKey: "item two completed")
         } else {
             checkBoxTwo.setImage(UIImage(named: "Ok-checked"), for: .normal)
-            let item = ToDo(title: textFieldTwo.text!, completed: true)
-            let itemDict = item.asDictionary
-            itemTwoDatabaseRef.setValue(itemDict)
-            userDefault.setValue(true, forKey: "item two completed")
         }
     }
     
     func checkOffItemThree() {
-        let itemThreeDatabaseRef = self.database.child("3")
         if checkBoxThree.image(for: .normal) == UIImage(named: "Ok-checked") {
             checkBoxThree.setImage(UIImage(named: "Ok-unchecked"), for: .normal)
-            let item = ToDo(title: textFieldThree.text!, completed: false)
-            let itemDict = item.asDictionary
-            itemThreeDatabaseRef.setValue(itemDict)
-            userDefault.setValue(false, forKey: "item three completed")
         } else {
             checkBoxThree.setImage(UIImage(named: "Ok-checked"), for: .normal)
-            let item = ToDo(title: textFieldThree.text!, completed: true)
-            let itemDict = item.asDictionary
-            itemThreeDatabaseRef.setValue(itemDict)
-            userDefault.setValue(true, forKey: "item three completed")
         }
     }
     
@@ -327,7 +300,8 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     lazy var textFieldOne: UITextField = {
         let field = UITextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-        field.backgroundColor = .clear//ColorPalette.whiteColor
+        field.backgroundColor = .clear
+        field.textColor = ColorPalette.whiteColor
         field.autocorrectionType = .yes
         field.keyboardType = .default
         field.returnKeyType = .done
@@ -342,7 +316,8 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     lazy var textFieldTwo: UITextField = {
         let field = UITextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-        field.backgroundColor = .clear//ColorPalette.whiteColor
+        field.backgroundColor = .clear
+        field.textColor = ColorPalette.whiteColor
         field.autocorrectionType = .yes
         field.keyboardType = .default
         field.returnKeyType = .done
@@ -357,7 +332,8 @@ class ToDoView: UIView, UITextFieldDelegate {
     
     lazy var textFieldThree: UITextField = {
         let field = UITextField(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-        field.backgroundColor = .clear//ColorPalette.whiteColor
+        field.backgroundColor = .clear
+        field.textColor = ColorPalette.whiteColor
         field.autocorrectionType = .yes
         field.keyboardType = .default
         field.returnKeyType = .done
