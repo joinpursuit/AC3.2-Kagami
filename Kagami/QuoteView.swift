@@ -77,7 +77,7 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
             label.right.equalTo(self).inset(8)
         }
         authorLabel.snp.makeConstraints { (label) in
-            label.top.equalTo(quoteLabel.snp.bottom).offset(10)
+            label.top.equalTo(quoteLabel.snp.bottom).offset(5)
             label.right.equalTo(self.snp.right).inset(20)
         }
         collectionView.snp.makeConstraints { (view) in
@@ -141,9 +141,7 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
                 DispatchQueue.main.async {
                     self.quote = quoteObject
                     self.quoteLabel.text = self.quote?.quote
-                    self.database.child("fullQuote").setValue(self.quote?.quote)
                     self.authorLabel.text = self.quote?.author
-                    self.database.child("author").setValue(self.quote?.author)
                 }
             }
         })
@@ -167,7 +165,7 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
     
     lazy var quoteLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Code-Pro-Demo", size: 25)
+        label.font = UIFont(name: "Code-Pro-Demo", size: 20)
         label.textColor = ColorPalette.whiteColor
         label.text = "Motivational quote here"
         label.lineBreakMode = NSLineBreakMode.byWordWrapping
@@ -177,7 +175,7 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
     
     lazy var authorLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Code-Pro-Demo", size: 18)
+        label.font = UIFont(name: "Code-Pro-Demo", size: 14)
         label.textColor = ColorPalette.whiteColor
         label.text = "By..."
         return label
