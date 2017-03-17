@@ -151,6 +151,7 @@ class WeatherView: UIView, UISearchBarDelegate {
             isFahrenheit = true
         } else {
             defaultZipcode = userDefault.object(forKey: "zipcode") as? String
+
             isFahrenheit = userDefault.object(forKey: "fahrenheit") as? Bool
             if isFahrenheit! {
                 customSegmentControl.move(to: 0)
@@ -289,7 +290,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     lazy var weatherIcon: UIImageView = {
         let image = UIImage(named: "Partly-Cloudy-Day-white")
         let imageView = UIImageView(image: image)
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleToFill
         return imageView
     }()
     

@@ -34,11 +34,11 @@ struct Widget {
         
         var mirrorIcon : UIImage {
             switch self {
-            case .weather: return UIImage(named: "Weather")!
-            case .forecast: return UIImage(named: "Forecast-1")!
-            case .time: return UIImage(named: "Time")!
-            case .todos: return UIImage(named: "To-Dos")!
-            case .quote: return UIImage(named: "Quote-1")!
+            case .weather: return UIImage(named: "Weather-Mirror")!
+            case .forecast: return UIImage(named: "Forecast-Mirror")!
+            case .time: return UIImage(named: "Time-Mirror")!
+            case .todos: return UIImage(named: "To-Dos-Mirror")!
+            case .quote: return UIImage(named: "Quote-Mirror")!
             }
         }
         
@@ -417,27 +417,27 @@ class KagamiViewController: UIViewController {
             let centerOfWidget = self.kagamiView.convert(widgetView.center, from: widgetView.superview)
             
             if kagamiView.bounds.contains(centerOfWidget) {
+                widgetView.subviews[0].alpha = 0.0
                 let animator = UIViewPropertyAnimator(duration: 0.5, curve: .easeOut, animations: {
                     
-                    widgetView.snp.remakeConstraints({ (make) in
-                    make.center.equalTo(centerOfWidget)
-                    make.size.equalTo(widgetView.subviews[1])
-                    })
                     
-                    widgetView.subviews[0].alpha = 0.0
+                    widgetView.snp.remakeConstraints({ (make) in
+                        make.center.equalTo(centerOfWidget)
+                        make.size.equalTo(widgetView.subviews[1])
+                    })
                     widgetView.subviews[1].alpha = 1.0
                 })
                 animator.startAnimation()
                 
             } else {
+                widgetView.subviews[0].alpha = 1.0
                 let animator = UIViewPropertyAnimator(duration: 1.0, curve: .easeOut, animations: {
                     
+
                     widgetView.snp.remakeConstraints({ (make) in
                         make.center.equalTo(centerOfWidget)
                         make.height.width.equalTo(50.0)
                     })
-
-                widgetView.subviews[0].alpha = 1.0
                 widgetView.subviews[1].alpha = 0.0
             })
                 animator.startAnimation()
