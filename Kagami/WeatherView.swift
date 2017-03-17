@@ -289,7 +289,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     lazy var weatherIcon: UIImageView = {
         let image = UIImage(named: "Partly-Cloudy-Day-white")
         let imageView = UIImageView(image: image)
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     

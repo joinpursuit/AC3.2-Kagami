@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "Time.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Forecast.png",
       "scale" : "2x"
     },
     {

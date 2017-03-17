@@ -25,7 +25,7 @@ struct Widget {
         var dockIcon : UIImage {
             switch self {
             case .weather: return UIImage(named: "cloud")!
-            case .forecast: return UIImage(named: "Forecast")!
+            case .forecast: return UIImage(named: "Forecast-1")!
             case .time: return UIImage(named: "clock")!
             case .todos: return UIImage(named: "checklist")!
             case .quote: return UIImage(named: "quote")!
@@ -34,11 +34,11 @@ struct Widget {
         
         var mirrorIcon : UIImage {
             switch self {
-            case .weather: return UIImage(named: "Flash_Logo_01")!
-            case .forecast: return UIImage(named: "Flash_Logo_01")!
-            case .time: return UIImage(named: "Flash_Logo_01")!
-            case .todos: return UIImage(named: "Flash_Logo_01")!
-            case .quote: return UIImage(named: "Flash_Logo_01")!
+            case .weather: return UIImage(named: "Weather")!
+            case .forecast: return UIImage(named: "Forecast")!
+            case .time: return UIImage(named: "Time")!
+            case .todos: return UIImage(named: "To-Dos")!
+            case .quote: return UIImage(named: "Quote-1")!
             }
         }
         
@@ -182,6 +182,7 @@ class KagamiViewController: UIViewController {
             })
             
             widget.mirrorView.alpha = 0.0
+            widget.mirrorView.contentMode = .scaleAspectFit
             widgetView.alpha = 0.8
             widgetView.tag = widget.category.rawValue
             widgetView.accessibilityIdentifier = widget.category.description
@@ -203,7 +204,7 @@ class KagamiViewController: UIViewController {
                     widgetView.subviews[1].alpha = 1.0
                     widgetView.snp.makeConstraints({ (make) in
                         make.center.equalTo(CGPoint(x: x, y: y))
-                        make.height.width.equalTo(50.0)
+                        make.size.equalTo(widgetView.subviews[1])
                     })
                 }
                 else {
@@ -367,6 +368,7 @@ class KagamiViewController: UIViewController {
     
     func wasDragged(_ gesture: UIPanGestureRecognizer) {
         let widgetView = gesture.view!
+        widgetBeingEdited = widgetView
         let translation = gesture.translation(in: self.view)
         let view = gesture.view!
 
@@ -377,35 +379,35 @@ class KagamiViewController: UIViewController {
       
       
         if gesture.state == .began {
-          for widget in widgetArray {
-            let widgetDict = userDefault.dictionary(forKey:view.accessibilityIdentifier!)
-            if widgetDict != nil {
-              if widgetDict?["onMirror"] as! Bool == true {
-                let x = widgetDict?["x"] as! CGFloat
-                let y = widgetDict?["y"] as! CGFloat
-                
-                view.snp.remakeConstraints({ (make) in
-                  make.center.equalTo(CGPoint(x:x, y:y))
-                  make.height.width.equalTo(55)
-                })
-              }
-              else {
-                if widgetDict?["onMirror"] as! Bool == false {
-                  view.snp.remakeConstraints({ (make) in
-                    make.leading.equalToSuperview().offset((view.tag * 50) + (8 * view.tag) + 8)
-                    make.bottom.equalToSuperview().offset(-5)
-                    make.height.width.equalTo(55)
-                  })
-                }
-              }
-            }
-            
-            else {
-              view.snp.remakeConstraints({ (make) in
-                make.bottom.equalToSuperview().offset((view.tag * 50) + (8 * view.tag) + 8)
-              })
-            }
-          }
+//          for widget in widgetArray {
+//            let widgetDict = userDefault.dictionary(forKey:view.accessibilityIdentifier!)
+//            if widgetDict != nil {
+//              if widgetDict?["onMirror"] as! Bool == true {
+//                let x = widgetDict?["x"] as! CGFloat
+//                let y = widgetDict?["y"] as! CGFloat
+//                
+//                view.snp.remakeConstraints({ (make) in
+//                  make.center.equalTo(CGPoint(x:x, y:y))
+//                  make.height.width.equalTo(55)
+//                })
+//              }
+//              else {
+//                if widgetDict?["onMirror"] as! Bool == false {
+//                  view.snp.remakeConstraints({ (make) in
+//                    make.leading.equalToSuperview().offset((view.tag * 50) + (8 * view.tag) + 8)
+//                    make.bottom.equalToSuperview().offset(-5)
+//                    make.height.width.equalTo(55)
+//                  })
+//                }
+//              }
+//            }
+//            
+//            else {
+//              view.snp.remakeConstraints({ (make) in
+//                make.bottom.equalToSuperview().offset((view.tag * 50) + (8 * view.tag) + 8)
+//              })
+//            }
+//          }
             dump("Parent View \(self.view.subviews.count)")
             dump("Kagami View \(self.kagamiView.subviews.count)")
             dump(widgetView)
@@ -416,6 +418,12 @@ class KagamiViewController: UIViewController {
             
             if kagamiView.bounds.contains(centerOfWidget) {
                 let animator = UIViewPropertyAnimator(duration: 0.5, curve: .easeOut, animations: {
+                    
+                    widgetView.snp.remakeConstraints({ (make) in
+                    make.center.equalTo(centerOfWidget)
+                    make.size.equalTo(widgetView.subviews[1])
+                    })
+                    
                     widgetView.subviews[0].alpha = 0.0
                     widgetView.subviews[1].alpha = 1.0
                 })
@@ -423,6 +431,12 @@ class KagamiViewController: UIViewController {
                 
             } else {
                 let animator = UIViewPropertyAnimator(duration: 1.0, curve: .easeOut, animations: {
+                    
+                    widgetView.snp.remakeConstraints({ (make) in
+                        make.center.equalTo(centerOfWidget)
+                        make.height.width.equalTo(50.0)
+                    })
+
                 widgetView.subviews[0].alpha = 1.0
                 widgetView.subviews[1].alpha = 0.0
             })
@@ -438,7 +452,7 @@ class KagamiViewController: UIViewController {
                 // self.kagamiView.addSubview(widgetView)
                 widgetView.snp.remakeConstraints({ (make) in
                     make.center.equalTo(centerOfWidget)
-                    make.height.width.equalTo(50.0)
+                    make.size.equalTo(widgetView.subviews[1])
                 })
                 self.view.layoutSubviews()
                 userDefault.set(["onMirror" : true, "x" : centerOfWidget.x, "y" : centerOfWidget.y], forKey: widgetView.accessibilityIdentifier!)
