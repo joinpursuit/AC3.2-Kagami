@@ -184,6 +184,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         print("did begin")
         isSearchActive = true
+        searchBar.showsCancelButton = true
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
@@ -350,6 +351,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         bar.layer.borderWidth = 1
         bar.layer.borderColor = UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor
         bar.searchBarStyle = UISearchBarStyle.default
+        bar.clipsToBounds = true
         return bar
     }()
     
