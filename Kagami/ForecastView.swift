@@ -197,19 +197,21 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     // MARK: - Search Bar
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        isSearchActive = true
         print("did begin")
+        isSearchActive = true
+        searchBar.showsCancelButton = true
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         isSearchActive = false
         print("did end")
-        self.endEditing(true)
+        self.searchBar.setShowsCancelButton(false, animated: true)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         print("did cancel")
         isSearchActive = false
+        self.endEditing(true)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -246,11 +248,13 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     lazy var searchBar: UISearchBar = {
         let bar = UISearchBar()
         bar.placeholder = "SEARCH BY ZIPCODE"
-                bar.tintColor = UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0)
+        bar.tintColor = ColorPalette.whiteColor
         bar.barTintColor = UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0)
         bar.layer.borderWidth = 1
         bar.layer.borderColor = UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor
         bar.searchBarStyle = UISearchBarStyle.default
+        bar.isUserInteractionEnabled = true
+        bar.clipsToBounds = true
         return bar
     }()
     
