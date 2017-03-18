@@ -77,11 +77,11 @@ class KagamiViewController: UIViewController {
     // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-      
+        
         self.title = "鏡"
         mirrorAnimationView.play()
         propertyAnimator = UIViewPropertyAnimator(duration: 0.75, dampingRatio: 0.77, animations: nil)
-      
+        
         setupViewHierarchy()
         
         ref = FIRDatabase.database().reference()
@@ -151,11 +151,11 @@ class KagamiViewController: UIViewController {
             make.top.left.right.equalToSuperview()
             make.bottom.equalTo(iconContainerView.snp.top)
         })
-      
+        
         mirrorAnimationView.snp.makeConstraints { (make) in
-          make.top.left.right.equalToSuperview()
-          make.bottom.equalTo(iconContainerView.snp.top)
-      }
+            make.top.left.right.equalToSuperview()
+            make.bottom.equalTo(iconContainerView.snp.top)
+        }
         
         // widget dock
         iconContainerView.snp.makeConstraints { (make) in
@@ -240,19 +240,19 @@ class KagamiViewController: UIViewController {
         timeView.snp.makeConstraints { (make) in
             make.center.equalTo(widgetArray[2].widgetView)
             make.size.equalTo(0.1)
-
+            
         }
         
         toDoView.snp.makeConstraints { (make) in
             make.center.equalTo(widgetArray[3].widgetView)
             make.size.equalTo(0.1)
-
+            
         }
         
         quoteView.snp.makeConstraints { (make) in
             make.center.equalTo(widgetArray[4].widgetView)
             make.size.equalTo(0.1)
-
+            
         }
     }
     
@@ -276,7 +276,7 @@ class KagamiViewController: UIViewController {
     }
     
     func wasTapped(_ gesture: UITapGestureRecognizer) {
-
+        
         let view = gesture.view!
         
         if gesture.state == .ended {
@@ -371,55 +371,58 @@ class KagamiViewController: UIViewController {
         widgetBeingEdited = widgetView
         let translation = gesture.translation(in: self.view)
         let view = gesture.view!
-
+        
         widgetView.center = CGPoint(x: widgetView.center.x + translation.x , y: widgetView.center.y + translation.y)
         gesture.setTranslation(CGPoint.zero, in: self.view)
         
         //TODO: - MATH -- min > kagami.min && max < kagami.max
-      
-      
+        
+        let topLeft = self.kagamiView.convert(CGPoint(x: widgetView.frame.minX, y: widgetView.frame.minY), to: widgetView.superview)
+        let topRight = self.kagamiView.convert(CGPoint(x: widgetView.frame.minX, y: widgetView.frame.minY), to: widgetView.superview)
+        let bottomRight = self.kagamiView.convert(CGPoint(x: widgetView.frame.minX, y: widgetView.frame.minY), to: widgetView.superview)
+        let bottomLeft = self.kagamiView.convert(CGPoint(x: widgetView.frame.minX, y: widgetView.frame.minY), to: widgetView.superview)
+        
         if gesture.state == .began {
-//          for widget in widgetArray {
-//            let widgetDict = userDefault.dictionary(forKey:view.accessibilityIdentifier!)
-//            if widgetDict != nil {
-//              if widgetDict?["onMirror"] as! Bool == true {
-//                let x = widgetDict?["x"] as! CGFloat
-//                let y = widgetDict?["y"] as! CGFloat
-//                
-//                view.snp.remakeConstraints({ (make) in
-//                  make.center.equalTo(CGPoint(x:x, y:y))
-//                  make.height.width.equalTo(55)
-//                })
-//              }
-//              else {
-//                if widgetDict?["onMirror"] as! Bool == false {
-//                  view.snp.remakeConstraints({ (make) in
-//                    make.leading.equalToSuperview().offset((view.tag * 50) + (8 * view.tag) + 8)
-//                    make.bottom.equalToSuperview().offset(-5)
-//                    make.height.width.equalTo(55)
-//                  })
-//                }
-//              }
-//            }
-//            
-//            else {
-//              view.snp.remakeConstraints({ (make) in
-//                make.bottom.equalToSuperview().offset((view.tag * 50) + (8 * view.tag) + 8)
-//              })
-//            }
-//          }
+            //          for widget in widgetArray {
+            //            let widgetDict = userDefault.dictionary(forKey:view.accessibilityIdentifier!)
+            //            if widgetDict != nil {
+            //              if widgetDict?["onMirror"] as! Bool == true {
+            //                let x = widgetDict?["x"] as! CGFloat
+            //                let y = widgetDict?["y"] as! CGFloat
+            //
+            //                view.snp.remakeConstraints({ (make) in
+            //                  make.center.equalTo(CGPoint(x:x, y:y))
+            //                  make.height.width.equalTo(55)
+            //                })
+            //              }
+            //              else {
+            //                if widgetDict?["onMirror"] as! Bool == false {
+            //                  view.snp.remakeConstraints({ (make) in
+            //                    make.leading.equalToSuperview().offset((view.tag * 50) + (8 * view.tag) + 8)
+            //                    make.bottom.equalToSuperview().offset(-5)
+            //                    make.height.width.equalTo(55)
+            //                  })
+            //                }
+            //              }
+            //            }
+            //
+            //            else {
+            //              view.snp.remakeConstraints({ (make) in
+            //                make.bottom.equalToSuperview().offset((view.tag * 50) + (8 * view.tag) + 8)
+            //              })
+            //            }
+            //          }
             dump("Parent View \(self.view.subviews.count)")
             dump("Kagami View \(self.kagamiView.subviews.count)")
             dump(widgetView)
         }
-      
+        
         if gesture.state == .changed {
             let centerOfWidget = self.kagamiView.convert(widgetView.center, from: widgetView.superview)
             
             if kagamiView.bounds.contains(centerOfWidget) {
                 widgetView.subviews[0].alpha = 0.0
-                let animator = UIViewPropertyAnimator(duration: 0.5, curve: .easeOut, animations: {
-                    
+                let animator = UIViewPropertyAnimator(duration: 0.5, curve: .easeIn, animations: {
                     
                     widgetView.snp.remakeConstraints({ (make) in
                         make.center.equalTo(centerOfWidget)
@@ -429,17 +432,18 @@ class KagamiViewController: UIViewController {
                 })
                 animator.startAnimation()
                 
-            } else {
-                widgetView.subviews[0].alpha = 1.0
-                let animator = UIViewPropertyAnimator(duration: 1.0, curve: .easeOut, animations: {
+            }
+            else {
+                let animator = UIViewPropertyAnimator(duration: 1.0, curve: .easeIn, animations: {
                     
-
+                    
                     widgetView.snp.remakeConstraints({ (make) in
                         make.center.equalTo(centerOfWidget)
                         make.height.width.equalTo(50.0)
                     })
-                widgetView.subviews[1].alpha = 0.0
-            })
+                    widgetView.subviews[0].alpha = 1.0
+                    widgetView.subviews[1].alpha = 0.0
+                })
                 animator.startAnimation()
             }
         }
@@ -448,15 +452,23 @@ class KagamiViewController: UIViewController {
             
             let centerOfWidget = self.kagamiView.convert(widgetView.center, from: widgetView.superview)
             
-            if kagamiView.bounds.contains(centerOfWidget) {
+            if kagamiView.bounds.minX < widgetView.frame.minX &&
+                kagamiView.bounds.maxX > widgetView.frame.maxX &&
+                kagamiView.bounds.minY < widgetView.frame.minY &&
+                kagamiView.bounds.maxY > widgetView.frame.maxY {
+//            if kagamiView.bounds.contains(topLeft) &&
+//                kagamiView.bounds.contains(topRight) &&
+//                kagamiView.bounds.contains(bottomRight) &&
+//                kagamiView.bounds.contains(bottomLeft) {
                 // self.kagamiView.addSubview(widgetView)
                 widgetView.snp.remakeConstraints({ (make) in
                     make.center.equalTo(centerOfWidget)
                     make.size.equalTo(widgetView.subviews[1])
                 })
+                
                 self.view.layoutSubviews()
                 userDefault.set(["onMirror" : true, "x" : centerOfWidget.x, "y" : centerOfWidget.y], forKey: widgetView.accessibilityIdentifier!)
-               
+                
             }
             else {
                 widgetView.snp.remakeConstraints  { (make) in
@@ -464,7 +476,13 @@ class KagamiViewController: UIViewController {
                     make.width.height.equalTo(50.0)
                     make.leading.equalTo(iconContainerView.snp.leading).offset((widgetView.tag * 50) + (8 * widgetView.tag) + 8)
                 }
-                dump("Center of \(widgetView.accessibilityIdentifier!) is \(centerOfWidget)")
+                
+                let animator = UIViewPropertyAnimator(duration: 1.0, curve: .easeIn, animations: {
+                    widgetView.subviews[0].alpha = 1.0
+                    widgetView.subviews[1].alpha = 0.0
+                })
+                animator.startAnimation()
+
                 self.view.layoutSubviews()
                 userDefault.set(["onMirror" : false, "x" : centerOfWidget.x, "y" : centerOfWidget.y], forKey: widgetView.accessibilityIdentifier!)
                 ref.child(widgetView.accessibilityIdentifier!).updateChildValues(["onMirror" : false])
@@ -473,7 +491,7 @@ class KagamiViewController: UIViewController {
             for widget in widgetArray {
                 let widgetCenter = self.kagamiView.convert(widget.widgetView.center, from: widgetView.superview)
                 let widgetOrigin = self.kagamiView.convert(CGPoint.init(x: widget.widgetView.frame.minX, y: widget.widgetView.frame.minY), from: widgetView.superview)
-
+                
                 if self.kagamiView.bounds.contains(widgetCenter) {
                     switch widget.category {
                     case .weather:
@@ -629,7 +647,7 @@ class KagamiViewController: UIViewController {
         view.layer.shouldRasterize = true
         return view
     }()
-  
+    
     lazy var weatherView: WeatherView = {
         let view = WeatherView()
         view.layer.opacity = 0.0
@@ -666,12 +684,12 @@ class KagamiViewController: UIViewController {
         view.clipsToBounds = true
         return view
     }()
-  
-    lazy var mirrorAnimationView: LOTAnimationView = {
-      var view: LOTAnimationView = LOTAnimationView(name: "KagamiMirrorAnimation")
-      view.contentMode = .scaleAspectFill
     
-      return view
+    lazy var mirrorAnimationView: LOTAnimationView = {
+        var view: LOTAnimationView = LOTAnimationView(name: "KagamiMirrorAnimation")
+        view.contentMode = .scaleAspectFill
+        
+        return view
     }()
 }
 
