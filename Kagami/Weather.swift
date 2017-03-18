@@ -6,11 +6,15 @@
 //  Copyright © 2017 Eric Chang. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
-struct Weather {
+class Weather: Widgetable {
+    
     var type: String
     var location: String
+    var category: String = "weather"
+    var iconImage: UIImage = #imageLiteral(resourceName: "cloud-icon")
+    var description: String = "weather"
     
     init(type: String, location: String) {
         self.type = type

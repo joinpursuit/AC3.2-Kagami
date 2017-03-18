@@ -40,7 +40,6 @@ class WeatherView: UIView, UISearchBarDelegate {
     }
     
     // MARK: - Set up Hierarchy & Constraints
-    
     func setupHierarchy() {
         self.addSubview(searchBar)
         self.addSubview(degreeLabel)
@@ -55,6 +54,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         self.addSubview(headerImage)
         self.addSubview(segmentView)
         segmentView.addSubview(customSegmentControl)
+        
         doneButton.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
     }
@@ -143,7 +143,9 @@ class WeatherView: UIView, UISearchBarDelegate {
         if userDefault.object(forKey: "zipcode") == nil, userDefault.object(forKey: "fahrenheit") == nil {
             defaultZipcode = "10014"
             isFahrenheit = true
-        } else {
+        }
+        
+        else {
             defaultZipcode = userDefault.object(forKey: "zipcode") as? String
             dump("loading user default: \(userDefault.object(forKey: "zipcode") as! String)")
             isFahrenheit = userDefault.object(forKey: "fahrenheit") as? Bool
