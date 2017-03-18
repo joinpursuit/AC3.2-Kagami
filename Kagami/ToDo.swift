@@ -13,7 +13,7 @@ class ToDo: Widgetable {
     var title: String
     var completed: Bool
     var category: String = "toDo"
-    var iconImage: UIImage = #imageLiteral(resourceName: "checklist-icon")
+    var iconImage: UIImage = #imageLiteral(resourceName: "checklist")
     var description: String = "toDo"
     
     init(title: String, completed: Bool) {

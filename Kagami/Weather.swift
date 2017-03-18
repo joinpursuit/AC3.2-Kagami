@@ -13,7 +13,7 @@ class Weather: Widgetable {
     var type: String
     var location: String
     var category: String = "weather"
-    var iconImage: UIImage = #imageLiteral(resourceName: "cloud-icon")
+    var iconImage: UIImage = #imageLiteral(resourceName: "cloud")
     var description: String = "weather"
     
     init(type: String, location: String) {
