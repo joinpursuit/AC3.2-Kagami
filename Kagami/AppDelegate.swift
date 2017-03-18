@@ -23,12 +23,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             _ = user!.isAnonymous
             _ = user!.uid
         }
-        
+      
+      let userDefaults = UserDefaults.standard
+      let didViewTour = userDefaults.bool(forKey: "didViewTour")
+      
+      if didViewTour == false {
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = KagamiViewController()
-        window?.makeKeyAndVisible()
-        
-        return true
+        let rootVC = WalkthroughViewController()
+        self.window?.rootViewController = rootVC
+        self.window?.makeKeyAndVisible()
+      }
+      else {
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let rootVC = KagamiViewController()
+        self.window?.rootViewController = rootVC
+        self.window?.makeKeyAndVisible()
+      }
+      return true
+      
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
