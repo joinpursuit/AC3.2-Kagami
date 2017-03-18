@@ -15,9 +15,13 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     
     var isSearchActive: Bool = false
     var database: FIRDatabaseReference!
-    let userDefault = UserDefaults.standard
     var forecast: [Forecast] = []
     var gradientLayer: CAGradientLayer!
+    let userDefault = UserDefaults.standard
+    // default properties
+    var defaultZipcode: String?
+    var isFahrenheit: Bool?
+    var unit = "imperial"
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,20 +37,10 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
         tableView.register(ForecastTableViewCell.self, forCellReuseIdentifier: ForecastTableViewCell.identifier)
         searchBar.delegate = self
         loadUserDefaults()
-        
     }
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
-    }
-    
-    func createGradientLayer() {
-        gradientLayer = CAGradientLayer()
-        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 650))
-        gradientLayer.frame = view.bounds
-        gradientLayer.colors = [UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor, UIColor(red:0.93, green:0.95, blue:0.95, alpha:1.0).cgColor]
-        gradientLayer.locations = [0.0 , 1.0]
-        self.layer.addSublayer(gradientLayer)
     }
     
     // MARK: - Set up Hierarchy & Constraints
@@ -106,7 +100,12 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     // MARK: - Methods
     
     func addToMirror() {
-        print("adding to mirror")
+        self.userDefault.setValue(self.defaultZipcode, forKey: "location")
+        if customSegmentControl.selectedSegmentIndex == 0 {
+            self.userDefault.setValue(true, forKey: "fahrenheit")
+        } else {
+            self.userDefault.setValue(false, forKey: "fahrenheit")
+        }
     }
     
     func cancelTapped() {
@@ -114,54 +113,63 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     }
     
     func getAPIResultsForFahrenheit() {
-        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/forecast/daily?zip=\(searchBar.text!)&appid=93163a043d0bde0df1a79f0fdebc744f&cnt=5&units=imperial") { (data: Data?) in
+        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/forecast/daily?zip=\(defaultZipcode!)&appid=93163a043d0bde0df1a79f0fdebc744f&cnt=5&units=imperial") { (data: Data?) in
             guard let validData = data else { return }
             if let forecastObject = Forecast.parseForecast(from: validData) {
                 self.forecast = forecastObject
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
-                dump(self.forecast)
             }
         }
     }
     
     func getAPIResultsForCelsius() {
-        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/forecast/daily?zip=\(searchBar.text!)&appid=93163a043d0bde0df1a79f0fdebc744f&cnt=5&units=metric") { (data: Data?) in
+        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/forecast/daily?zip=\(defaultZipcode!)&appid=93163a043d0bde0df1a79f0fdebc744f&cnt=5&units=metric") { (data: Data?) in
             guard let validData = data else { return }
             if let forecastObject = Forecast.parseForecast(from: validData) {
                 self.forecast = forecastObject
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
-                dump(self.forecast)
             }
         }
     }
     
     func loadUserDefaults() {
-        if userDefault.object(forKey: "fahrenheit") != nil {
-            let isFahrenheit = userDefault.object(forKey: "fahrenheit") as! Bool
-            if isFahrenheit {
+        
+        if userDefault.object(forKey: "fahrenheit") == nil, userDefault.object(forKey: "location") == nil {
+            defaultZipcode = "10014"
+            isFahrenheit = true
+        } else {
+            defaultZipcode = userDefault.object(forKey: "location") as? String
+            isFahrenheit = userDefault.object(forKey: "fahrenheit") as? Bool
+            if isFahrenheit! {
                 customSegmentControl.move(to: 0)
             } else {
                 customSegmentControl.move(to: 1)
+                self.unit = "metric"
             }
         }
-        if userDefault.object(forKey: "location") != nil {
-            let zipcode = userDefault.object(forKey: "location") as? String ?? ""
-            
-            APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/forecast/daily?zip=\(zipcode)&appid=93163a043d0bde0df1a79f0fdebc744f&cnt=5&units=imperial") { (data: Data?) in
-                guard let validData = data else { return }
-                if let forecastObject = Forecast.parseForecast(from: validData) {
-                    self.forecast = forecastObject
-                    dump(self.forecast)
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
+        
+        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/forecast/daily?zip=\(defaultZipcode!)&appid=93163a043d0bde0df1a79f0fdebc744f&cnt=5&units=\(self.unit)") { (data: Data?) in
+            guard let validData = data else { return }
+            if let forecastObject = Forecast.parseForecast(from: validData) {
+                self.forecast = forecastObject
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
                 }
             }
         }
+    }
+    
+    func createGradientLayer() {
+        gradientLayer = CAGradientLayer()
+        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 650))
+        gradientLayer.frame = view.bounds
+        gradientLayer.colors = [UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor, UIColor(red:0.93, green:0.95, blue:0.95, alpha:1.0).cgColor]
+        gradientLayer.locations = [0.0 , 1.0]
+        self.layer.addSublayer(gradientLayer)
     }
     
     // MARK: - TableView
@@ -215,11 +223,16 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        print("searching")
         guard searchBar.text != nil else { return }
+        
+        defaultZipcode = searchBar.text!
         database.child("location").setValue(searchBar.text)
-        userDefault.setValue(searchBar.text, forKey: "location")
-        getAPIResultsForFahrenheit()
+        if customSegmentControl.selectedSegmentIndex == 0 {
+            getAPIResultsForFahrenheit()
+        } else {
+            getAPIResultsForCelsius()
+        }
+        print("sending info to firebase")
         self.endEditing(true)
     }
     
@@ -297,16 +310,9 @@ extension ForecastView: TwicketSegmentedControlDelegate {
     func didSelect(_ segmentIndex: Int) {
         if segmentIndex == 0 {
             database.child("fahrenheit").setValue(true)
-            userDefault.setValue(true, forKey: "fahrenheit")
-            
-            guard searchBar.text != "" else { return }
             getAPIResultsForFahrenheit()
-            
         } else {
             database.child("fahrenheit").setValue(false)
-            userDefault.setValue(false, forKey: "fahrenheit")
-            
-            guard searchBar.text != "" else { return }
             getAPIResultsForCelsius()
         }
     }
