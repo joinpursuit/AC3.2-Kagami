@@ -55,7 +55,6 @@ class Forecast {
                     
                     let forecastObj = Forecast(name: cityName, date: date, min: min, max: max, description: description)
                     forecastObject.append(forecastObj)
-                    dump(forecastObject)
                 }
             }
         }

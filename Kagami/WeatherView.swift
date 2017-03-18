@@ -15,12 +15,13 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     var isSearchActive: Bool = false
     var database: FIRDatabaseReference!
-    let userDefault = UserDefaults.standard
     var weather: DailyWeather?
+    var gradientLayer: CAGradientLayer!
+    let userDefault = UserDefaults.standard
+    // default properties
     var defaultZipcode: String?
     var isFahrenheit: Bool?
     var unit = "imperial"
-    var gradientLayer: CAGradientLayer!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,7 +33,6 @@ class WeatherView: UIView, UISearchBarDelegate {
         setupHierarchy()
         configureConstraints()
         loadUserDefaults()
-        getDefaultAPIResults()
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -46,8 +46,6 @@ class WeatherView: UIView, UISearchBarDelegate {
         self.addSubview(degreeLabel)
         self.addSubview(locationLabel)
         self.addSubview(weatherIcon)
-        self.addSubview(doneButton)
-        self.addSubview(cancelButton)
         self.addSubview(descriptionLabel)
         self.addSubview(lowestTempLabel)
         self.addSubview(minMaxDegreeLabel)
@@ -55,6 +53,8 @@ class WeatherView: UIView, UISearchBarDelegate {
         self.addSubview(headerImage)
         self.addSubview(segmentView)
         segmentView.addSubview(customSegmentControl)
+        self.addSubview(doneButton)
+        self.addSubview(cancelButton)
         doneButton.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
     }
@@ -131,7 +131,12 @@ class WeatherView: UIView, UISearchBarDelegate {
     // MARK: - Methods
     
     func addToMirror() {
-        print("adding to mirror")
+        self.userDefault.setValue(self.defaultZipcode, forKey: "zipcode")
+        if customSegmentControl.selectedSegmentIndex == 0 {
+            self.userDefault.setValue(true, forKey: "fahrenheit")
+        } else {
+            self.userDefault.setValue(false, forKey: "fahrenheit")
+        }
     }
     
     func cancelTapped() {
@@ -145,9 +150,7 @@ class WeatherView: UIView, UISearchBarDelegate {
             isFahrenheit = true
         } else {
             defaultZipcode = userDefault.object(forKey: "zipcode") as? String
-            dump("loading user default: \(userDefault.object(forKey: "zipcode") as! String)")
             isFahrenheit = userDefault.object(forKey: "fahrenheit") as? Bool
-            dump("loading user default: \(userDefault.object(forKey: "fahrenheit") as! Bool)")
             if isFahrenheit! {
                 customSegmentControl.move(to: 0)
             } else {
@@ -156,69 +159,10 @@ class WeatherView: UIView, UISearchBarDelegate {
             }
         }
         
-        APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(self.defaultZipcode!),us&units=\(self.unit)") { (data: Data?) in
-            guard let validData = data else { return }
-            if let weatherObject = DailyWeather.parseWeather(from: validData) {
-                self.weather = weatherObject
-                dump(self.weather)
-                DispatchQueue.main.async {
-                    self.locationLabel.text = self.weather!.name
-                    self.degreeLabel.text = String(describing: self.weather!.temperature)
-                    self.descriptionLabel.text = self.weather!.weatherDescription
-                    self.lowestTempLabel.text = String(describing: self.weather!.minTemp)
-                    self.highestTempLabel.text = String(describing: self.weather!.maxTemp)
-                    self.layoutIfNeeded()
-                }
-            }
-            
-        }
-    }
-    
-    // MARK: - Search Bar Delegate
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        print("did begin")
-        isSearchActive = true
-        searchBar.showsCancelButton = true
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        print("did end")
-        isSearchActive = false
-        self.searchBar.setShowsCancelButton(false, animated: true)
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        print("search")
-        guard searchBar.text != nil else { return }
-        defaultZipcode = searchBar.text!
-        
-        self.database.child("location").setValue(defaultZipcode!)
-        
-        if customSegmentControl.selectedSegmentIndex == 0 {
-            getAPIResultsForFahrenheit()
-        } else {
-            getAPIResultsForCelsius()
-        }
-        print("location setting to firebase and user default")
-        self.endEditing(true)
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        print("cancel")
-        isSearchActive = false
-        self.endEditing(true)
-    }
-    
-    func getDefaultAPIResults() {
         APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(defaultZipcode!),us&units=\(self.unit)") { (data: Data?) in
             guard let validData = data else { return }
-            self.userDefault.setValue(self.defaultZipcode, forKey: "zipcode")
-            self.userDefault.setValue(true, forKey: "fahrenheit")
-            
             if let weatherObject = DailyWeather.parseWeather(from: validData) {
                 self.weather = weatherObject
-                dump(self.weather)
                 DispatchQueue.main.async {
                     self.locationLabel.text = self.weather!.name
                     self.degreeLabel.text = String(describing: self.weather!.temperature)
@@ -234,12 +178,9 @@ class WeatherView: UIView, UISearchBarDelegate {
     func getAPIResultsForFahrenheit() {
         APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(defaultZipcode!),us&units=imperial") { (data: Data?) in
             guard let validData = data else { return }
-            self.userDefault.setValue(self.defaultZipcode, forKey: "zipcode")
-            self.userDefault.setValue(true, forKey: "fahrenheit")
-
+            
             if let weatherObject = DailyWeather.parseWeather(from: validData) {
                 self.weather = weatherObject
-                dump(self.weather)
                 DispatchQueue.main.async {
                     self.locationLabel.text = self.weather!.name
                     self.degreeLabel.text = String(describing: self.weather!.temperature)
@@ -255,12 +196,9 @@ class WeatherView: UIView, UISearchBarDelegate {
     func getAPIResultsForCelsius() {
         APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(defaultZipcode!),us&units=metric") { (data: Data?) in
             guard let validData = data else { return }
-            self.userDefault.setValue(self.defaultZipcode, forKey: "zipcode")
-            self.userDefault.setValue(false, forKey: "fahrenheit")
-
+            
             if let weatherObject = DailyWeather.parseWeather(from: validData) {
                 self.weather = weatherObject
-                dump(self.weather)
                 DispatchQueue.main.async {
                     self.locationLabel.text = self.weather!.name
                     self.degreeLabel.text = String(describing: self.weather!.temperature)
@@ -282,6 +220,42 @@ class WeatherView: UIView, UISearchBarDelegate {
         self.layer.addSublayer(gradientLayer)
     }
     
+    // MARK: - Search Bar Delegate
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        print("did begin")
+        isSearchActive = true
+        searchBar.showsCancelButton = true
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        print("did end")
+        isSearchActive = false
+        self.searchBar.setShowsCancelButton(false, animated: true)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        print("search")
+        guard searchBar.text != nil else { return }
+        defaultZipcode = searchBar.text!
+        
+        self.database.child("zipcode").setValue(defaultZipcode!)
+        
+        if customSegmentControl.selectedSegmentIndex == 0 {
+            getAPIResultsForFahrenheit()
+        } else {
+            getAPIResultsForCelsius()
+        }
+        print("location sending to firebase")
+        self.endEditing(true)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        print("cancel")
+        isSearchActive = false
+        self.endEditing(true)
+    }
+
     // MARK: - Lazy Instances
     
     lazy var weatherIcon: UIImageView = {

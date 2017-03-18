@@ -104,7 +104,6 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
             guard let validData = data else { return }
             if let quoteObject = QuoteOfTheDay.parseQuote(from: validData) {
                 self.quote = quoteObject
-                dump(self.quote)
                 self.quoteLabel.text = self.quote?.quote
                 self.authorLabel.text = self.quote?.author
             }
