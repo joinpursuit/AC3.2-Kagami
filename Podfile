@@ -8,5 +8,8 @@ target 'Kagami' do
   # Pods for Kagami
   pod 'SnapKit', '~> 3.0'
   pod 'Firebase/Core'
-
+  pod 'Firebase/Database'
+  pod 'Firebase/Auth'
+  pod 'TwicketSegmentedControl'
+  pod 'lottie-ios'
 end
