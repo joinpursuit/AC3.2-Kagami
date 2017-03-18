@@ -34,7 +34,7 @@
 		CC723BEC1E77F24300A0DB3D /* KagamiMirrorAnimation.json in Resources */ = {isa = PBXBuildFile; fileRef = CC723BEB1E77F24300A0DB3D /* KagamiMirrorAnimation.json */; };
 		CC9032DF1E71F59D00014276 /* TimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9032DE1E71F59D00014276 /* TimeView.swift */; };
 		CCC18ACD1E7CE02D00AAE1F1 /* WalkthroughViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC18ACC1E7CE02D00AAE1F1 /* WalkthroughViewController.swift */; };
-		CCC18ACF1E7CE17200AAE1F1 /* KagamiWalkthrough.json in Resources */ = {isa = PBXBuildFile; fileRef = CCC18ACE1E7CE17200AAE1F1 /* KagamiWalkthrough.json */; };
+		CCC18AD11E7D0C1A00AAE1F1 /* KagamiWalkthrough.json in Resources */ = {isa = PBXBuildFile; fileRef = CCC18AD01E7D0C1A00AAE1F1 /* KagamiWalkthrough.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,7 +68,7 @@
 		CC723BEB1E77F24300A0DB3D /* KagamiMirrorAnimation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = KagamiMirrorAnimation.json; sourceTree = "<group>"; };
 		CC9032DE1E71F59D00014276 /* TimeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeView.swift; sourceTree = "<group>"; };
 		CCC18ACC1E7CE02D00AAE1F1 /* WalkthroughViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalkthroughViewController.swift; sourceTree = "<group>"; };
-		CCC18ACE1E7CE17200AAE1F1 /* KagamiWalkthrough.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = KagamiWalkthrough.json; sourceTree = "<group>"; };
+		CCC18AD01E7D0C1A00AAE1F1 /* KagamiWalkthrough.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = KagamiWalkthrough.json; sourceTree = "<group>"; };
 		E91726256CD58FA69FD00264 /* Pods-Kagami.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kagami.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Kagami/Pods-Kagami.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -123,7 +123,7 @@
 				9C49BA901E70A9D7001C4780 /* Code_Pro_Demo.otf */,
 				9C49BA911E70A9D7001C4780 /* Code_Pro_Light_Demo.otf */,
 				CC723BEB1E77F24300A0DB3D /* KagamiMirrorAnimation.json */,
-				CCC18ACE1E7CE17200AAE1F1 /* KagamiWalkthrough.json */,
+				CCC18AD01E7D0C1A00AAE1F1 /* KagamiWalkthrough.json */,
 				478B30761E66181500FD580C /* LaunchScreen.storyboard */,
 				478B30791E66181500FD580C /* Info.plist */,
 				9C022C971E67381400AA2802 /* GoogleService-Info.plist */,
@@ -269,7 +269,7 @@
 				9C49BA921E70A9D7001C4780 /* Code_Pro_Demo.otf in Resources */,
 				478B30781E66181500FD580C /* LaunchScreen.storyboard in Resources */,
 				CC723BEC1E77F24300A0DB3D /* KagamiMirrorAnimation.json in Resources */,
-				CCC18ACF1E7CE17200AAE1F1 /* KagamiWalkthrough.json in Resources */,
+				CCC18AD11E7D0C1A00AAE1F1 /* KagamiWalkthrough.json in Resources */,
 				3E1C82CE1E7C645600CA47AE /* Assets.xcassets in Resources */,
 				9C022C981E67381400AA2802 /* GoogleService-Info.plist in Resources */,
 			);

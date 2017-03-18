@@ -32,7 +32,7 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
     
     for i in 0...3  {
       let label = UILabel(frame: CGRect(x: scrollView.center.x + CGFloat(i) * self.view.frame.size.width, y: 0, width: 400, height: 30))
-      label.font = UIFont.boldSystemFont(ofSize: 24)
+      label.font = UIFont(name: "Code-Pro-Demo", size: 20)
       label.textAlignment = .center
       label.text = walkthroughStringArray[i]
       label.backgroundColor = .black
@@ -77,6 +77,7 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
     diveInButton.snp.makeConstraints { (view) in
       view.bottom.equalToSuperview().offset(-8)
       view.centerX.equalToSuperview()
+      view.width.equalTo(500)
     }
     
     kagamiAnimationView.snp.makeConstraints { (view) in
@@ -87,7 +88,7 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
     
     scrollView.snp.makeConstraints { (view) in
       view.top.equalTo(kagamiAnimationView.snp.bottom)
-      view.bottom.width.equalToSuperview()
+      view.bottom.leading.trailing.equalToSuperview()
     }
   }
   
@@ -128,14 +129,14 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
   internal lazy var diveInButton: UIButton = {
     let button = UIButton(type: .roundedRect)
     button.setTitle("Dive in", for: .normal)
+    button.titleLabel?.font = UIFont(name: "Code-Pro-Demo", size: 14)
     button.isHidden = true
     button.translatesAutoresizingMaskIntoConstraints = false
     button.setTitleColor(UIColor.white, for: .normal)
-    button.layer.borderWidth = 1.5
-    button.layer.cornerRadius = 15
-    button.layer.borderColor = UIColor.white.cgColor
-    button.backgroundColor = UIColor.clear
+    button.backgroundColor = UIColor.lightGray
+    button.layer.cornerRadius = 10
     button.addTarget(self, action: #selector(diveIn), for: .touchUpInside)
+    
     return button
   }()
   
