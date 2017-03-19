@@ -138,18 +138,23 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     
     func loadUserDefaults() {
         
-        if userDefault.object(forKey: "fahrenheit") == nil, userDefault.object(forKey: "location") == nil {
-            defaultZipcode = "10014"
-            isFahrenheit = true
-        } else {
-            defaultZipcode = userDefault.object(forKey: "location") as? String
-            isFahrenheit = userDefault.object(forKey: "fahrenheit") as? Bool
-            if isFahrenheit! {
-                customSegmentControl.move(to: 0)
-            } else {
-                customSegmentControl.move(to: 1)
-                self.unit = "metric"
-            }
+        if userDefault.object(forKey: "fahrenheit") == nil {
+            self.userDefault.setValue(true, forKey: "fahrenheit")
+        }
+        
+        if userDefault.object(forKey: "location") == nil {
+            self.userDefault.setValue("10014", forKey: "location")
+        }
+        
+        defaultZipcode = userDefault.object(forKey: "location") as? String
+        isFahrenheit = userDefault.object(forKey: "fahrenheit") as? Bool
+        
+        if isFahrenheit! {
+            customSegmentControl.move(to: 0)
+        }
+        else {
+            customSegmentControl.move(to: 1)
+            self.unit = "metric"
         }
         
         APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/forecast/daily?zip=\(defaultZipcode!)&appid=93163a043d0bde0df1a79f0fdebc744f&cnt=5&units=\(self.unit)") { (data: Data?) in
