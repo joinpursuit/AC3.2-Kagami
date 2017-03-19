@@ -8,22 +8,39 @@
 
 import UIKit
 import Firebase
+import FirebaseAuth
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        
+        // firebase anon login
         FIRApp.configure()
-        
+        FIRAuth.auth()?.signInAnonymously() { (user, error) in
+            _ = user!.isAnonymous
+            _ = user!.uid
+        }
+      
+      let userDefaults = UserDefaults.standard
+      let didViewTour = userDefaults.bool(forKey: "didViewTour")
+      
+      if didViewTour == false {
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        self.window?.rootViewController = KagamiViewController()
+        let rootVC = WalkthroughViewController()
+        self.window?.rootViewController = rootVC
         self.window?.makeKeyAndVisible()
-        
-        return true
+      }
+      else {
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let rootVC = KagamiViewController()
+        self.window?.rootViewController = rootVC
+        self.window?.makeKeyAndVisible()
+      }
+      return true
+      
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
