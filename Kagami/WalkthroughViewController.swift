@@ -98,7 +98,7 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
     self.present(kagamiVC, animated: true, completion: nil)
     
     let userDefaults = UserDefaults.standard
-    userDefaults.set(true, forKey: "didViewTour")
+    userDefaults.setValue(true, forKey: "didViewTour")
   }
   
   // MARK: Lazy vars
