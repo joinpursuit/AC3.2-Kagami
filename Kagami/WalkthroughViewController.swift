@@ -31,7 +31,7 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
     scrollView.contentSize = CGSize(width: self.view.frame.size.width * 4, height: view.frame.size.height)
     
     for i in 0...3  {
-      let label = UILabel(frame: CGRect(x: scrollView.center.x + CGFloat(i) * self.view.frame.size.width, y: 500, width: self.view.frame.size.width  , height: 30))
+      let label = UILabel(frame: CGRect(x: scrollView.center.x + CGFloat(i) * self.view.frame.size.width, y: ((self.view.frame.size.height) * (0.77)), width: self.view.frame.size.width  , height: 30))
       label.font = UIFont(name: "Code-Pro-Demo", size: 20)
       label.textAlignment = .center
       label.text = walkthroughStringArray[i]
@@ -41,7 +41,7 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
       
       let _ = [
         label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-              ].map{ $0.isActive = true }
+        ].map{ $0.isActive = true }
     }
   }
   
@@ -50,12 +50,15 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
     kagamiAnimationView.animationProgress = progress
   }
   
-  
   func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
     let currentPage = Int(targetContentOffset.pointee.x / view.frame.width)
     pageController.currentPage = currentPage
     if currentPage == walkthroughStringArray.count - 1 {
+      diveInButton.alpha = 0
       diveInButton.isHidden = false
+      UIView.animate(withDuration: 1.0) {
+        self.diveInButton.alpha = 1
+      }
     }
   }
   
@@ -66,7 +69,8 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
       pageController.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40),
       pageController.leftAnchor.constraint(equalTo: view.leftAnchor),
       pageController.rightAnchor.constraint(equalTo: view.rightAnchor),
-      ].map{$0.isActive = true}
+      ].map{$0.isActive = true
+    }
   }
   
   // MARK: Setup
@@ -90,7 +94,6 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
     }
     
     scrollView.snp.makeConstraints { (view) in
-      
       view.bottom.leading.trailing.top.equalToSuperview()
     }
   }
@@ -115,21 +118,29 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
   }()
   
   //Views
-  internal lazy var kagamiAnimationView: LOTAnimationView = {
+  lazy var kagamiAnimationView: LOTAnimationView = {
     var view: LOTAnimationView = LOTAnimationView(name: "KagamiWalkthrough")
     view.contentMode = .scaleAspectFill
     return view
   }()
   
-  internal lazy var mirrorImageView: UIImageView = {
+  lazy var mirrorImageView: UIImageView = {
     let image = #imageLiteral(resourceName: "kagamiMirror.png")
     let imageView = UIImageView(image: image)
     imageView.contentMode = .scaleAspectFill
     return imageView
   }()
   
+  lazy var scrollView: UIScrollView = {
+    var view: UIScrollView = UIScrollView()
+    view.isPagingEnabled = true
+    view.backgroundColor = .clear
+    view.alpha = 0.9
+    return view
+  }()
+  
   //Buttons
-  internal lazy var diveInButton: UIButton = {
+  lazy var diveInButton: UIButton = {
     let button = UIButton(type: .roundedRect)
     button.setTitle("Dive in", for: .normal)
     button.titleLabel?.font = UIFont(name: "Code-Pro-Demo", size: 14)
@@ -141,13 +152,5 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
     button.addTarget(self, action: #selector(diveIn), for: .touchUpInside)
     
     return button
-  }()
-  
-  internal lazy var scrollView: UIScrollView = {
-    var view: UIScrollView = UIScrollView()
-    view.isPagingEnabled = true
-    view.backgroundColor = .clear
-    view.alpha = 0.9
-    return view
   }()
 }
