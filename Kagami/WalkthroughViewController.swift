@@ -28,17 +28,20 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
   //MARK: ScrollView
   
   func setupScrollView() {
-    scrollView.contentSize = CGSize(width: self.view.frame.size.width * 4, height: scrollView.frame.size.height)
+    scrollView.contentSize = CGSize(width: self.view.frame.size.width * 4, height: view.frame.size.height)
     
     for i in 0...3  {
-      let label = UILabel(frame: CGRect(x: scrollView.center.x + CGFloat(i) * self.view.frame.size.width, y: 0, width: 400, height: 30))
+      let label = UILabel(frame: CGRect(x: scrollView.center.x + CGFloat(i) * self.view.frame.size.width, y: 500, width: self.view.frame.size.width  , height: 30))
       label.font = UIFont(name: "Code-Pro-Demo", size: 20)
       label.textAlignment = .center
       label.text = walkthroughStringArray[i]
       label.backgroundColor = .black
       label.textColor = .white
-      
       scrollView.addSubview(label)
+      
+      let _ = [
+        label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+              ].map{ $0.isActive = true }
     }
   }
   
@@ -87,8 +90,8 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
     }
     
     scrollView.snp.makeConstraints { (view) in
-      view.top.equalTo(kagamiAnimationView.snp.bottom)
-      view.bottom.leading.trailing.equalToSuperview()
+      
+      view.bottom.leading.trailing.top.equalToSuperview()
     }
   }
   
@@ -98,7 +101,7 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
     self.present(kagamiVC, animated: true, completion: nil)
     
     let userDefaults = UserDefaults.standard
-    userDefaults.set(true, forKey: "didViewTour")
+    userDefaults.setValue(true, forKey: "didViewTour")
   }
   
   // MARK: Lazy vars
@@ -143,7 +146,7 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
   internal lazy var scrollView: UIScrollView = {
     var view: UIScrollView = UIScrollView()
     view.isPagingEnabled = true
-    view.backgroundColor = .black
+    view.backgroundColor = .clear
     view.alpha = 0.9
     return view
   }()
