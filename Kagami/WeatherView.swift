@@ -144,20 +144,24 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     func loadUserDefaults() {
         
-        if userDefault.object(forKey: "zipcode") == nil, userDefault.object(forKey: "fahrenheit") == nil {
-            defaultZipcode = "10014"
-            isFahrenheit = true
+        
+        if userDefault.object(forKey: "zipcode") == nil {
+            self.userDefault.setValue("10014", forKey: "zipcode")
         }
         
+        if  userDefault.object(forKey: "fahrenheit") == nil {
+            self.userDefault.setValue(true, forKey: "fahrenheit")
+        }
+        
+        defaultZipcode = userDefault.object(forKey: "zipcode") as? String
+        isFahrenheit = userDefault.object(forKey: "fahrenheit") as? Bool
+        
+        if isFahrenheit! {
+            customSegmentControl.move(to: 0)
+        }
         else {
-            defaultZipcode = userDefault.object(forKey: "zipcode") as? String
-            isFahrenheit = userDefault.object(forKey: "fahrenheit") as? Bool
-            if isFahrenheit! {
-                customSegmentControl.move(to: 0)
-            } else {
-                customSegmentControl.move(to: 1)
-                self.unit = "metric"
-            }
+            customSegmentControl.move(to: 1)
+            self.unit = "metric"
         }
         
         APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(defaultZipcode!),us&units=\(self.unit)") { (data: Data?) in
@@ -256,7 +260,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         isSearchActive = false
         self.endEditing(true)
     }
-
+    
     // MARK: - Lazy Instances
     
     lazy var weatherIcon: UIImageView = {
