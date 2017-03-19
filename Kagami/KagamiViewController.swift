@@ -647,25 +647,3 @@ class KagamiViewController: UIViewController {
         return view
     }()
 }
-
-// Ignore for now
-class CollidingViewBehavior: UIDynamicBehavior  {
-    
-    override init() {}
-    
-    convenience init(items: [UIDynamicItem]) {
-        self.init()
-        
-        let collisionBehavior = UICollisionBehavior(items: items)
-        collisionBehavior.translatesReferenceBoundsIntoBoundary = true
-        self.addChildBehavior(collisionBehavior)
-        
-        let elasticBehavior = UIDynamicItemBehavior(items: items)
-        elasticBehavior.elasticity = 0.0
-        self.addChildBehavior(elasticBehavior)
-        
-    }
-}
-
-
-
