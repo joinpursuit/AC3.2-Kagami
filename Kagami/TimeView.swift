@@ -81,29 +81,18 @@ class TimeView: UIView {
             view.centerX.equalToSuperview()
             view.top.equalTo(self.snp.top).inset(50)
         }
+       
         segmentView.snp.makeConstraints { (view) in
             view.left.right.equalToSuperview()
             view.top.equalTo(timeLabel.snp.bottom).offset(40)
             view.height.equalTo(40)
         }
-        //    clockAndTimeView.snp.makeConstraints { (view) in
-        //      view.top.trailing.leading.equalToSuperview()
-        //      view.height.equalTo(self.snp.height).multipliedBy(0.5)
-        //    }
-        //
+
         //Labels
         timeLabel.snp.makeConstraints { (label) in
             label.centerX.equalToSuperview()
             label.top.equalTo(headerImage.snp.bottom).offset(50)
         }
-        
-        //ImageViews
-        //    clockImageView.snp.makeConstraints { (view) in
-        //      view.height.equalTo(clockAndTimeView.snp.height).multipliedBy(0.8)
-        //      view.width.equalTo(clockAndTimeView.snp.width).multipliedBy(0.8)
-        //      view.centerX.equalTo(clockAndTimeView.snp.centerX)
-        //      view.centerY.equalTo(clockAndTimeView.snp.centerY)
-        //    }
         
         //SegmentedControl
         timeFormatSegmentedControl.snp.makeConstraints { (control) in
@@ -142,7 +131,7 @@ class TimeView: UIView {
         print("cancel tapped")
     }
     
-    func loadUserDefaults() {
+    private func loadUserDefaults() {
         if userDefault.object(forKey: "timeBool") != nil {
             let is12Hr = userDefault.object(forKey: "timeBool") as! Bool
             if is12Hr {
@@ -153,12 +142,12 @@ class TimeView: UIView {
         }
     }
     
-    func setDateFormatterStyles() {
+    private func setDateFormatterStyles() {
         dateFormatter.timeStyle = .short
         dateFormatter.dateStyle = .none
     }
     
-    func setDefaultTimeLabelText() {
+    private func setDefaultTimeLabelText() {
         
         switch timeFormatSegmentedControl.selectedSegmentIndex {
         case 0:

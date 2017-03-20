@@ -143,7 +143,7 @@ class WeatherView: UIView, UISearchBarDelegate {
     }
     
     func loadUserDefaults() {
-        
+      
         if userDefault.object(forKey: "weatherFahrenheit") == nil {
             self.userDefault.setValue(true, forKey: "weatherFahrenheit")
         }
