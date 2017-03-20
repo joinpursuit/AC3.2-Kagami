@@ -140,20 +140,24 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     }
     
     func loadUserDefaults() {
-        if userDefault.object(forKey: "ForecastFahrenheit") == nil, userDefault.object(forKey: "ForecastZip") == nil {
-            defaultZipcode = "10014"
-            self.userDefault.setValue(self.defaultZipcode, forKey: "ForecastZip")
-            isFahrenheit = true
+
+        if userDefault.object(forKey: "ForecastFahrenheit") == nil {
             self.userDefault.setValue(true, forKey: "ForecastFahrenheit")
-        } else {
-            defaultZipcode = userDefault.object(forKey: "ForecastZip") as? String
-            isFahrenheit = userDefault.object(forKey: "ForecastFahrenheit") as? Bool
-            if isFahrenheit! {
-                customSegmentControl.move(to: 0)
-            } else {
-                customSegmentControl.move(to: 1)
-                self.unit = "metric"
-            }
+        }
+        
+        if userDefault.object(forKey: "ForecastZip") == nil {
+            self.userDefault.setValue("10014", forKey: "ForecastZip")
+        }
+        
+        defaultZipcode = userDefault.object(forKey: "ForecastZip") as? String
+        isFahrenheit = userDefault.object(forKey: "ForecastFahrenheit") as? Bool
+        
+        if isFahrenheit! {
+            customSegmentControl.move(to: 0)
+        }
+        else {
+            customSegmentControl.move(to: 1)
+            self.unit = "metric"
         }
         
         APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/forecast/daily?zip=\(defaultZipcode!)&appid=93163a043d0bde0df1a79f0fdebc744f&cnt=5&units=\(self.unit)") { (data: Data?) in

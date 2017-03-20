@@ -144,12 +144,12 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     func loadUserDefaults() {
       
-        if userDefault.object(forKey: "weatherZip") == nil {
-            self.userDefault.setValue("10014", forKey: "weatherZip")
+        if userDefault.object(forKey: "weatherFahrenheit") == nil {
+            self.userDefault.setValue(true, forKey: "weatherFahrenheit")
         }
         
-        if  userDefault.object(forKey: "fahrenheit") == nil {
-            self.userDefault.setValue(true, forKey: "weatherFahrenheit")
+        if userDefault.object(forKey: "weatherZip") == nil {
+            self.userDefault.setValue("10014", forKey: "weatherZip")
         }
         
         defaultZipcode = userDefault.object(forKey: "weatherZip") as? String
