@@ -144,21 +144,23 @@ class WeatherView: UIView, UISearchBarDelegate {
     
     func loadUserDefaults() {
         
-        if userDefault.object(forKey: "weatherZip") == nil, userDefault.object(forKey: "weatherFahrenheit") == nil {
-            defaultZipcode = "10014"
-            self.userDefault.setValue(self.defaultZipcode, forKey: "weatherZip")
-            isFahrenheit = true
+        if userDefault.object(forKey: "weatherFahrenheit") == nil {
             self.userDefault.setValue(true, forKey: "weatherFahrenheit")
         }
+        
+        if userDefault.object(forKey: "weatherZip") == nil {
+            self.userDefault.setValue("10014", forKey: "weatherZip")
+        }
+        
+        defaultZipcode = userDefault.object(forKey: "weatherZip") as? String
+        isFahrenheit = userDefault.object(forKey: "weatherFahrenheit") as? Bool
+        
+        if isFahrenheit! {
+            customSegmentControl.move(to: 0)
+        }
         else {
-            defaultZipcode = userDefault.object(forKey: "weatherZip") as? String
-            isFahrenheit = userDefault.object(forKey: "weatherFahrenheit") as? Bool
-            if isFahrenheit! {
-                customSegmentControl.move(to: 0)
-            } else {
-                customSegmentControl.move(to: 1)
-                self.unit = "metric"
-            }
+            customSegmentControl.move(to: 1)
+            self.unit = "metric"
         }
         
         APIRequestManager.manager.getData(endPoint: "http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=\(defaultZipcode!),us&units=\(self.unit)") { (data: Data?) in
@@ -257,7 +259,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         isSearchActive = false
         self.endEditing(true)
     }
-
+    
     // MARK: - Lazy Instances
     
     lazy var weatherIcon: UIImageView = {
