@@ -100,11 +100,14 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     // MARK: - Methods
     
     func addToMirror() {
-        self.userDefault.setValue(self.defaultZipcode, forKey: "location")
+        self.userDefault.setValue(self.defaultZipcode, forKey: "ForecastZip")
+        print("SAVING: \(userDefault.object(forKey: "ForecastZip") as? String)")
         if customSegmentControl.selectedSegmentIndex == 0 {
-            self.userDefault.setValue(true, forKey: "fahrenheit")
+            self.userDefault.setValue(true, forKey: "ForecastFahrenheit")
+            print("SAVING: \(userDefault.object(forKey: "ForecastFahrenheit") as? Bool)")
         } else {
-            self.userDefault.setValue(false, forKey: "fahrenheit")
+            self.userDefault.setValue(false, forKey: "ForecastFahrenheit")
+            print("SAVING: \(userDefault.object(forKey: "ForecastFahrenheit") as? Bool)")
         }
     }
     
@@ -137,17 +140,17 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     }
     
     func loadUserDefaults() {
-        
-        if userDefault.object(forKey: "fahrenheit") == nil {
-            self.userDefault.setValue(true, forKey: "fahrenheit")
+
+        if userDefault.object(forKey: "ForecastFahrenheit") == nil {
+            self.userDefault.setValue(true, forKey: "ForecastFahrenheit")
         }
         
-        if userDefault.object(forKey: "location") == nil {
-            self.userDefault.setValue("10014", forKey: "location")
+        if userDefault.object(forKey: "ForecastZip") == nil {
+            self.userDefault.setValue("10014", forKey: "ForecastZip")
         }
         
-        defaultZipcode = userDefault.object(forKey: "location") as? String
-        isFahrenheit = userDefault.object(forKey: "fahrenheit") as? Bool
+        defaultZipcode = userDefault.object(forKey: "ForecastZip") as? String
+        isFahrenheit = userDefault.object(forKey: "ForecastFahrenheit") as? Bool
         
         if isFahrenheit! {
             customSegmentControl.move(to: 0)
