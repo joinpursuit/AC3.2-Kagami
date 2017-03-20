@@ -467,7 +467,7 @@
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Kagami/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = nyc.c4q.atung.Kagami;
+				PRODUCT_BUNDLE_IDENTIFIER = nyc.c4q.ac32.Kagami;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -481,7 +481,7 @@
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Kagami/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = nyc.c4q.atung.Kagami;
+				PRODUCT_BUNDLE_IDENTIFIER = nyc.c4q.ac32.Kagami;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
