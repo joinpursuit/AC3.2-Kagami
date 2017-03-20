@@ -84,7 +84,7 @@ class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
     diveInButton.snp.makeConstraints { (view) in
       view.bottom.equalToSuperview().offset(-8)
       view.centerX.equalToSuperview()
-      view.width.equalTo(500)
+      view.width.equalTo(80)
     }
     
     kagamiAnimationView.snp.makeConstraints { (view) in
