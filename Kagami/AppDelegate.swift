@@ -27,18 +27,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       let userDefaults = UserDefaults.standard
       let didViewTour = userDefaults.bool(forKey: "didViewTour")
       
-      if didViewTour == false {
+//      if didViewTour == false {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         let rootVC = WalkthroughViewController()
         self.window?.rootViewController = rootVC
         self.window?.makeKeyAndVisible()
-      }
-      else {
-        self.window = UIWindow(frame: UIScreen.main.bounds)
-        let rootVC = KagamiViewController()
-        self.window?.rootViewController = rootVC
-        self.window?.makeKeyAndVisible()
-      }
+//      }
+//      else {
+//        self.window = UIWindow(frame: UIScreen.main.bounds)
+//        let rootVC = KagamiViewController()
+//        self.window?.rootViewController = rootVC
+//        self.window?.makeKeyAndVisible()
+//      }
       return true
       
     }
