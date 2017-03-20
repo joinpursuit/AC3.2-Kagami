@@ -130,11 +130,11 @@ class WeatherView: UIView, UISearchBarDelegate {
     // MARK: - Methods
     
     func addToMirror() {
-        self.userDefault.setValue(self.defaultZipcode, forKey: "zipcode")
+        self.userDefault.setValue(self.defaultZipcode, forKey: "weatherZip")
         if customSegmentControl.selectedSegmentIndex == 0 {
-            self.userDefault.setValue(true, forKey: "fahrenheit")
+            self.userDefault.setValue(true, forKey: "weatherFahrenheit")
         } else {
-            self.userDefault.setValue(false, forKey: "fahrenheit")
+            self.userDefault.setValue(false, forKey: "weatherFahrenheit")
         }
     }
     
@@ -143,18 +143,17 @@ class WeatherView: UIView, UISearchBarDelegate {
     }
     
     func loadUserDefaults() {
-        
-        
-        if userDefault.object(forKey: "zipcode") == nil {
-            self.userDefault.setValue("10014", forKey: "zipcode")
+      
+        if userDefault.object(forKey: "weatherFahrenheit") == nil {
+            self.userDefault.setValue(true, forKey: "weatherFahrenheit")
         }
         
-        if  userDefault.object(forKey: "fahrenheit") == nil {
-            self.userDefault.setValue(true, forKey: "fahrenheit")
+        if userDefault.object(forKey: "weatherZip") == nil {
+            self.userDefault.setValue("10014", forKey: "weatherZip")
         }
         
-        defaultZipcode = userDefault.object(forKey: "zipcode") as? String
-        isFahrenheit = userDefault.object(forKey: "fahrenheit") as? Bool
+        defaultZipcode = userDefault.object(forKey: "weatherZip") as? String
+        isFahrenheit = userDefault.object(forKey: "weatherFahrenheit") as? Bool
         
         if isFahrenheit! {
             customSegmentControl.move(to: 0)
