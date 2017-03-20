@@ -29,13 +29,13 @@ extension WidgetViewable {
 
 class WidgetView: UIView, WidgetViewable {
     
-
+    
     // MARK: - Properties
     internal var userDefaults: UserDefaults?
     internal var propertyAnimator: UIViewPropertyAnimator?
     internal var tapRecognizer = UITapGestureRecognizer()
     internal var panRecognizer = UIPanGestureRecognizer()
-
+    
     var widget: Widgetable?
     var iconImageView: UIImageView?
     var widgetImageView: UIImageView?
@@ -71,14 +71,10 @@ class WidgetView: UIView, WidgetViewable {
         tapRecognizer.require(toFail: panRecognizer)
         return tapRecognizer
     }
-
+    
     func wasTapped(_ gesture: UITapGestureRecognizer) {
         
-        let view = gesture.view!
-        
         if gesture.state == .ended {
-            
-            
             
             propertyAnimator?.addAnimations ({
                 self.setupAnimationConstraint()
@@ -89,7 +85,7 @@ class WidgetView: UIView, WidgetViewable {
     }
     
     func wasDragged(_ gesture: UIPanGestureRecognizer) {
-
+        
         let translation = gesture.translation(in: self)
         
         self.center = CGPoint(x: self.center.x + translation.x , y: self.center.y + translation.y)
@@ -144,13 +140,13 @@ class WidgetView: UIView, WidgetViewable {
     
     
     /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
-
+     // Only override draw() if you perform custom drawing.
+     // An empty implementation adversely affects performance during animation.
+     override func draw(_ rect: CGRect) {
+     // Drawing code
+     }
+     */
+    
 }
 
 class WeatherWidgetView : WidgetView {

@@ -140,7 +140,6 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     }
     
     func loadUserDefaults() {
-        
         if userDefault.object(forKey: "ForecastFahrenheit") == nil, userDefault.object(forKey: "ForecastZip") == nil {
             defaultZipcode = "10014"
             self.userDefault.setValue(self.defaultZipcode, forKey: "ForecastZip")
@@ -189,6 +188,8 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ForecastTableViewCell.identifier, for: indexPath) as! ForecastTableViewCell
+        cell.selectionStyle = .none
+        
         let forecast = self.forecast[indexPath.row]
         self.cityLabel.text = forecast.name
         
@@ -202,6 +203,7 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
         let localDate = dateFormatter.string(from: date as Date)
         
         cell.dayLabel.text = String(describing: localDate)
+        
         
         cell.setNeedsLayout()
         return cell
@@ -246,6 +248,7 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     lazy var tableView: UITableView = {
         let view = UITableView()
         view.backgroundColor = .clear
+        view.isScrollEnabled = false
         return view
     }()
     
