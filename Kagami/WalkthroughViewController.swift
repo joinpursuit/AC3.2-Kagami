@@ -13,8 +13,13 @@ import SnapKit
 class WalkthroughViewController: UIViewController, UIScrollViewDelegate {
   var walkthroughStringArray = ["This is your Kagami Mirror ","These are your widgets", "Drag the widget into the mirror!", "Tap the widget for its settings"]
   
+  override var prefersStatusBarHidden: Bool {
+    return false
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
+    let _ = UIApplication.shared.setStatusBarHidden(false, with: .slide)
     view.backgroundColor = .black
     
     setupViewHierarchy()
