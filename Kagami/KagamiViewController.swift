@@ -37,7 +37,7 @@ struct Widget {
             case .weather: return UIImage(named: "Weather-Mirror")!
             case .forecast: return UIImage(named: "Forecast-Mirror")!
             case .time: return UIImage(named: "Time-Mirror")!
-            case .todos: return UIImage(named: "To-Dos-Mirror")!
+            case .todos: return UIImage(named: "ToDo-Mirror")!
             case .quote: return UIImage(named: "Quote-Mirror")!
             }
         }
