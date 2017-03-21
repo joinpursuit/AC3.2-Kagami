@@ -14,7 +14,6 @@
 		478B30851E66192300FD580C /* APIRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30841E66192300FD580C /* APIRequestManager.swift */; };
 		478B30871E66257300FD580C /* KagamiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30861E66257300FD580C /* KagamiViewController.swift */; };
 		478B30A91E6767AD00FD580C /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30A81E6767AD00FD580C /* Utilities.swift */; };
-		478B30B11E6DF87400FD580C /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30B01E6DF87400FD580C /* SettingsViewController.swift */; };
 		478B30B41E6DF95300FD580C /* WeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30B31E6DF95300FD580C /* WeatherView.swift */; };
 		478B30B71E6DFDBE00FD580C /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30B61E6DFDBE00FD580C /* Weather.swift */; };
 		478B30C91E77362800FD580C /* WidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478B30C81E77362800FD580C /* WidgetView.swift */; };
@@ -48,7 +47,6 @@
 		478B30841E66192300FD580C /* APIRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIRequestManager.swift; sourceTree = "<group>"; };
 		478B30861E66257300FD580C /* KagamiViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KagamiViewController.swift; sourceTree = "<group>"; };
 		478B30A81E6767AD00FD580C /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
-		478B30B01E6DF87400FD580C /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		478B30B31E6DF95300FD580C /* WeatherView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherView.swift; sourceTree = "<group>"; };
 		478B30B61E6DFDBE00FD580C /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		478B30C81E77362800FD580C /* WidgetView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WidgetView.swift; sourceTree = "<group>"; };
@@ -144,7 +142,6 @@
 			children = (
 				478B30861E66257300FD580C /* KagamiViewController.swift */,
 				CCC18ACC1E7CE02D00AAE1F1 /* WalkthroughViewController.swift */,
-				478B30AA1E68D44700FD580C /* Customize Selections */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -175,14 +172,6 @@
 				9C0411F61E783F97006469DB /* QuoteCollectionViewCell.swift */,
 			);
 			name = Views;
-			sourceTree = "<group>";
-		};
-		478B30AA1E68D44700FD580C /* Customize Selections */ = {
-			isa = PBXGroup;
-			children = (
-				478B30B01E6DF87400FD580C /* SettingsViewController.swift */,
-			);
-			name = "Customize Selections";
 			sourceTree = "<group>";
 		};
 		90FC43B4122C23A8D49FAEC7 /* Pods */ = {
@@ -345,7 +334,6 @@
 				478B306E1E66181500FD580C /* AppDelegate.swift in Sources */,
 				9C49BA801E6F02CC001C4780 /* ToDoView.swift in Sources */,
 				478B30A91E6767AD00FD580C /* Utilities.swift in Sources */,
-				478B30B11E6DF87400FD580C /* SettingsViewController.swift in Sources */,
 				9C0411F71E783F97006469DB /* QuoteCollectionViewCell.swift in Sources */,
 				9C0411FD1E78B952006469DB /* Forecast.swift in Sources */,
 				478B30871E66257300FD580C /* KagamiViewController.swift in Sources */,
