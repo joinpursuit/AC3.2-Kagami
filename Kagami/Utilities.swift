@@ -16,37 +16,9 @@ struct ColorPalette {
     static let accentColor = UIColor(red:0.76, green:0.83, blue:0.90, alpha:1.0)
 }
 
-// Button styles
-extension UIButton {
-    
-    func styled() {
-        self.layer.borderWidth = 1.0
-        self.layer.borderColor = ColorPalette.blackColor.cgColor
-        self.layer.shadowColor = ColorPalette.blackColor.cgColor
-        self.layer.shadowOpacity = 1
-        self.layer.shadowOffset = CGSize(width: -1, height: 2)
-        self.layer.shadowRadius = 2.5
-        
-        self.layer.shadowPath = UIBezierPath(rect: self.bounds).cgPath
-        self.layer.shouldRasterize = true
-    }
-}
-
 // Widget protocol
 protocol Widgetable: class {
     var category: String { get }
     var iconImage: UIImage { get }
     var description: String { get }
 }
-
-// should be for dock if dock/mirror are put into own UIView class - separate from KVC
-protocol KagamiViewControllerDataSource {
-    
-    var widgetables: [Widgetable] { get set }
-    
-}
-
-
-
-
-

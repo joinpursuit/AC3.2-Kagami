@@ -10,58 +10,40 @@ import UIKit
 import SnapKit
 import Firebase
 import FirebaseDatabase
-import FirebaseAuth
 import TwicketSegmentedControl
 
 class TimeView: UIView {
     
+    // MARK: - Properties
+    var databaseReference: FIRDatabaseReference!
     var time: Time?
     let dateFormatter = DateFormatter()
     let currentDateTime = Date()
     let date = NSDate()
     let calendar = NSCalendar.current
-    let userDefault = UserDefaults.standard
     var gradientLayer: CAGradientLayer!
+    let userDefault = UserDefaults.standard
     
-    var databaseReference: FIRDatabaseReference!
-    var user: FIRUser?
-    
+    // MARK; - View Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         createGradientLayer()
         self.layer.cornerRadius = 9
-        
         databaseReference = FIRDatabase.database().reference()
         time = Time(militaryTime: false)
-        
         setDateFormatterStyles()
-        
         setupViewHierarchy()
         configureConstraints()
-        
         loadUserDefaults()
         setDefaultTimeLabelText()
-        
-        for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
-            print("WOOO \(key) = \(value) \n")
-        }
     }
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
     }
     
-    func createGradientLayer() {
-        gradientLayer = CAGradientLayer()
-        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 650))
-        gradientLayer.frame = view.bounds
-        gradientLayer.colors = [UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor, UIColor(red:0.93, green:0.95, blue:0.95, alpha:1.0).cgColor]
-        gradientLayer.locations = [0.0 , 1.0]
-        self.layer.addSublayer(gradientLayer)
-    }
-    
-    // MARK: Setup
+    // MARK: Setup View Hierarchy
     func setupViewHierarchy () {
         self.addSubview(clockAndTimeView)
         self.addSubview(segmentView)
@@ -71,12 +53,11 @@ class TimeView: UIView {
         self.addSubview(cancelButton)
         self.addSubview(headerImage)
         segmentView.addSubview(timeFormatSegmentedControl)
+        
         doneButton.addTarget(self, action: #selector(setTimeFormat), for: .touchUpInside)
-        cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
     }
     
     func configureConstraints() {
-        //Views
         headerImage.snp.makeConstraints { (view) in
             view.centerX.equalToSuperview()
             view.top.equalTo(self.snp.top).inset(50)
@@ -88,20 +69,17 @@ class TimeView: UIView {
             view.height.equalTo(40)
         }
 
-        //Labels
         timeLabel.snp.makeConstraints { (label) in
             label.centerX.equalToSuperview()
             label.top.equalTo(headerImage.snp.bottom).offset(50)
         }
         
-        //SegmentedControl
         timeFormatSegmentedControl.snp.makeConstraints { (control) in
             control.top.bottom.equalTo(segmentView)
             control.left.equalTo(segmentView).inset(100)
             control.right.equalTo(segmentView).inset(100)
         }
         
-        //Button
         doneButton.snp.makeConstraints { (view) in
             view.right.equalTo(self.snp.right).inset(8)
             view.bottom.equalTo(self.snp.bottom).inset(8)
@@ -113,7 +91,16 @@ class TimeView: UIView {
         }
     }
     
-    //MARK: - Methods
+    func createGradientLayer() {
+        gradientLayer = CAGradientLayer()
+        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 650))
+        gradientLayer.frame = view.bounds
+        gradientLayer.colors = [UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor, UIColor(red:0.93, green:0.95, blue:0.95, alpha:1.0).cgColor]
+        gradientLayer.locations = [0.0 , 1.0]
+        self.layer.addSublayer(gradientLayer)
+    }
+    
+    //MARK: - Settings Methods
     func setTimeFormat() {
         let militaryTimeRef = databaseReference.child("time/militaryTime")
         
@@ -126,17 +113,15 @@ class TimeView: UIView {
             }
         }
     }
-    
-    func cancelTapped() {
-        print("cancel tapped")
-    }
-    
+
     private func loadUserDefaults() {
         if userDefault.object(forKey: "timeBool") != nil {
             let is12Hr = userDefault.object(forKey: "timeBool") as! Bool
+            
             if is12Hr {
                 timeFormatSegmentedControl.move(to: 0)
-            } else {
+            }
+            else {
                 timeFormatSegmentedControl.move(to: 1)
             }
         }
@@ -168,8 +153,7 @@ class TimeView: UIView {
         }
     }
     
-    //MARK: - Lazy Inits
-    //Labels
+    //MARK: - Lazy Instantiates
     lazy var timeLabel: UILabel = {
         let label: UILabel = UILabel()
         label.font = UIFont(name: "Code-Pro-Demo", size: 72)
@@ -177,20 +161,19 @@ class TimeView: UIView {
         return label
     }()
     
-    //Views
     lazy var clockAndTimeView: UIView = {
         let view: UIView = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
         return view
     }()
+    
     lazy var segmentView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
         return view
     }()
     
-    //ImageViews
     lazy var clockImageView: UIImageView = {
         let imageView: UIImageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -198,7 +181,6 @@ class TimeView: UIView {
         return imageView
     }()
     
-    //TwicketSegmentedControl
     lazy var timeFormatSegmentedControl: TwicketSegmentedControl = {
         let segmentedControl = TwicketSegmentedControl()
         let titles = ["12HR", "24HR"]
@@ -212,7 +194,6 @@ class TimeView: UIView {
         return segmentedControl
     }()
     
-    //Buttons
     lazy var doneButton: UIButton = {
         let button = UIButton()
         let image = UIImage(named: "Ok-50")
@@ -227,7 +208,6 @@ class TimeView: UIView {
         return button
     }()
     
-    //Header
     lazy var headerImage: UIImageView = {
         let imageView = UIImageView()
         let image = UIImage(named: "timeheader")

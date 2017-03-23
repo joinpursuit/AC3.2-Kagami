@@ -21,5 +21,4 @@ class Time: Widgetable {
     var asDictionary: [String: Bool] {
         return ["militaryTime": militaryTime]
     }
-    
 }

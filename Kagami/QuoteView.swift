@@ -13,11 +13,13 @@ import FirebaseDatabase
 
 class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
     
+    // MARK: - Properties
     var quote: QuoteOfTheDay?
     var database: FIRDatabaseReference!
     let categories = ["inspire","management","sports","life","funny","love","art","students"]
     var gradientLayer: CAGradientLayer!
     
+    // MARK: - View Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -36,6 +38,53 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Setup View Hierarchy & Constraints
+    func setupHierarchy() {
+        self.addSubview(doneButton)
+        self.addSubview(cancelButton)
+        self.addSubview(quoteLabel)
+        self.addSubview(authorLabel)
+        self.addSubview(collectionView)
+        self.addSubview(headerImage)
+        
+        doneButton.addTarget(self, action: #selector(saveQuote), for: .touchUpInside)
+    }
+    
+    func setupConstraints() {
+        headerImage.snp.makeConstraints { (view) in
+            view.centerX.equalToSuperview()
+            view.top.equalTo(self.snp.top).inset(40)
+        }
+        
+        doneButton.snp.makeConstraints { (view) in
+            view.right.equalTo(self.snp.right).inset(8)
+            view.bottom.equalTo(self.snp.bottom).inset(8)
+        }
+        
+        cancelButton.snp.makeConstraints { (view) in
+            view.left.equalTo(self.snp.left).inset(8)
+            view.bottom.equalTo(self.snp.bottom).inset(8)
+        }
+        
+        quoteLabel.snp.makeConstraints { (label) in
+            label.top.equalTo(collectionView.snp.bottom).offset(15)
+            label.left.equalTo(self).inset(8)
+            label.right.equalTo(self).inset(8)
+        }
+        
+        authorLabel.snp.makeConstraints { (label) in
+            label.top.equalTo(quoteLabel.snp.bottom).offset(5)
+            label.right.equalTo(self.snp.right).inset(20)
+        }
+       
+        collectionView.snp.makeConstraints { (view) in
+            view.top.equalTo(headerImage.snp.bottom).offset(30)
+            view.left.equalTo(self.snp.left).inset(8)
+            view.right.equalToSuperview()
+            view.height.equalTo(40)
+        }
+    }
+    
     func createGradientLayer() {
         gradientLayer = CAGradientLayer()
         let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 650))
@@ -45,58 +94,10 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
         self.layer.addSublayer(gradientLayer)
     }
     
-    // MARK: - Set up Hierarchy & Constraints
-    
-    func setupHierarchy() {
-        self.addSubview(doneButton)
-        self.addSubview(cancelButton)
-        self.addSubview(quoteLabel)
-        self.addSubview(authorLabel)
-        self.addSubview(collectionView)
-        self.addSubview(headerImage)
-        doneButton.addTarget(self, action: #selector(saveQuote), for: .touchUpInside)
-        cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
-    }
-    
-    func setupConstraints() {
-        headerImage.snp.makeConstraints { (view) in
-            view.centerX.equalToSuperview()
-            view.top.equalTo(self.snp.top).inset(40)
-        }
-        doneButton.snp.makeConstraints { (view) in
-            view.right.equalTo(self.snp.right).inset(8)
-            view.bottom.equalTo(self.snp.bottom).inset(8)
-        }
-        cancelButton.snp.makeConstraints { (view) in
-            view.left.equalTo(self.snp.left).inset(8)
-            view.bottom.equalTo(self.snp.bottom).inset(8)
-        }
-        quoteLabel.snp.makeConstraints { (label) in
-            label.top.equalTo(collectionView.snp.bottom).offset(15)
-            label.left.equalTo(self).inset(8)
-            label.right.equalTo(self).inset(8)
-        }
-        authorLabel.snp.makeConstraints { (label) in
-            label.top.equalTo(quoteLabel.snp.bottom).offset(5)
-            label.right.equalTo(self.snp.right).inset(20)
-        }
-        collectionView.snp.makeConstraints { (view) in
-            view.top.equalTo(headerImage.snp.bottom).offset(30)
-            view.left.equalTo(self.snp.left).inset(8)
-            view.right.equalToSuperview()
-            view.height.equalTo(40)
-        }
-    }
-    
-    // MARK: - Methods
-    
+    // MARK: - Settings Methods
     func saveQuote() {
         database.child("fullQuote").setValue(quote!.quote)
         database.child("author").setValue(quote!.author)
-    }
-    
-    func cancelTapped() {
-        print("return to home page")
     }
     
     func getAPIResults() {
@@ -110,7 +111,7 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
         }
     }
     
-    // MARK: - Collection View
+    // MARK: - Collection View Data Source
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -146,8 +147,7 @@ class QuoteView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
         })
     }
     
-    // MARK: - Lazy Instances
-    
+    // MARK: - Lazy Instantiates
     lazy var doneButton: UIButton = {
         let button = UIButton()
         let image = UIImage(named: "Ok-50")

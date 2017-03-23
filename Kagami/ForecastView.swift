@@ -13,23 +13,25 @@ import TwicketSegmentedControl
 
 class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
+    // MARK: - Properties
     var isSearchActive: Bool = false
     var database: FIRDatabaseReference!
     var forecast: [Forecast] = []
     var gradientLayer: CAGradientLayer!
-    let userDefault = UserDefaults.standard
     // default properties
+    let userDefault = UserDefaults.standard
     var defaultZipcode: String?
     var isFahrenheit: Bool?
     var unit = "imperial"
     
+    // MARK: - View Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         self.database = FIRDatabase.database().reference().child("forecast")
         createGradientLayer()
         self.layer.cornerRadius = 9
-        setupHierarchy()
+        setupViewHierarchy()
         configureConstraints()
         tableView.delegate = self
         tableView.dataSource = self
@@ -43,9 +45,8 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
         super.init(coder: aDecoder)!
     }
     
-    // MARK: - Set up Hierarchy & Constraints
-    
-    func setupHierarchy() {
+    // MARK: - Setup View Hierarchy & Constraints
+    func setupViewHierarchy() {
         self.addSubview(tableView)
         self.addSubview(searchBar)
         self.addSubview(cityLabel)
@@ -54,8 +55,8 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
         self.addSubview(cancelButton)
         self.addSubview(headerImage)
         segmentView.addSubview(customSegmentControl)
+        
         doneButton.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
-        cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
     }
     
     func configureConstraints() {
@@ -97,22 +98,25 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
         }
     }
     
-    // MARK: - Methods
-    
-    func addToMirror() {
-        self.userDefault.setValue(self.defaultZipcode, forKey: "ForecastZip")
-        print("SAVING: \(userDefault.object(forKey: "ForecastZip") as? String)")
-        if customSegmentControl.selectedSegmentIndex == 0 {
-            self.userDefault.setValue(true, forKey: "ForecastFahrenheit")
-            print("SAVING: \(userDefault.object(forKey: "ForecastFahrenheit") as? Bool)")
-        } else {
-            self.userDefault.setValue(false, forKey: "ForecastFahrenheit")
-            print("SAVING: \(userDefault.object(forKey: "ForecastFahrenheit") as? Bool)")
-        }
+    func createGradientLayer() {
+        gradientLayer = CAGradientLayer()
+        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 650))
+        gradientLayer.frame = view.bounds
+        gradientLayer.colors = [UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor, UIColor(red:0.93, green:0.95, blue:0.95, alpha:1.0).cgColor]
+        gradientLayer.locations = [0.0 , 1.0]
+        self.layer.addSublayer(gradientLayer)
     }
     
-    func cancelTapped() {
-        print("return to home page")
+    // MARK: - Settings Methods
+    func addToMirror() {
+        self.userDefault.setValue(self.defaultZipcode, forKey: "ForecastZip")
+
+        if customSegmentControl.selectedSegmentIndex == 0 {
+            self.userDefault.setValue(true, forKey: "ForecastFahrenheit")
+        }
+        else {
+            self.userDefault.setValue(false, forKey: "ForecastFahrenheit")
+        }
     }
     
     func getAPIResultsForFahrenheit() {
@@ -140,7 +144,6 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
     }
     
     func loadUserDefaults() {
-
         if userDefault.object(forKey: "ForecastFahrenheit") == nil {
             self.userDefault.setValue(true, forKey: "ForecastFahrenheit")
         }
@@ -171,17 +174,7 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
         }
     }
     
-    func createGradientLayer() {
-        gradientLayer = CAGradientLayer()
-        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 650))
-        gradientLayer.frame = view.bounds
-        gradientLayer.colors = [UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor, UIColor(red:0.93, green:0.95, blue:0.95, alpha:1.0).cgColor]
-        gradientLayer.locations = [0.0 , 1.0]
-        self.layer.addSublayer(gradientLayer)
-    }
-    
-    // MARK: - TableView
-    
+    // MARK: - TableView Data Source
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -208,27 +201,22 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
         
         cell.dayLabel.text = String(describing: localDate)
         
-        
         cell.setNeedsLayout()
         return cell
     }
     
     // MARK: - Search Bar
-    
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        print("did begin")
         isSearchActive = true
         searchBar.showsCancelButton = true
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         isSearchActive = false
-        print("did end")
         self.searchBar.setShowsCancelButton(false, animated: true)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        print("did cancel")
         isSearchActive = false
         self.endEditing(true)
     }
@@ -238,17 +226,17 @@ class ForecastView: UIView, UITableViewDelegate, UITableViewDataSource, UISearch
         
         defaultZipcode = searchBar.text!
         database.child("location").setValue(searchBar.text)
+        
         if customSegmentControl.selectedSegmentIndex == 0 {
             getAPIResultsForFahrenheit()
-        } else {
+        }
+        else {
             getAPIResultsForCelsius()
         }
-        print("sending info to firebase")
         self.endEditing(true)
     }
     
-    // MARK: - Lazy Instances
-    
+    // MARK: - Lazy Instantiates
     lazy var tableView: UITableView = {
         let view = UITableView()
         view.backgroundColor = .clear

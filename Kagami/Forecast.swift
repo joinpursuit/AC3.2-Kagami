@@ -34,7 +34,6 @@ class Forecast {
             if let json = try JSONSerialization.jsonObject(with: validData, options: []) as? [String:Any] {
                 
                 guard let list = json["list"] as? [[String:Any]] else {
-                    print("Error casting at top level")
                     return nil
                 }
                 
@@ -49,7 +48,6 @@ class Forecast {
                         let max = temp["max"],
                         let weather = each["weather"] as? [[String:Any]],
                         let description = weather[0]["description"] as? String else {
-                            print("Error parsing each list")
                             return nil
                     }
                     
@@ -59,7 +57,6 @@ class Forecast {
             }
         }
         catch {
-            print("Error parsing json: \(error.localizedDescription)")
             return nil
         }
         return forecastObject

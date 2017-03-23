@@ -13,16 +13,18 @@ import FirebaseDatabase
 
 class WeatherView: UIView, UISearchBarDelegate {
     
+    // MARK: - Properties
     var isSearchActive: Bool = false
     var database: FIRDatabaseReference!
     var weather: DailyWeather?
     var gradientLayer: CAGradientLayer!
-    let userDefault = UserDefaults.standard
     // default properties
+    let userDefault = UserDefaults.standard
     var defaultZipcode: String?
     var isFahrenheit: Bool?
     var unit = "imperial"
     
+    // MARK: - View Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -30,7 +32,7 @@ class WeatherView: UIView, UISearchBarDelegate {
         createGradientLayer()
         self.layer.cornerRadius = 9
         searchBar.delegate = self
-        setupHierarchy()
+        setupViewHierarchy()
         configureConstraints()
         loadUserDefaults()
     }
@@ -39,8 +41,8 @@ class WeatherView: UIView, UISearchBarDelegate {
         super.init(coder: aDecoder)!
     }
     
-    // MARK: - Set up Hierarchy & Constraints
-    func setupHierarchy() {
+    // MARK: - Setup View Hierarchy & Constraints
+    func setupViewHierarchy() {
         self.addSubview(searchBar)
         self.addSubview(degreeLabel)
         self.addSubview(locationLabel)
@@ -51,11 +53,11 @@ class WeatherView: UIView, UISearchBarDelegate {
         self.addSubview(highestTempLabel)
         self.addSubview(headerImage)
         self.addSubview(segmentView)
-        segmentView.addSubview(customSegmentControl)
         self.addSubview(doneButton)
         self.addSubview(cancelButton)
+        segmentView.addSubview(customSegmentControl)
+        
         doneButton.addTarget(self, action: #selector(addToMirror), for: .touchUpInside)
-        cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
     }
     
     func configureConstraints() {
@@ -127,23 +129,28 @@ class WeatherView: UIView, UISearchBarDelegate {
         }
     }
     
-    // MARK: - Methods
+    func createGradientLayer() {
+        gradientLayer = CAGradientLayer()
+        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 650))
+        gradientLayer.frame = view.bounds
+        gradientLayer.colors = [UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor, UIColor(red:0.93, green:0.95, blue:0.95, alpha:1.0).cgColor]
+        gradientLayer.locations = [0.0 , 1.0]
+        self.layer.addSublayer(gradientLayer)
+    }
     
+    // MARK: - Settings Methods
     func addToMirror() {
         self.userDefault.setValue(self.defaultZipcode, forKey: "weatherZip")
+        
         if customSegmentControl.selectedSegmentIndex == 0 {
             self.userDefault.setValue(true, forKey: "weatherFahrenheit")
-        } else {
+        }
+        else {
             self.userDefault.setValue(false, forKey: "weatherFahrenheit")
         }
     }
     
-    func cancelTapped() {
-        print("return to home page")
-    }
-    
     func loadUserDefaults() {
-      
         if userDefault.object(forKey: "weatherFahrenheit") == nil {
             self.userDefault.setValue(true, forKey: "weatherFahrenheit")
         }
@@ -215,53 +222,39 @@ class WeatherView: UIView, UISearchBarDelegate {
         }
     }
     
-    func createGradientLayer() {
-        gradientLayer = CAGradientLayer()
-        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 650))
-        gradientLayer.frame = view.bounds
-        gradientLayer.colors = [UIColor(red:0.56, green:0.62, blue:0.67, alpha:1.0).cgColor, UIColor(red:0.93, green:0.95, blue:0.95, alpha:1.0).cgColor]
-        gradientLayer.locations = [0.0 , 1.0]
-        self.layer.addSublayer(gradientLayer)
-    }
-    
     // MARK: - Search Bar Delegate
-    
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        print("did begin")
         isSearchActive = true
         searchBar.showsCancelButton = true
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        print("did end")
         isSearchActive = false
         self.searchBar.setShowsCancelButton(false, animated: true)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        print("search")
         guard searchBar.text != nil else { return }
-        defaultZipcode = searchBar.text!
         
+        defaultZipcode = searchBar.text!
         self.database.child("zipcode").setValue(defaultZipcode!)
         
         if customSegmentControl.selectedSegmentIndex == 0 {
             getAPIResultsForFahrenheit()
-        } else {
+        }
+        else {
             getAPIResultsForCelsius()
         }
-        print("location sending to firebase")
+        
         self.endEditing(true)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        print("cancel")
         isSearchActive = false
         self.endEditing(true)
     }
     
-    // MARK: - Lazy Instances
-    
+    // MARK: - Lazy Instantiates
     lazy var weatherIcon: UIImageView = {
         let image = UIImage(named: "Partly-Cloudy-Day-white")
         let imageView = UIImageView(image: image)

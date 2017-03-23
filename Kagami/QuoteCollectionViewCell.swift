@@ -11,6 +11,7 @@ import SnapKit
 
 class QuoteCollectionViewCell: UICollectionViewCell {
     
+    // MARK: - View Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -21,8 +22,10 @@ class QuoteCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Setup View Hierarchy & Constraints
     private func setupView() {
         self.addSubview(categoryLabel)
+        
         categoryLabel.snp.makeConstraints({ (label) in
             label.centerX.equalTo(self.snp.centerX)
             label.centerY.equalTo(self.snp.centerY)
@@ -36,5 +39,4 @@ class QuoteCollectionViewCell: UICollectionViewCell {
         label.textColor = ColorPalette.whiteColor
         return label
     }()
-
 }

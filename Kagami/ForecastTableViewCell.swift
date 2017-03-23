@@ -11,8 +11,10 @@ import SnapKit
 
 class ForecastTableViewCell: UITableViewCell {
     
+    // MARK: - Properties
     static let identifier: String = "forecast"
     
+    // MARK: - View Lifecycle
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -24,34 +26,34 @@ class ForecastTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        
-        // Configure the view for the selected state
-    }
-    
+    // MARK: - Setup View Hierarchy & Constraints
     private func setupView() {
         self.addSubview(dayLabel)
         self.addSubview(minLabel)
         self.addSubview(maxLabel)
         self.addSubview(minMaxSepLabel)
         self.addSubview(descriptionLabel)
+        
         dayLabel.snp.makeConstraints { (label) in
             label.top.equalTo(self.snp.top).inset(8)
             label.centerX.equalToSuperview()
         }
+        
         descriptionLabel.snp.makeConstraints { (label) in
             label.top.equalTo(dayLabel.snp.bottom)
             label.centerX.equalToSuperview()
         }
+        
         minMaxSepLabel.snp.makeConstraints { (label) in
             label.top.equalTo(descriptionLabel.snp.bottom)
             label.centerX.equalToSuperview()
         }
+        
         minLabel.snp.makeConstraints { (label) in
             label.top.equalTo(descriptionLabel.snp.bottom)
             label.right.equalTo(minMaxSepLabel.snp.left)
         }
+        
         maxLabel.snp.makeConstraints { (label) in
             label.top.equalTo(descriptionLabel.snp.bottom)
             label.left.equalTo(minMaxSepLabel.snp.right)

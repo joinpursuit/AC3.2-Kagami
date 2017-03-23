@@ -13,6 +13,7 @@ import UIKit
 //http://api.openweathermap.org/data/2.5/weather?appid=93163a043d0bde0df1a79f0fdebc744f&zip=11101,us&units=imperial
 
 class DailyWeather {
+    
     var temperature: Int
     var icon: String
     var mainCondition: String
@@ -63,5 +64,4 @@ class DailyWeather {
         
         return DailyWeather(from: validJson)
     }
-    
 }
