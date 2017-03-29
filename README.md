@@ -1,4 +1,4 @@
-# AC3.2-Kagami
+# Kagami
 How many of you would like to sleep in for 5 more minutes in the morning?
 We have a solution for you. Let us introduce you to, Kagami. Kagami is a mirror with a heads up display with information from a set of customized widgets. It's budget-friendly and gives you, the user, absolute control of what is displayed. It requires minimal setup too, with a little DIY. 
 
