@@ -14,4 +14,4 @@ https://medium.com/@amtung/how-to-configure-raspberry-pi-3-on-a-mac-b6006858f6fa
 
 Our FREE companion app will allow you to customize what you see and where you see it on the mirror display. We know you will have as much fun as we did building this!
 
-"Change the way you see yourself."  - Kagami
+### "Change the way you see yourself."  - Kagami
