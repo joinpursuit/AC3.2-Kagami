@@ -1,6 +1,6 @@
 # Kagami
 
-![33324353420_031294f0b7_o](https://user-images.githubusercontent.com/20934684/28436724-fd760494-6d65-11e7-831e-5de5a6004bda.jpg)
+![32866028944_2ca9798fcf_o](https://user-images.githubusercontent.com/20934684/28437029-18149602-6d67-11e7-94b1-18f509135497.jpg)
 
 How many of you would like to sleep in for 5 more minutes in the morning?
 We have a solution for you. Let us introduce you to Kagami, a mirror with a heads up display with information from a set of customized widgets. It's budget-friendly and gives you, the user, absolute control of what is displayed. It requires minimal setup too, with a little DIY. 
@@ -17,8 +17,17 @@ https://medium.com/@amtung/how-to-configure-raspberry-pi-3-on-a-mac-b6006858f6fa
 
 Our FREE companion app will allow you to customize what you see and where you see it on the mirror display. We know you will have as much fun as we did building this!
 
-![giphy](https://user-images.githubusercontent.com/20934684/28435762-61926746-6d62-11e7-9c4f-288df936b97d.gif)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/20934684/28435762-61926746-6d62-11e7-9c4f-288df936b97d.gif">
+</p>
 
-### "Change the way you see yourself." 
-
-![32895006323_300b392d03_z](https://user-images.githubusercontent.com/20934684/28436772-28bbfe42-6d66-11e7-95c8-81c14483c689.jpg)
+<p align="center">
+  <br><br>
+  <br><br>
+  <br><br>
+  <br><br>
+  <br><br>
+  <b>"Change the way you see yourself"</b><br>
+  <br><br>
+  <img src="https://user-images.githubusercontent.com/20934684/28436772-28bbfe42-6d66-11e7-95c8-81c14483c689.jpg">
+</p>
