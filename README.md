@@ -31,6 +31,5 @@ Our FREE companion app will allow you to customize what you see and where you se
   <br><br>
   <br><br>
   <b>"Change the way you see yourself"</b><br>
-  <br><br>
   <img src="https://user-images.githubusercontent.com/20934684/28436772-28bbfe42-6d66-11e7-95c8-81c14483c689.jpg">
 </p>
