@@ -1,4 +1,7 @@
 # Kagami
+
+![33324353420_031294f0b7_o](https://user-images.githubusercontent.com/20934684/28436724-fd760494-6d65-11e7-831e-5de5a6004bda.jpg)
+
 How many of you would like to sleep in for 5 more minutes in the morning?
 We have a solution for you. Let us introduce you to Kagami, a mirror with a heads up display with information from a set of customized widgets. It's budget-friendly and gives you, the user, absolute control of what is displayed. It requires minimal setup too, with a little DIY. 
 
@@ -17,3 +20,5 @@ Our FREE companion app will allow you to customize what you see and where you se
 ![giphy](https://user-images.githubusercontent.com/20934684/28435762-61926746-6d62-11e7-9c4f-288df936b97d.gif)
 
 ### "Change the way you see yourself." 
+
+![32895006323_300b392d03_z](https://user-images.githubusercontent.com/20934684/28436772-28bbfe42-6d66-11e7-95c8-81c14483c689.jpg)
