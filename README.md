@@ -18,10 +18,13 @@ https://medium.com/@amtung/how-to-configure-raspberry-pi-3-on-a-mac-b6006858f6fa
 Our FREE companion app will allow you to customize what you see and where you see it on the mirror display. We know you will have as much fun as we did building this!
 
 <p align="center">
+  <br><br>
+  <br><br>
   <img src="https://user-images.githubusercontent.com/20934684/28435762-61926746-6d62-11e7-9c4f-288df936b97d.gif">
 </p>
 
 <p align="center">
+  <br><br>
   <br><br>
   <br><br>
   <br><br>
